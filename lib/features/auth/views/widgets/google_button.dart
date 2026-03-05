@@ -1,5 +1,6 @@
 import 'package:craft_chain/core/theme/app_colors.dart';
 import 'package:craft_chain/core/theme/app_text_styles.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 class GoogleButton extends StatelessWidget {
@@ -33,7 +34,7 @@ class GoogleButton extends StatelessWidget {
             ),
             const SizedBox(width: 10),
             Text(
-              'Continue with Google',
+              'auth.continue_with_google'.tr(),
               style: AppTextStyles.bodyLarge.copyWith(
                 color: colors.onSurface,
                 fontWeight: FontWeight.w500,

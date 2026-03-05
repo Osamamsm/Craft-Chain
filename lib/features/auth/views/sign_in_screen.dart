@@ -12,6 +12,7 @@ import 'package:craft_chain/features/auth/views/widgets/auth_web_layout.dart';
 import 'package:craft_chain/features/auth/views/widgets/forgot_password_link.dart';
 import 'package:craft_chain/features/auth/views/widgets/google_button.dart';
 import 'package:craft_chain/features/auth/views/widgets/or_divider.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -26,10 +27,10 @@ class SignInScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) => constraints.maxWidth >= 700
-          ? const AuthWebLayout(
-              title: 'Welcome back',
-              subtitle: 'Sign in to your CraftChain account',
-              formContent: _SignInForm(),
+          ? AuthWebLayout(
+              title: 'auth.welcome_back_title'.tr(),
+              subtitle: 'auth.welcome_back_subtitle'.tr(),
+              formContent: const _SignInForm(),
             )
           : const _SignInMobileScaffold(),
     );
@@ -53,7 +54,7 @@ class _SignInMobileScaffold extends StatelessWidget {
           onPressed: () => context.pop(),
         ),
         title: Text(
-          'Sign In',
+          'auth.sign_in'.tr(),
           style: AppTextStyles.titleLarge.copyWith(color: colors.onSurface),
         ),
         centerTitle: true,
@@ -66,7 +67,7 @@ class _SignInMobileScaffold extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Text(
-                'Sign in to your account',
+                'auth.sign_in_to_account'.tr(),
                 style: AppTextStyles.bodyLarge.copyWith(
                   color: colors.secondaryText,
                 ),
@@ -126,10 +127,10 @@ class _SignInFormState extends State<_SignInForm> {
                   const SizedBox(height: 16),
                   AuthPasswordField(
                     colors: colors,
-                    hint: 'Your password',
+                    hint: 'auth.password_your_hint'.tr(),
                     textInputAction: TextInputAction.done,
                     validator: (v) => (v == null || v.isEmpty)
-                        ? 'Password is required'
+                        ? 'auth.validation_password_field_required'.tr()
                         : null,
                     onChanged: (v) => setState(() => _password = v),
                     onSaved: (v) => _password = v ?? '',
@@ -149,15 +150,15 @@ class _SignInFormState extends State<_SignInForm> {
                     const SizedBox(height: 12),
                   ],
                   AuthSubmitButton(
-                    label: 'Sign In',
+                    label: 'auth.sign_in'.tr(),
                     isLoading: authState.isLoading,
                     colors: colors,
                     onPressed: _submit,
                   ),
                   const SizedBox(height: 20),
                   AuthFooter(
-                    prompt: "Don't have an account?",
-                    actionLabel: 'Sign Up',
+                    prompt: 'auth.no_account'.tr(),
+                    actionLabel: 'auth.sign_up'.tr(),
                     onTap: () =>
                         context.pushReplacement(SignUpScreen.routePath),
                     colors: colors,

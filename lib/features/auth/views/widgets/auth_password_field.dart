@@ -1,6 +1,7 @@
 import 'package:craft_chain/core/theme/app_colors.dart';
 import 'package:craft_chain/core/utils/auth_validators.dart';
 import 'package:craft_chain/features/auth/views/widgets/auth_form_field.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 /// Pre-configured password field with built-in show/hide visibility toggle.
@@ -12,7 +13,7 @@ class AuthPasswordField extends StatefulWidget {
     this.onChanged,
     this.onSaved,
     this.validator,
-    this.hint = 'Create a strong password',
+    this.hint,
     this.textInputAction = TextInputAction.done,
   });
 
@@ -21,7 +22,9 @@ class AuthPasswordField extends StatefulWidget {
   final void Function(String?)? onSaved;
   final String? Function(String?)? validator;
 
-  final String hint;
+  /// Pass a translated hint string from the parent. If null, falls back to
+  /// the default 'auth.password_create_hint' translation.
+  final String? hint;
   final TextInputAction textInputAction;
 
   @override
@@ -34,8 +37,8 @@ class _AuthPasswordFieldState extends State<AuthPasswordField> {
   @override
   Widget build(BuildContext context) {
     return AuthFormField(
-      label: 'PASSWORD',
-      hint: widget.hint,
+      label: 'auth.password_label'.tr(),
+      hint: widget.hint ?? 'auth.password_create_hint'.tr(),
       prefixIcon: Icons.lock_outline_rounded,
       obscureText: _obscure,
       textInputAction: widget.textInputAction,

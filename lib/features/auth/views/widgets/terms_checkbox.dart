@@ -1,5 +1,6 @@
 import 'package:craft_chain/core/theme/app_colors.dart';
 import 'package:craft_chain/core/theme/app_text_styles.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 /// Terms & Privacy Policy checkbox that participates in standard [Form]
@@ -14,9 +15,8 @@ class TermsCheckbox extends StatelessWidget {
   Widget build(BuildContext context) {
     return FormField<bool>(
       initialValue: false,
-      validator: (v) => (v == null || !v)
-          ? 'You must agree to the Terms & Privacy Policy to continue'
-          : null,
+      validator: (v) =>
+          (v == null || !v) ? 'auth.validation_terms_required'.tr() : null,
       builder: (state) {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -43,17 +43,17 @@ class TermsCheckbox extends StatelessWidget {
                           color: colors.secondaryText,
                         ),
                         children: [
-                          const TextSpan(text: 'I agree to the '),
+                          TextSpan(text: 'auth.terms_agree'.tr()),
                           TextSpan(
-                            text: 'Terms of Service',
+                            text: 'auth.terms_of_service'.tr(),
                             style: AppTextStyles.bodySmall.copyWith(
                               color: colors.primary,
                               fontWeight: FontWeight.w600,
                             ),
                           ),
-                          const TextSpan(text: ' and '),
+                          TextSpan(text: 'auth.terms_and'.tr()),
                           TextSpan(
-                            text: 'Privacy Policy',
+                            text: 'auth.privacy_policy'.tr(),
                             style: AppTextStyles.bodySmall.copyWith(
                               color: colors.primary,
                               fontWeight: FontWeight.w600,

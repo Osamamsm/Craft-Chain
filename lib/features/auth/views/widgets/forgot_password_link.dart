@@ -1,5 +1,6 @@
 import 'package:craft_chain/core/theme/app_colors.dart';
 import 'package:craft_chain/core/theme/app_text_styles.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 class ForgotPasswordLink extends StatelessWidget {
@@ -25,7 +26,7 @@ class ForgotPasswordLink extends StatelessWidget {
           tapTargetSize: MaterialTapTargetSize.shrinkWrap,
         ),
         child: Text(
-          'Forgot Password?',
+          'auth.forgot_password'.tr(),
           style: AppTextStyles.bodyMedium.copyWith(
             color: colors.primary,
             fontWeight: FontWeight.w600,

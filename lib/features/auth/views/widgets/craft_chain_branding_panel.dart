@@ -1,5 +1,6 @@
 import 'package:craft_chain/core/theme/app_colors.dart';
 import 'package:craft_chain/core/theme/app_text_styles.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 
@@ -25,12 +26,12 @@ class CraftChainBrandingPanel extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             const _BrandingLogo(),
-            Spacer(flex: 1),
+            const Spacer(flex: 1),
             const _DemoProfileCards(),
             const SizedBox(height: 28),
-            _BrandingHeadline(),
+            const _BrandingHeadline(),
             const SizedBox(height: 12),
-            _BrandingSubtitle(),
+            const _BrandingSubtitle(),
             if (bottomChild != null) ...[
               const Spacer(),
               bottomChild!,
@@ -100,7 +101,7 @@ class _DemoProfileCards extends StatelessWidget {
               children: [
                 Column(
                   children: [
-                    SizedBox(height: 15),
+                    const SizedBox(height: 15),
                     _ProfileCard(
                           initials: 'SA',
                           avatarColor: AppColors.avatarPurple,
@@ -114,7 +115,7 @@ class _DemoProfileCards extends StatelessWidget {
                         .slideY(begin: -0.1, end: 0, duration: 600.ms),
                   ],
                 ),
-                SizedBox(width: 10),
+                const SizedBox(width: 10),
                 Column(
                   children: [
                     _ProfileCard(
@@ -128,12 +129,12 @@ class _DemoProfileCards extends StatelessWidget {
                         .animate(delay: 150.ms)
                         .fadeIn(duration: 600.ms)
                         .slideY(begin: -0.1, end: 0, duration: 600.ms),
-                    SizedBox(height: 15),
+                    const SizedBox(height: 15),
                   ],
                 ),
               ],
             ),
-            SizedBox(height: 30),
+            const SizedBox(height: 30),
             const Center(child: _MatchBadge())
                 .animate(delay: 400.ms)
                 .fadeIn(duration: 400.ms)
@@ -274,7 +275,7 @@ class _MatchBadge extends StatelessWidget {
           const Icon(Icons.bolt_rounded, color: Colors.white, size: 16),
           const SizedBox(width: 4),
           Text(
-            '94% Match!',
+            'auth.match_percentage'.tr(namedArgs: {'percentage': '94'}),
             style: AppTextStyles.bodyMedium.copyWith(
               color: Colors.white,
               fontWeight: FontWeight.w700,
@@ -297,7 +298,7 @@ class _BrandingHeadline extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 24),
       child:
           Text(
-                'Trade Skills,\nGrow Together',
+                'auth.branding_headline'.tr(),
                 textAlign: TextAlign.center,
                 style: AppTextStyles.headlineLarge.copyWith(
                   color: Colors.white,
@@ -319,7 +320,7 @@ class _BrandingSubtitle extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 32),
       child:
           Text(
-                'Exchange what you know for what you want\nto learn. No money — just knowledge.',
+                'auth.branding_subtitle'.tr(),
                 textAlign: TextAlign.center,
                 style: AppTextStyles.bodyLarge.copyWith(
                   color: Colors.white.withValues(alpha: 0.75),

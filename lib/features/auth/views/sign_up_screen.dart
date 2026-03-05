@@ -13,6 +13,7 @@ import 'package:craft_chain/features/auth/views/widgets/google_button.dart';
 import 'package:craft_chain/features/auth/views/widgets/or_divider.dart';
 import 'package:craft_chain/features/auth/views/widgets/sign_up_info_box.dart';
 import 'package:craft_chain/features/auth/views/widgets/terms_checkbox.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -27,10 +28,10 @@ class SignUpScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) => constraints.maxWidth >= 700
-          ? const AuthWebLayout(
-              title: 'Create your account',
-              subtitle: 'Join thousands of skill traders worldwide',
-              formContent: _SignUpForm(),
+          ? AuthWebLayout(
+              title: 'auth.sign_up_title'.tr(),
+              subtitle: 'auth.sign_up_subtitle'.tr(),
+              formContent: const _SignUpForm(),
             )
           : const _SignUpMobileScaffold(),
     );
@@ -54,7 +55,7 @@ class _SignUpMobileScaffold extends StatelessWidget {
           onPressed: () => context.pop(),
         ),
         title: Text(
-          'Create Account',
+          'auth.create_account'.tr(),
           style: AppTextStyles.titleLarge.copyWith(color: colors.onSurface),
         ),
         centerTitle: true,
@@ -67,7 +68,7 @@ class _SignUpMobileScaffold extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Text(
-                'Join skill traders worldwide',
+                'auth.join_skill_traders'.tr(),
                 style: AppTextStyles.bodyLarge.copyWith(
                   color: colors.secondaryText,
                 ),
@@ -132,7 +133,7 @@ class _SignUpFormState extends State<_SignUpForm> {
                   const SizedBox(height: 16),
                   AuthPasswordField(
                     colors: colors,
-                    hint: 'Create a strong password',
+                    hint: 'auth.password_create_hint'.tr(),
                     textInputAction: TextInputAction.next,
                     onChanged: (v) => setState(() => _password = v),
                     onSaved: (value) => setState(() => _password = value!),
@@ -140,14 +141,14 @@ class _SignUpFormState extends State<_SignUpForm> {
                   const SizedBox(height: 16),
                   AuthPasswordField(
                     colors: colors,
-                    hint: 'Repeat your password',
+                    hint: 'auth.password_repeat_hint'.tr(),
                     textInputAction: TextInputAction.done,
                     validator: (v) {
                       if (v == null || v.isEmpty) {
-                        return 'Please confirm your password';
+                        return 'auth.validation_confirm_password_required'.tr();
                       }
                       if (v != _password) {
-                        return 'Passwords do not match';
+                        return 'auth.validation_passwords_mismatch'.tr();
                       }
                       return null;
                     },
@@ -165,7 +166,7 @@ class _SignUpFormState extends State<_SignUpForm> {
                     const SizedBox(height: 12),
                   ],
                   AuthSubmitButton(
-                    label: 'Create My Account',
+                    label: 'auth.create_my_account'.tr(),
                     trailingIcon: Icons.arrow_forward_rounded,
                     isLoading: authState.isLoading,
                     colors: colors,
@@ -173,8 +174,8 @@ class _SignUpFormState extends State<_SignUpForm> {
                   ),
                   const SizedBox(height: 20),
                   AuthFooter(
-                    prompt: 'Already have an account?',
-                    actionLabel: 'Sign In',
+                    prompt: 'auth.already_have_account'.tr(),
+                    actionLabel: 'auth.sign_in'.tr(),
                     onTap: () =>
                         context.pushReplacement(SignInScreen.routePath),
                     colors: colors,

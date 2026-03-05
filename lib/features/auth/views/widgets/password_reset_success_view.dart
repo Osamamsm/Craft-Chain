@@ -1,5 +1,6 @@
 import 'package:craft_chain/core/theme/app_colors.dart';
 import 'package:craft_chain/core/theme/app_text_styles.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 
@@ -34,7 +35,7 @@ class PasswordResetSuccessView extends StatelessWidget {
             ),
             const SizedBox(height: 24),
             Text(
-              'Check your email!',
+              'auth.reset_success_title'.tr(),
               style: AppTextStyles.headlineMedium.copyWith(
                 color: colors.onBackground,
               ),
@@ -42,7 +43,7 @@ class PasswordResetSuccessView extends StatelessWidget {
             ),
             const SizedBox(height: 12),
             Text(
-              "We've sent a password reset link to your email.\nCheck your inbox and follow the instructions.",
+              'auth.reset_success_body'.tr(),
               style: AppTextStyles.bodyLarge.copyWith(
                 color: colors.secondaryText,
               ),
@@ -62,7 +63,7 @@ class PasswordResetSuccessView extends StatelessWidget {
                   ),
                 ),
                 child: Text(
-                  'Back to Sign In',
+                  'auth.back_to_sign_in'.tr(),
                   style: AppTextStyles.buttonLarge,
                 ),
               ),

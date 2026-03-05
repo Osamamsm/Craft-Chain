@@ -1,5 +1,6 @@
 import 'package:craft_chain/core/theme/app_colors.dart';
 import 'package:craft_chain/core/theme/app_text_styles.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 class SignUpInfoBox extends StatelessWidget {
@@ -32,16 +33,13 @@ class SignUpInfoBox extends StatelessWidget {
                 ),
                 children: [
                   TextSpan(
-                    text: 'Next step  ',
+                    text: 'auth.info_next_step'.tr(),
                     style: AppTextStyles.bodySmall.copyWith(
                       color: colors.primary,
                       fontWeight: FontWeight.w700,
                     ),
                   ),
-                  const TextSpan(
-                    text:
-                        "After signing up, you'll pick the skills you teach and want to learn.",
-                  ),
+                  TextSpan(text: 'auth.info_pick_skills'.tr()),
                 ],
               ),
             ),

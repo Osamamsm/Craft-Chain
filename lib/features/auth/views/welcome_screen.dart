@@ -3,6 +3,7 @@ import 'package:craft_chain/features/auth/views/sign_up_screen.dart';
 import 'package:craft_chain/features/auth/views/widgets/craft_chain_branding_panel.dart';
 import 'package:craft_chain/core/theme/app_colors.dart';
 import 'package:craft_chain/core/theme/app_text_styles.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:go_router/go_router.dart';
@@ -44,7 +45,7 @@ class _WelcomeButtons extends StatelessWidget {
       child: Column(
         children: [
           _WelcomeButton(
-                label: 'Get Started',
+                label: 'auth.get_started'.tr(),
                 onPressed: () => context.push(SignUpScreen.routePath),
                 variant: _ButtonVariant.filled,
               )
@@ -53,7 +54,7 @@ class _WelcomeButtons extends StatelessWidget {
               .slideY(begin: 0.3, end: 0, duration: 400.ms),
           const SizedBox(height: 12),
           _WelcomeButton(
-                label: 'I already have an account',
+                label: 'auth.already_have_account_cta'.tr(),
                 onPressed: () => context.push(SignInScreen.routePath),
                 variant: _ButtonVariant.outline,
               )

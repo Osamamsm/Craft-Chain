@@ -7,6 +7,7 @@ import 'package:craft_chain/features/auth/views/widgets/auth_error_banner.dart';
 import 'package:craft_chain/features/auth/views/widgets/auth_submit_button.dart';
 import 'package:craft_chain/features/auth/views/widgets/auth_web_layout.dart';
 import 'package:craft_chain/features/auth/views/widgets/password_reset_success_view.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -21,10 +22,10 @@ class ForgotPasswordScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) => constraints.maxWidth >= 700
-          ? const AuthWebLayout(
-              title: 'Reset your password',
-              subtitle: "Enter your email and we'll send you a reset link",
-              formContent: _ForgotPasswordForm(),
+          ? AuthWebLayout(
+              title: 'auth.reset_password_title'.tr(),
+              subtitle: 'auth.reset_password_subtitle'.tr(),
+              formContent: const _ForgotPasswordForm(),
             )
           : const _ForgotPasswordMobileScaffold(),
     );
@@ -48,7 +49,7 @@ class _ForgotPasswordMobileScaffold extends StatelessWidget {
           onPressed: () => context.pop(),
         ),
         title: Text(
-          'Reset Password',
+          'auth.reset_password'.tr(),
           style: AppTextStyles.titleLarge.copyWith(color: colors.onSurface),
         ),
         centerTitle: true,
@@ -61,7 +62,7 @@ class _ForgotPasswordMobileScaffold extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                "Enter your email and we'll send you a reset link",
+                'auth.reset_password_subtitle'.tr(),
                 style: AppTextStyles.bodyLarge.copyWith(
                   color: colors.secondaryText,
                 ),
@@ -126,7 +127,7 @@ class _ForgotPasswordFormState extends State<_ForgotPasswordForm> {
                   ],
                   const SizedBox(height: 24),
                   AuthSubmitButton(
-                    label: 'Send Reset Link',
+                    label: 'auth.send_reset_link'.tr(),
                     isLoading: authState.isLoading,
                     colors: colors,
                     onPressed: _submit,
