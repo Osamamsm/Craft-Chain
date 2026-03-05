@@ -94,7 +94,6 @@ class _SignUpForm extends StatefulWidget {
 class _SignUpFormState extends State<_SignUpForm> {
   final _formKey = GlobalKey<FormState>();
   late String _name, _email, _password;
-  bool _agreedToTerms = false;
 
   Future<void> _submit() async {
     if (_formKey.currentState!.validate()) {
@@ -156,12 +155,7 @@ class _SignUpFormState extends State<_SignUpForm> {
                   const SizedBox(height: 20),
                   SignUpInfoBox(colors: colors),
                   const SizedBox(height: 16),
-                  TermsCheckbox(
-                    value: _agreedToTerms,
-                    colors: colors,
-                    onChanged: (v) =>
-                        setState(() => _agreedToTerms = v ?? false),
-                  ),
+                  TermsCheckbox(colors: colors),
                   const SizedBox(height: 24),
                   if (authState.errorMessage != null) ...[
                     AuthErrorBanner(
