@@ -1,15 +1,18 @@
-import 'package:craft_chain/core/theme/app_theme.dart';
+import 'package:craft_chain/app.dart';
+import 'package:craft_chain/core/di/injection.dart';
+import 'package:craft_chain/features/auth/viewmodels/auth_cubit/auth_cubit.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  configureDependencies();
   runApp(
-    MaterialApp(
-      title: 'CraftChain',
-      debugShowCheckedModeBanner: false,
-      theme: AppTheme.light(),
-      darkTheme: AppTheme.dark(),
-      themeMode: ThemeMode.light,
-      home: const Scaffold(body: Center(child: Text('CraftChain'))),
+    MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (_) => getIt<AuthCubit>()),
+      ],
+      child: const CraftChainApp(),
     ),
   );
 }
