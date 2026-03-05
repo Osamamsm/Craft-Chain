@@ -14,8 +14,8 @@ Every query that returns users (match feed, explore, search) **must** include a 
 
 Views (screens, widgets) are for presentation only. They:
 
-- Read state from ViewModels via Riverpod providers
-- Call ViewModel methods in response to user actions
+- Read state from Cubits via `BlocBuilder` / `BlocListener` / `context.read<T>()`
+- Call Cubit methods in response to user actions
 - Display loading, error, and data states
 
 They must **never** contain:

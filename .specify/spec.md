@@ -340,6 +340,6 @@ Every user has:
 - **No skill verification**: Trust-based system.
 - **Server timestamps always**: `serverTimestamp()` for all time fields.
 - **MVVM architecture**: Models, ViewModels, Views — no exceptions.
-- **Riverpod state management**: All state through Riverpod providers.
+- **Cubit state management**: All state through Cubit classes with `BlocProvider`.
 - **go_router navigation**: `context.go()` only, never `Navigator.push()`.
 - **No hardcoded styles**: All colors and text styles from theme constants.
