@@ -3,22 +3,9 @@ import 'package:craft_chain/core/theme/app_text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 
-/// Single source of truth for the CraftChain gradient branding area.
-///
-/// Used in two contexts:
-///  • Mobile [WelcomeScreen] — `showLogo: false`, pass buttons via [bottomChild]
-///  • Web split-screen (Sign Up / Sign In / Forgot Password) — `showLogo: true`
 class CraftChainBrandingPanel extends StatelessWidget {
-  const CraftChainBrandingPanel({
-    super.key,
-    this.showLogo = true,
-    this.bottomChild,
-  });
+  const CraftChainBrandingPanel({super.key, this.bottomChild});
 
-  final bool showLogo;
-
-  /// Optional widget placed at the very bottom of the panel (e.g. CTA buttons
-  /// on the mobile welcome screen). The panel provides vertical spacing above it.
   final Widget? bottomChild;
 
   @override
@@ -38,12 +25,12 @@ class CraftChainBrandingPanel extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             const _BrandingLogo(),
-            const SizedBox(height: 48),
+            Spacer(flex: 1),
             const _DemoProfileCards(),
             const SizedBox(height: 28),
-            _BrandingHeadline(centered: !showLogo),
+            _BrandingHeadline(),
             const SizedBox(height: 12),
-            _BrandingSubtitle(centered: !showLogo),
+            _BrandingSubtitle(),
             if (bottomChild != null) ...[
               const Spacer(),
               bottomChild!,
@@ -106,55 +93,56 @@ class _DemoProfileCards extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 24),
       child: SizedBox(
         height: 185,
-        child: Stack(
-          clipBehavior: Clip.none,
+        child: Column(
           children: [
-            Positioned(
-              left: 0,
-              top: 20,
-              child:
-                  _ProfileCard(
-                        initials: 'SA',
-                        avatarColor: AppColors.avatarPurple,
-                        name: 'Sara A.',
-                        city: 'Cairo',
-                        chips: const ['Calligraphy'],
-                        chipTextColor: AppColors.avatarTeal,
-                      )
-                      .animate()
-                      .fadeIn(duration: 600.ms)
-                      .slideY(begin: -0.1, end: 0, duration: 600.ms),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Column(
+                  children: [
+                    SizedBox(height: 15),
+                    _ProfileCard(
+                          initials: 'SA',
+                          avatarColor: AppColors.avatarPurple,
+                          name: 'Sara A.',
+                          city: 'Cairo',
+                          chips: const ['Calligraphy'],
+                          chipTextColor: AppColors.avatarTeal,
+                        )
+                        .animate()
+                        .fadeIn(duration: 600.ms)
+                        .slideY(begin: -0.1, end: 0, duration: 600.ms),
+                  ],
+                ),
+                SizedBox(width: 10),
+                Column(
+                  children: [
+                    _ProfileCard(
+                          initials: 'KA',
+                          avatarColor: AppColors.avatarGreen,
+                          name: 'Khalid A.',
+                          city: 'Dubai',
+                          chips: const ['Flutter', 'Firebase'],
+                          chipTextColor: AppColors.skillBlueText,
+                        )
+                        .animate(delay: 150.ms)
+                        .fadeIn(duration: 600.ms)
+                        .slideY(begin: -0.1, end: 0, duration: 600.ms),
+                    SizedBox(height: 15),
+                  ],
+                ),
+              ],
             ),
-            Positioned(
-              right: 0,
-              top: 0,
-              child:
-                  _ProfileCard(
-                        initials: 'KA',
-                        avatarColor: AppColors.avatarGreen,
-                        name: 'Khalid A.',
-                        city: 'Dubai',
-                        chips: const ['Flutter', 'Firebase'],
-                        chipTextColor: AppColors.skillBlueText,
-                      )
-                      .animate(delay: 150.ms)
-                      .fadeIn(duration: 600.ms)
-                      .slideY(begin: -0.1, end: 0, duration: 600.ms),
-            ),
-            Positioned(
-              bottom: 0,
-              left: 0,
-              right: 0,
-              child: const Center(child: _MatchBadge())
-                  .animate(delay: 400.ms)
-                  .fadeIn(duration: 400.ms)
-                  .scale(
-                    begin: const Offset(0.8, 0.8),
-                    end: const Offset(1, 1),
-                    duration: 400.ms,
-                    curve: Curves.easeOutBack,
-                  ),
-            ),
+            SizedBox(height: 30),
+            const Center(child: _MatchBadge())
+                .animate(delay: 400.ms)
+                .fadeIn(duration: 400.ms)
+                .scale(
+                  begin: const Offset(0.8, 0.8),
+                  end: const Offset(1, 1),
+                  duration: 400.ms,
+                  curve: Curves.easeOutBack,
+                ),
           ],
         ),
       ),
@@ -301,8 +289,7 @@ class _MatchBadge extends StatelessWidget {
 // ── Headline & Subtitle ───────────────────────────────────────────────────────
 
 class _BrandingHeadline extends StatelessWidget {
-  const _BrandingHeadline({required this.centered});
-  final bool centered;
+  const _BrandingHeadline();
 
   @override
   Widget build(BuildContext context) {
@@ -311,7 +298,7 @@ class _BrandingHeadline extends StatelessWidget {
       child:
           Text(
                 'Trade Skills,\nGrow Together',
-                textAlign: centered ? TextAlign.center : TextAlign.left,
+                textAlign: TextAlign.center,
                 style: AppTextStyles.headlineLarge.copyWith(
                   color: Colors.white,
                 ),
@@ -324,8 +311,7 @@ class _BrandingHeadline extends StatelessWidget {
 }
 
 class _BrandingSubtitle extends StatelessWidget {
-  const _BrandingSubtitle({required this.centered});
-  final bool centered;
+  const _BrandingSubtitle();
 
   @override
   Widget build(BuildContext context) {
@@ -334,7 +320,7 @@ class _BrandingSubtitle extends StatelessWidget {
       child:
           Text(
                 'Exchange what you know for what you want\nto learn. No money — just knowledge.',
-                textAlign: centered ? TextAlign.center : TextAlign.left,
+                textAlign: TextAlign.center,
                 style: AppTextStyles.bodyLarge.copyWith(
                   color: Colors.white.withValues(alpha: 0.75),
                 ),

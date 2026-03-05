@@ -6,9 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:go_router/go_router.dart';
 
-/// On mobile: full-screen gradient with profile cards, headline, and two CTA buttons.
-/// On web (≥700px): immediately renders [SignUpScreen] which already contains
-/// the side-by-side branding + form split layout — no separate welcome needed.
 class WelcomeScreen extends StatelessWidget {
   const WelcomeScreen({super.key});
 
@@ -23,18 +20,13 @@ class WelcomeScreen extends StatelessWidget {
   }
 }
 
-// ── Mobile welcome ────────────────────────────────────────────────────────────
-
 class _WelcomeMobile extends StatelessWidget {
   const _WelcomeMobile();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: CraftChainBrandingPanel(
-        showLogo: false,
-        bottomChild: const _WelcomeButtons(),
-      ),
+      body: CraftChainBrandingPanel(bottomChild: const _WelcomeButtons()),
     );
   }
 }
