@@ -1,3 +1,4 @@
+import 'package:craft_chain/features/auth/views/sign_in_screen.dart';
 import 'package:craft_chain/features/auth/views/sign_up_screen.dart';
 import 'package:craft_chain/features/auth/views/widgets/craft_chain_branding_panel.dart';
 import 'package:craft_chain/core/theme/app_colors.dart';
@@ -7,6 +8,8 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:go_router/go_router.dart';
 
 class WelcomeScreen extends StatelessWidget {
+  static const String routePath = '/';
+
   const WelcomeScreen({super.key});
 
   @override
@@ -42,7 +45,7 @@ class _WelcomeButtons extends StatelessWidget {
         children: [
           _WelcomeButton(
                 label: 'Get Started',
-                onPressed: () => context.push('/sign-up'),
+                onPressed: () => context.push(SignUpScreen.routePath),
                 variant: _ButtonVariant.filled,
               )
               .animate(delay: 600.ms)
@@ -51,7 +54,7 @@ class _WelcomeButtons extends StatelessWidget {
           const SizedBox(height: 12),
           _WelcomeButton(
                 label: 'I already have an account',
-                onPressed: () => context.push('/sign-in'),
+                onPressed: () => context.push(SignInScreen.routePath),
                 variant: _ButtonVariant.outline,
               )
               .animate(delay: 800.ms)

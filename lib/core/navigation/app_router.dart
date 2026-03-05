@@ -7,26 +7,26 @@ import 'package:go_router/go_router.dart';
 /// Central router for CraftChain.
 /// Auth redirect logic will be added in task 01b when Firebase Auth is wired.
 final appRouter = GoRouter(
-  initialLocation: '/',
+  initialLocation: WelcomeScreen.routePath,
   debugLogDiagnostics: false,
   routes: [
     GoRoute(
-      path: '/',
+      path: WelcomeScreen.routePath,
       name: 'welcome',
       builder: (context, state) => const WelcomeScreen(),
     ),
     GoRoute(
-      path: '/sign-in',
+      path: SignInScreen.routePath,
       name: 'sign-in',
       builder: (context, state) => const SignInScreen(),
     ),
     GoRoute(
-      path: '/sign-up',
+      path: SignUpScreen.routePath,
       name: 'sign-up',
       builder: (context, state) => const SignUpScreen(),
     ),
     GoRoute(
-      path: '/forgot-password',
+      path: ForgotPasswordScreen.routePath,
       name: 'forgot-password',
       builder: (context, state) => const ForgotPasswordScreen(),
     ),

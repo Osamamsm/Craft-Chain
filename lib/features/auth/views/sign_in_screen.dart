@@ -1,19 +1,25 @@
 import 'package:craft_chain/core/theme/app_colors.dart';
 import 'package:craft_chain/core/theme/app_text_styles.dart';
-import 'package:craft_chain/core/utils/auth_validators.dart';
 import 'package:craft_chain/features/auth/viewmodels/auth_cubit/auth_cubit.dart';
 import 'package:craft_chain/features/auth/views/auth_footer.dart';
+import 'package:craft_chain/features/auth/views/forgot_password_screen.dart';
+import 'package:craft_chain/features/auth/views/sign_up_screen.dart';
 import 'package:craft_chain/features/auth/views/widgets/auth_email_field.dart';
 import 'package:craft_chain/features/auth/views/widgets/auth_error_banner.dart';
 import 'package:craft_chain/features/auth/views/widgets/auth_password_field.dart';
 import 'package:craft_chain/features/auth/views/widgets/auth_submit_button.dart';
 import 'package:craft_chain/features/auth/views/widgets/auth_web_layout.dart';
+import 'package:craft_chain/features/auth/views/widgets/forgot_password_link.dart';
+import 'package:craft_chain/features/auth/views/widgets/google_button.dart';
+import 'package:craft_chain/features/auth/views/widgets/or_divider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 class SignInScreen extends StatelessWidget {
+  static const String routePath = '/sign-in';
+
   const SignInScreen({super.key});
 
   @override
@@ -53,7 +59,7 @@ class _SignInMobileScaffold extends StatelessWidget {
         child: SingleChildScrollView(
           padding: const EdgeInsets.fromLTRB(24, 8, 24, 32),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Text(
                 'Sign in to your account',
@@ -82,17 +88,16 @@ class _SignInForm extends StatefulWidget {
 
 class _SignInFormState extends State<_SignInForm> {
   final _formKey = GlobalKey<FormState>();
-  String _email = '', _password = '';
-  bool _autoValidate = false;
-
-  bool get _isValid =>
-      AuthValidators.email(_email) == null && _password.isNotEmpty;
+  late String _email, _password;
 
   Future<void> _submit() async {
-    setState(() => _autoValidate = true);
-    if (!(_formKey.currentState?.validate() ?? false)) return;
-    _formKey.currentState!.save();
-    await context.read<AuthCubit>().signIn(email: _email, password: _password);
+    if (_formKey.currentState!.validate()) {
+      _formKey.currentState!.save();
+      await context.read<AuthCubit>().signIn(
+        email: _email,
+        password: _password,
+      );
+    }
   }
 
   @override
@@ -102,12 +107,12 @@ class _SignInFormState extends State<_SignInForm> {
       builder: (context, authState) {
         return Form(
               key: _formKey,
-              autovalidateMode: _autoValidate
-                  ? AutovalidateMode.onUserInteraction
-                  : AutovalidateMode.disabled,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  GoogleButton(colors: colors),
+                  const SizedBox(height: 20),
+                  OrDivider(colors: colors),
                   AuthEmailField(
                     colors: colors,
                     textInputAction: TextInputAction.next,
@@ -126,24 +131,10 @@ class _SignInFormState extends State<_SignInForm> {
                     onSaved: (v) => _password = v ?? '',
                   ),
                   const SizedBox(height: 8),
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: TextButton(
-                      onPressed: () => context.push('/forgot-password'),
-                      style: TextButton.styleFrom(
-                        foregroundColor: colors.primary,
-                        padding: EdgeInsets.zero,
-                        minimumSize: const Size(0, 0),
-                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                      ),
-                      child: Text(
-                        'Forgot Password?',
-                        style: AppTextStyles.bodyMedium.copyWith(
-                          color: colors.primary,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ),
+                  ForgotPasswordLink(
+                    colors: colors,
+                    onPressed: () =>
+                        context.push(ForgotPasswordScreen.routePath),
                   ),
                   const SizedBox(height: 20),
                   if (authState.errorMessage != null) ...[
@@ -155,7 +146,6 @@ class _SignInFormState extends State<_SignInForm> {
                   ],
                   AuthSubmitButton(
                     label: 'Sign In',
-                    enabled: _isValid && !authState.isLoading,
                     isLoading: authState.isLoading,
                     colors: colors,
                     onPressed: _submit,
@@ -164,7 +154,8 @@ class _SignInFormState extends State<_SignInForm> {
                   AuthFooter(
                     prompt: "Don't have an account?",
                     actionLabel: 'Sign Up',
-                    onTap: () => context.go('/sign-up'),
+                    onTap: () =>
+                        context.pushReplacement(SignUpScreen.routePath),
                     colors: colors,
                   ),
                 ],
