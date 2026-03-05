@@ -133,7 +133,25 @@ class _SignUpFormState extends State<_SignUpForm> {
                   const SizedBox(height: 16),
                   AuthPasswordField(
                     colors: colors,
+                    hint: 'Create a strong password',
+                    textInputAction: TextInputAction.next,
+                    onChanged: (v) => setState(() => _password = v),
                     onSaved: (value) => setState(() => _password = value!),
+                  ),
+                  const SizedBox(height: 16),
+                  AuthPasswordField(
+                    colors: colors,
+                    hint: 'Repeat your password',
+                    textInputAction: TextInputAction.done,
+                    validator: (v) {
+                      if (v == null || v.isEmpty) {
+                        return 'Please confirm your password';
+                      }
+                      if (v != _password) {
+                        return 'Passwords do not match';
+                      }
+                      return null;
+                    },
                   ),
                   const SizedBox(height: 20),
                   SignUpInfoBox(colors: colors),

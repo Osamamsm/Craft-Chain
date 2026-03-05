@@ -48,6 +48,10 @@ class _SignInMobileScaffold extends StatelessWidget {
       backgroundColor: colors.background,
       appBar: AppBar(
         backgroundColor: colors.background,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back_ios_new_rounded, color: colors.onSurface),
+          onPressed: () => context.pop(),
+        ),
         title: Text(
           'Sign In',
           style: AppTextStyles.titleLarge.copyWith(color: colors.onSurface),
