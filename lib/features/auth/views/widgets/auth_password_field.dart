@@ -19,9 +19,6 @@ class AuthPasswordField extends StatefulWidget {
   final AppColorPalette colors;
   final void Function(String)? onChanged;
   final void Function(String?)? onSaved;
-
-  /// Defaults to [AuthValidators.password] (≥6 chars).
-  /// Pass null or a lighter check for sign-in.
   final String? Function(String?)? validator;
 
   final String hint;
