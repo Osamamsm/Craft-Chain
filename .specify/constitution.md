@@ -95,3 +95,36 @@ context.push('/profile/$userId')
 ### 8. All Firebase Imports Only in Repository Implementations
 
 Only `*_repository_impl.dart` files may import Firebase packages (`cloud_firestore`, `firebase_auth`, `firebase_storage`). No other file in the codebase may import these packages directly. This ensures a clean separation between business logic and the backend provider.
+
+### 9. No Hardcoded Strings — Ever
+
+All user-visible text must use `easy_localization` keys via the `.tr()` extension. Never write a raw string inside a widget:
+
+```dart
+// ❌ WRONG
+Text('Sign In')
+return 'Password is required';
+
+// ✅ CORRECT
+Text('auth.sign_in'.tr())
+return 'auth.validation_password_required'.tr();
+```
+
+Every new key **must** be added to both `assets/translations/en.json` and `assets/translations/ar.json` before the code is considered complete.
+
+### 10. Check Colors & Theme Files Before Adding New Colors — Always
+
+Before introducing any new color value anywhere in the codebase, you **must** open and read:
+
+- `core/theme/app_colors.dart`
+- `core/theme/app_theme.dart`
+
+If an equivalent color already exists, **reuse it**. Never add a duplicate color constant. If a genuinely new semantic color is needed, add it to `AppColorPalette` (both `light` and `dark`) in `app_colors.dart` and wire it into `app_theme.dart`.
+
+```dart
+// ❌ WRONG — adding a raw color without checking
+color: Color(0xFF2563EB)   // already exists as AppColors.light.primary
+
+// ✅ CORRECT — reuse the existing semantic name
+color: colors.primary
+```

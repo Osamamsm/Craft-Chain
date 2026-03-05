@@ -119,3 +119,5 @@ function cosineSimilarity(vecA, vecB) {
 - Do NOT match users of different genders.
 - Do NOT use `new Date()` for Firestore timestamps — use `admin.firestore.FieldValue.serverTimestamp()`.
 - Do NOT skip the reverse write for match scores (both users should see each other's score).
+- Do NOT write raw English strings in Cloud Function notification payloads when they surface in the Dart app — the Flutter app must look up its own `.tr()` keys.
+- Before adding any color to the Flutter layer, open `app_colors.dart` and `app_theme.dart` first to check if an equivalent already exists.

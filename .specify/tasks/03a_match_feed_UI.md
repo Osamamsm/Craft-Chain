@@ -69,3 +69,5 @@ The Home screen that displays a ranked list of AI-matched users with complementa
 - Do NOT call Firestore from this screen.
 - Do NOT hardcode colors or font sizes.
 - Do NOT use `Navigator.push()`.
+- Do NOT write raw English strings in widgets — use `'key'.tr()` from `easy_localization`. Add all new keys to both `en.json` and `ar.json`.
+- Before adding any color, open `app_colors.dart` and `app_theme.dart` first to check if an equivalent already exists.

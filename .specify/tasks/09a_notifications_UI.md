@@ -55,3 +55,5 @@ No new screen files are needed for notifications. This task modifies:
 - Do NOT send notifications from the client — they are sent by Cloud Functions.
 - Do NOT hardcode colors or font sizes.
 - Do NOT use `Navigator.push()` for notification tap navigation — use `context.go()`.
+- Do NOT write raw English strings in widgets — use `'key'.tr()` from `easy_localization`. Add all new keys to both `en.json` and `ar.json`.
+- Before adding any color, open `app_colors.dart` and `app_theme.dart` first to check if an equivalent already exists.

@@ -80,3 +80,5 @@ All authentication screens: Welcome, Sign Up, Sign In, and Forgot Password. Thes
 - Do NOT hardcode any colors or font sizes.
 - Do NOT use `Navigator.push()`.
 - Do NOT add any business logic (e.g., checking if profile is complete — that is handled by the router redirect).
+- Do NOT write raw English strings in widgets — use `'key'.tr()` from `easy_localization`.
+- Before adding any color, open `app_colors.dart` and `app_theme.dart` first to check if an equivalent already exists.

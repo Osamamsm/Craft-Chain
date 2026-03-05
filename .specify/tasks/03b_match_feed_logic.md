@@ -54,3 +54,5 @@ The match repository (abstract + impl), match suggestion model, and match feed V
 - Do NOT filter gender in Dart — filter in the Firestore query.
 - Do NOT import `cloud_firestore` in the ViewModel.
 - Do NOT write any UI code.
+- Do NOT write raw English strings — use `'key'.tr()`. Add all new keys to both `en.json` and `ar.json`.
+- Before adding any color, open `app_colors.dart` and `app_theme.dart` first to check if an equivalent already exists.

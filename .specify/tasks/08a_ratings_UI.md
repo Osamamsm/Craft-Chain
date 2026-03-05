@@ -55,3 +55,5 @@ The review form that appears after a barter is marked complete. Both users rate 
 - Do NOT hardcode colors or font sizes.
 - Do NOT allow submitting without both rating and comment.
 - Do NOT use `Navigator.push()`.
+- Do NOT write raw English strings in widgets — use `'key'.tr()` from `easy_localization`. Add all new keys to both `en.json` and `ar.json`.
+- Before adding any color, open `app_colors.dart` and `app_theme.dart` first to check if an equivalent already exists.

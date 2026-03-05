@@ -68,3 +68,5 @@ The dedicated chat screen for an active barter. This is where two users communic
 - Do NOT use `Navigator.push()`.
 - Do NOT implement video/audio calling — sessions happen outside the app.
 - Do NOT use `DateTime.now()` for timestamp display — format the server timestamp.
+- Do NOT write raw English strings in widgets — use `'key'.tr()` from `easy_localization`. Add all new keys to both `en.json` and `ar.json`.
+- Before adding any color, open `app_colors.dart` and `app_theme.dart` first to check if an equivalent already exists.

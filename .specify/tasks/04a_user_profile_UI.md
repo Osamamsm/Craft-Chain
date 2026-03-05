@@ -78,3 +78,5 @@ The screen that displays a user's full profile — their info, skills, reviews, 
 - Do NOT hardcode colors or font sizes.
 - Do NOT allow gender editing.
 - Do NOT use `Navigator.push()`.
+- Do NOT write raw English strings in widgets — use `'key'.tr()` from `easy_localization`. Add all new keys to both `en.json` and `ar.json`.
+- Before adding any color, open `app_colors.dart` and `app_theme.dart` first to check if an equivalent already exists.

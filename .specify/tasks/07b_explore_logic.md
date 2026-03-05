@@ -45,3 +45,5 @@ The explore repository (abstract + impl) and ViewModel for searching users by sk
 - Do NOT import `cloud_firestore` in the ViewModel.
 - Do NOT compute or display match scores.
 - Do NOT filter gender in Dart.
+- Do NOT write raw English strings — use `'key'.tr()`. Add all new keys to both `en.json` and `ar.json`.
+- Before adding any color, open `app_colors.dart` and `app_theme.dart` first to check if an equivalent already exists.

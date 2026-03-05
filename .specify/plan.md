@@ -5,7 +5,7 @@
 ```
 lib/
 ├── main.dart                          # Entry point, Firebase init, DI init, runApp
-├── app.dart                           # MaterialApp.router with theme & go_router
+├── app.dart                           # MaterialApp.router with theme, go_router & locale
 ├── core/
 │   ├── di/
 │   │   ├── injection.dart             # configureDependencies() + GetIt instance
@@ -25,6 +25,10 @@ lib/
 │       ├── skill_chip.dart            # Reusable skill chip (green for teach, blue for learn)
 │       ├── user_avatar.dart           # CircleAvatar with fallback
 │       └── empty_state.dart           # Empty state with icon + message
+├── assets/
+│   └── translations/
+│       ├── en.json                    # English strings
+│       └── ar.json                    # Arabic strings
 └── features/
     ├── auth/
     │   ├── models/
@@ -567,6 +571,59 @@ class AppTheme {
 
 ---
 
+## 10. Localization — easy_localization
+
+### Overview
+
+The app is fully bilingual: **English (`en`)** and **Arabic (`ar`)**. Arabic uses RTL layout which is handled automatically by `easy_localization` via the standard Flutter `localizationsDelegates`.
+
+### Translation Files
+
+| File                          | Language |
+| ----------------------------- | -------- |
+| `assets/translations/en.json` | English  |
+| `assets/translations/ar.json` | Arabic   |
+
+### Key Naming Convention
+
+Keys follow a `feature.snake_case_key` pattern:
+
+```
+auth.sign_in
+auth.validation_email_invalid
+profile.edit_profile
+match.no_matches_found
+```
+
+### Usage
+
+```dart
+import 'package:easy_localization/easy_localization.dart';
+
+// Simple key
+Text('auth.sign_in'.tr())
+
+// Key with named argument
+Text('auth.validation_field_required'.tr(namedArgs: {'field': 'Email'}))
+```
+
+### Adding New Keys
+
+1. Add the English string to `assets/translations/en.json`.
+2. Add the Arabic translation to `assets/translations/ar.json`.
+3. Use `'feature.key'.tr()` in the widget — never write a raw string.
+
+### RTL Support
+
+- RTL is automatic: when the locale is `ar`, Flutter mirrors the layout direction.
+- Do not manually set `TextDirection` or `Directionality` unless you have a specific non-text UI element that must not mirror.
+
+### Locale Persistence
+
+`easy_localization` persists the chosen locale to device shared preferences automatically. The user's last locale is restored on next app launch.
+
+---
+
 ## 11. Approved Package List
 
 | Package                     | Version | Purpose                                    |
@@ -592,6 +649,8 @@ class AppTheme {
 | skeletonizer                | ^1.4.x  | Skeleton loading placeholders (light/dark) |
 | intl                        | ^0.19.x | Date/time formatting                       |
 | flutter_local_notifications | ^17.x   | Local notification display                 |
+| easy_localization           | ^3.0.x  | Arabic & English localization (i18n/l10n)  |
+| flutter_localizations       | SDK dep | RTL support & standard l10n delegates      |
 
 > **Rule**: Any package not on this list requires explicit approval before adding.
 

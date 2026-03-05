@@ -67,3 +67,5 @@ The bottom sheet for sending a barter request and the screen for viewing incomin
 - Do NOT hardcode colors or font sizes.
 - Do NOT use `Navigator.push()`.
 - Do NOT allow selecting more than one skill per section.
+- Do NOT write raw English strings in widgets — use `'key'.tr()` from `easy_localization`. Add all new keys to both `en.json` and `ar.json`.
+- Before adding any color, open `app_colors.dart` and `app_theme.dart` first to check if an equivalent already exists.

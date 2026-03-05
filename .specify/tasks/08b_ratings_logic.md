@@ -42,3 +42,5 @@ Add to the existing abstract + impl:
 - Do NOT write any UI code.
 - Do NOT import `cloud_firestore` in the ViewModel.
 - Do NOT allow rating outside 1–5 or empty comments.
+- Do NOT write raw English strings — use `'key'.tr()`. Add all new keys to both `en.json` and `ar.json`.
+- Before adding any color, open `app_colors.dart` and `app_theme.dart` first to check if an equivalent already exists.

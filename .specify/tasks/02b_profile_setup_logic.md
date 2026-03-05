@@ -86,3 +86,5 @@ The profile repository (abstract + impl), profile setup ViewModel, photo upload,
 - Do NOT use `DateTime.now()`.
 - Do NOT import `cloud_firestore` or `firebase_storage` in the ViewModel.
 - Do NOT bypass validation.
+- Do NOT write raw English strings — use `'key'.tr()`. Add all new keys to both `en.json` and `ar.json`.
+- Before adding any color, open `app_colors.dart` and `app_theme.dart` first to check if an equivalent already exists.

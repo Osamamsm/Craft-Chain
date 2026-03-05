@@ -46,3 +46,5 @@ These methods should be added to the existing `ProfileRepository` and `ProfileRe
 - Do NOT write any UI code.
 - Do NOT allow gender to be updated.
 - Do NOT import `cloud_firestore` in the ViewModel.
+- Do NOT write raw English strings — use `'key'.tr()`. Add all new keys to both `en.json` and `ar.json`.
+- Before adding any color, open `app_colors.dart` and `app_theme.dart` first to check if an equivalent already exists.

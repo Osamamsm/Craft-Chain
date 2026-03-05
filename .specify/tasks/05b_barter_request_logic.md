@@ -54,3 +54,5 @@ The barter repository (abstract + impl), barter model, and barter request ViewMo
 - Do NOT write any UI code.
 - Do NOT import `cloud_firestore` in the ViewModel.
 - Do NOT send push notifications from the client.
+- Do NOT write raw English strings — use `'key'.tr()`. Add all new keys to both `en.json` and `ar.json`.
+- Before adding any color, open `app_colors.dart` and `app_theme.dart` first to check if an equivalent already exists.

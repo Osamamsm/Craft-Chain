@@ -83,3 +83,5 @@ The multi-step profile setup wizard that new users must complete before accessin
 - Do NOT upload the photo directly — call the ViewModel method.
 - Do NOT hardcode colors or font sizes.
 - Do NOT skip validation — every step must be gated.
+- Do NOT write raw English strings in widgets — use `'key'.tr()` from `easy_localization`. Add all new keys to both `en.json` and `ar.json`.
+- Before adding any color, open `app_colors.dart` and `app_theme.dart` first to check if an equivalent already exists.

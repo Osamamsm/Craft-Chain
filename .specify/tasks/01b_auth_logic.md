@@ -113,3 +113,5 @@ final authRepositoryProvider = Provider<AuthRepository>(
 - Do NOT use `DateTime.now()` for any Firestore timestamps.
 - Do NOT import `cloud_firestore` or `firebase_auth` in the ViewModel.
 - Do NOT store `matchEmbedding` in the `AppUser` model.
+- Do NOT write raw English strings in widgets or ViewModels — use `'key'.tr()`.
+- Before adding any color, open `app_colors.dart` and `app_theme.dart` first to check if an equivalent already exists.

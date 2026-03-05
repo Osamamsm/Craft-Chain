@@ -67,3 +67,5 @@ A service class (not a ViewModel) that handles all FCM operations. Initialized o
 - Do NOT write any UI code (except the local notification display).
 - Do NOT store tokens in local storage — always in Firestore.
 - Do NOT use `Navigator.push()` for navigation.
+- Do NOT write raw English strings — use `'key'.tr()`. Add all new keys to both `en.json` and `ar.json`.
+- Before adding any color, open `app_colors.dart` and `app_theme.dart` first to check if an equivalent already exists.
