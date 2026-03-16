@@ -3,8 +3,8 @@ import 'package:craft_chain/features/auth/views/forgot_password_screen.dart';
 import 'package:craft_chain/features/auth/views/sign_in_screen.dart';
 import 'package:craft_chain/features/auth/views/sign_up_screen.dart';
 import 'package:craft_chain/features/auth/views/welcome_screen.dart';
-import 'package:craft_chain/features/profile/viewmodels/profile_setup_cubit/profile_setup_cubit.dart';
-import 'package:craft_chain/features/profile/views/profile_setup_wizard.dart';
+import 'package:craft_chain/features/profile/wizard/viewmodels/profile_setup_cubit/profile_setup_cubit.dart';
+import 'package:craft_chain/features/profile/wizard/views/profile_setup_wizard.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 

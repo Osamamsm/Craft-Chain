@@ -1,17 +1,17 @@
-import 'package:craft_chain/features/profile/views/widgets/step5_bio.dart';
-import 'package:craft_chain/features/profile/views/widgets/step4_learn_skills.dart';
-import 'package:craft_chain/features/profile/views/widgets/step3_teach_skills.dart';
-import 'package:craft_chain/features/profile/views/widgets/step2_photo_city.dart';
-import 'package:craft_chain/features/profile/views/widgets/step1_name_gender.dart';
+import 'package:craft_chain/features/profile/wizard/views/widgets/step5_bio.dart';
+import 'package:craft_chain/features/profile/wizard/views/widgets/step4_learn_skills.dart';
+import 'package:craft_chain/features/profile/wizard/views/widgets/step3_teach_skills.dart';
+import 'package:craft_chain/features/profile/wizard/views/widgets/step2_photo_city.dart';
+import 'package:craft_chain/features/profile/wizard/views/widgets/step1_name_gender.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:craft_chain/core/theme/app_colors.dart';
-import 'package:craft_chain/features/profile/viewmodels/profile_setup_cubit/profile_setup_cubit.dart';
-import 'package:craft_chain/features/profile/viewmodels/profile_setup_cubit/profile_setup_state.dart';
-import 'package:craft_chain/features/profile/views/widgets/mobile_progress_bar.dart';
-import 'package:craft_chain/features/profile/views/widgets/wizard_web_sidebar.dart';
+import 'package:craft_chain/features/profile/wizard/viewmodels/profile_setup_cubit/profile_setup_cubit.dart';
+import 'package:craft_chain/features/profile/wizard/viewmodels/profile_setup_cubit/profile_setup_state.dart';
+import 'package:craft_chain/features/profile/wizard/views/widgets/mobile_progress_bar.dart';
+import 'package:craft_chain/features/profile/wizard/views/widgets/wizard_web_sidebar.dart';
 
 const double _kWebBreakpoint = 700.0;
 

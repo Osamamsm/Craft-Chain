@@ -2,7 +2,7 @@ import 'package:craft_chain/core/constants/app_skills.dart';
 import 'package:craft_chain/core/theme/app_colors.dart';
 import 'package:craft_chain/core/theme/app_text_styles.dart';
 import 'package:craft_chain/core/widgets/skill_chip.dart';
-import 'package:craft_chain/features/profile/views/widgets/wizard_form_widgets.dart';
+import 'package:craft_chain/features/profile/wizard/views/widgets/wizard_form_widgets.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 

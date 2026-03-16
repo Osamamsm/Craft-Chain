@@ -1,9 +1,9 @@
 import 'package:craft_chain/core/widgets/skill_chip.dart';
-import 'package:craft_chain/features/profile/viewmodels/profile_setup_cubit/profile_setup_cubit.dart';
-import 'package:craft_chain/features/profile/viewmodels/profile_setup_cubit/profile_setup_state.dart';
-import 'package:craft_chain/features/profile/views/widgets/skill_selector.dart';
-import 'package:craft_chain/features/profile/views/widgets/wizard_step_footer.dart';
-import 'package:craft_chain/features/profile/views/widgets/wizard_step_scaffold.dart';
+import 'package:craft_chain/features/profile/wizard/viewmodels/profile_setup_cubit/profile_setup_cubit.dart';
+import 'package:craft_chain/features/profile/wizard/viewmodels/profile_setup_cubit/profile_setup_state.dart';
+import 'package:craft_chain/features/profile/wizard/views/widgets/skill_selector.dart';
+import 'package:craft_chain/features/profile/wizard/views/widgets/wizard_step_footer.dart';
+import 'package:craft_chain/features/profile/wizard/views/widgets/wizard_step_scaffold.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
