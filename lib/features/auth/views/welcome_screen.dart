@@ -1,3 +1,4 @@
+import 'package:craft_chain/core/layout/responsive_layout.dart';
 import 'package:craft_chain/features/auth/views/sign_in_screen.dart';
 import 'package:craft_chain/features/auth/views/sign_up_screen.dart';
 import 'package:craft_chain/features/auth/views/widgets/craft_chain_branding_panel.dart';
@@ -15,11 +16,9 @@ class WelcomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        if (constraints.maxWidth >= 700) return const SignUpScreen();
-        return const _WelcomeMobile();
-      },
+    return ResponsiveLayout(
+      mobileLayout: const _WelcomeMobile(),
+      desktopLayout: const SignUpScreen(),
     );
   }
 }

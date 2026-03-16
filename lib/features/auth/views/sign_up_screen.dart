@@ -14,6 +14,7 @@ import 'package:craft_chain/features/auth/views/widgets/or_divider.dart';
 import 'package:craft_chain/features/auth/views/widgets/sign_up_info_box.dart';
 import 'package:craft_chain/features/auth/views/widgets/terms_checkbox.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:craft_chain/core/layout/responsive_layout.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -26,14 +27,13 @@ class SignUpScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (context, constraints) => constraints.maxWidth >= 700
-          ? AuthWebLayout(
-              title: 'auth.sign_up_title'.tr(),
-              subtitle: 'auth.sign_up_subtitle'.tr(),
-              formContent: const _SignUpForm(),
-            )
-          : const _SignUpMobileScaffold(),
+    return ResponsiveLayout(
+      mobileLayout: const _SignUpMobileScaffold(),
+      desktopLayout: AuthWebLayout(
+        title: 'auth.sign_up_title'.tr(),
+        subtitle: 'auth.sign_up_subtitle'.tr(),
+        formContent: const _SignUpForm(),
+      ),
     );
   }
 }

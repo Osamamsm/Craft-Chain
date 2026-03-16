@@ -7,6 +7,7 @@ import 'package:craft_chain/features/auth/views/widgets/auth_error_banner.dart';
 import 'package:craft_chain/features/auth/views/widgets/auth_submit_button.dart';
 import 'package:craft_chain/features/auth/views/widgets/auth_web_layout.dart';
 import 'package:craft_chain/features/auth/views/widgets/password_reset_success_view.dart';
+import 'package:craft_chain/core/layout/responsive_layout.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -20,14 +21,13 @@ class ForgotPasswordScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (context, constraints) => constraints.maxWidth >= 700
-          ? AuthWebLayout(
-              title: 'auth.reset_password_title'.tr(),
-              subtitle: 'auth.reset_password_subtitle'.tr(),
-              formContent: const _ForgotPasswordForm(),
-            )
-          : const _ForgotPasswordMobileScaffold(),
+    return ResponsiveLayout(
+      mobileLayout: const _ForgotPasswordMobileScaffold(),
+      desktopLayout: AuthWebLayout(
+        title: 'auth.reset_password_title'.tr(),
+        subtitle: 'auth.reset_password_subtitle'.tr(),
+        formContent: const _ForgotPasswordForm(),
+      ),
     );
   }
 }

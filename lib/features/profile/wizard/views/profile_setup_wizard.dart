@@ -13,7 +13,7 @@ import 'package:craft_chain/features/profile/wizard/viewmodels/profile_setup_cub
 import 'package:craft_chain/features/profile/wizard/views/widgets/mobile_progress_bar.dart';
 import 'package:craft_chain/features/profile/wizard/views/widgets/wizard_web_sidebar.dart';
 
-const double _kWebBreakpoint = 700.0;
+import 'package:craft_chain/core/layout/responsive_layout.dart';
 
 class ProfileSetupWizardScreen extends StatefulWidget {
   const ProfileSetupWizardScreen({super.key});
@@ -106,9 +106,9 @@ class _ProfileSetupWizardScreenState extends State<ProfileSetupWizardScreen> {
       builder: (context, state) {
         return Scaffold(
           backgroundColor: context.colors.background,
-          body: LayoutBuilder(
-            builder: (ctx, constraints) {
-              final isWeb = constraints.maxWidth >= _kWebBreakpoint;
+          body: Builder(
+            builder: (ctx) {
+              final isWeb = ResponsiveLayout.isDesktop(ctx);
               final pageView = _buildPageView(context, state, isWeb);
               if (isWeb) {
                 return Row(

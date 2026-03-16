@@ -14,6 +14,7 @@ import 'package:craft_chain/features/auth/views/widgets/google_button.dart';
 import 'package:craft_chain/features/auth/views/widgets/or_divider.dart';
 import 'package:craft_chain/features/profile/wizard/views/profile_setup_wizard.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:craft_chain/core/layout/responsive_layout.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -26,14 +27,13 @@ class SignInScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (context, constraints) => constraints.maxWidth >= 700
-          ? AuthWebLayout(
-              title: 'auth.welcome_back_title'.tr(),
-              subtitle: 'auth.welcome_back_subtitle'.tr(),
-              formContent: const _SignInForm(),
-            )
-          : const _SignInMobileScaffold(),
+    return ResponsiveLayout(
+      mobileLayout: const _SignInMobileScaffold(),
+      desktopLayout: AuthWebLayout(
+        title: 'auth.welcome_back_title'.tr(),
+        subtitle: 'auth.welcome_back_subtitle'.tr(),
+        formContent: const _SignInForm(),
+      ),
     );
   }
 }
