@@ -14,7 +14,7 @@ class CraftChainApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: AppTheme.light(),
       darkTheme: AppTheme.dark(),
-      themeMode: ThemeMode.light,
+      themeMode: ThemeMode.dark,
       routerConfig: appRouter,
       locale: context.locale,
       supportedLocales: context.supportedLocales,
