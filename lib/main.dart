@@ -14,7 +14,7 @@ void main() async {
       supportedLocales: const [Locale('en'), Locale('ar')],
       path: 'assets/translations',
       fallbackLocale: const Locale('en'),
-      startLocale: const Locale('ar'),
+      startLocale: const Locale('en'),
       child: MultiBlocProvider(
         providers: [BlocProvider(create: (_) => getIt<AuthCubit>())],
         child: const CraftChainApp(),
