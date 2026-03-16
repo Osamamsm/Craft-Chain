@@ -55,7 +55,23 @@
     "validation_terms_required": "You must agree to the Terms & Privacy Policy to continue",
     "validation_field_required": "{field} is required"
   },
+  "nav": {
+    "home": "Home",
+    "explore": "Explore",
+    "barters": "Barters",
+    "profile": "Profile"
+  },
+  "home": {
+    "your_matches": "Your Matches"
+  },
+  "explore": {
+    "title": "Explore"
+  },
+  "barter": {
+    "my_barters": "My Barters"
+  },
   "profile": {
+    "title": "Profile",
     "step_of": "Step {current} of {total}",
     "step_1_title": "Who are you? 👋",
     "step_1_subtitle": "Tell us a little about yourself to get started.",

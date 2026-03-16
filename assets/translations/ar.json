@@ -55,7 +55,23 @@
     "validation_terms_required": "يجب الموافقة على الشروط وسياسة الخصوصية للمتابعة",
     "validation_field_required": "{field} مطلوب"
   },
+  "nav": {
+    "home": "الرئيسية",
+    "explore": "استكشاف",
+    "barters": "مقايضاتي",
+    "profile": "ملفي"
+  },
+  "home": {
+    "your_matches": "تطابقاتك"
+  },
+  "explore": {
+    "title": "استكشاف"
+  },
+  "barter": {
+    "my_barters": "مقايضاتي"
+  },
   "profile": {
+    "title": "الملف الشخصي",
     "step_of": "خطوة {current} من {total}",
     "step_1_title": "من أنت؟ 👋",
     "step_1_subtitle": "أخبرنا قليلاً عن نفسك للبدء.",

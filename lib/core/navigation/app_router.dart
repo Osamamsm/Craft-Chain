@@ -3,6 +3,11 @@ import 'package:craft_chain/features/auth/views/forgot_password_screen.dart';
 import 'package:craft_chain/features/auth/views/sign_in_screen.dart';
 import 'package:craft_chain/features/auth/views/sign_up_screen.dart';
 import 'package:craft_chain/features/auth/views/welcome_screen.dart';
+import 'package:craft_chain/features/barter/views/barter_requests_screen.dart';
+import 'package:craft_chain/features/explore/views/explore_screen.dart';
+import 'package:craft_chain/features/home/main_shell.dart';
+import 'package:craft_chain/features/matching/views/match_feed_screen.dart';
+import 'package:craft_chain/features/profile/views/profile_screen.dart';
 import 'package:craft_chain/features/profile/wizard/viewmodels/profile_setup_cubit/profile_setup_cubit.dart';
 import 'package:craft_chain/features/profile/wizard/views/profile_setup_wizard.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -41,6 +46,49 @@ final appRouter = GoRouter(
         create: (context) => getIt<ProfileSetupCubit>(),
         child: const ProfileSetupWizardScreen(),
       ),
+    ),
+    StatefulShellRoute.indexedStack(
+      builder: (context, state, navigationShell) {
+        return MainShell(navigationShell: navigationShell);
+      },
+      branches: [
+        StatefulShellBranch(
+          routes: [
+            GoRoute(
+              path: MatchFeedScreen.routePath,
+              name: 'home',
+              builder: (context, state) => const MatchFeedScreen(),
+            ),
+          ],
+        ),
+        StatefulShellBranch(
+          routes: [
+            GoRoute(
+              path: ExploreScreen.routePath,
+              name: 'explore',
+              builder: (context, state) => const ExploreScreen(),
+            ),
+          ],
+        ),
+        StatefulShellBranch(
+          routes: [
+            GoRoute(
+              path: BarterRequestsScreen.routePath,
+              name: 'barters',
+              builder: (context, state) => const BarterRequestsScreen(),
+            ),
+          ],
+        ),
+        StatefulShellBranch(
+          routes: [
+            GoRoute(
+              path: ProfileScreen.routePath,
+              name: 'profile',
+              builder: (context, state) => const ProfileScreen(),
+            ),
+          ],
+        ),
+      ],
     ),
   ],
 );
