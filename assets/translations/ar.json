@@ -70,6 +70,29 @@
   "barter": {
     "my_barters": "مقايضاتي"
   },
+  "match": {
+    "filter_all": "الكل",
+    "filter_tech": "تقنية",
+    "filter_design": "تصميم",
+    "filter_languages": "لغات",
+    "filter_crafts": "حرف",
+    "filter_business": "أعمال",
+    "teaches": "يعلّم",
+    "wants_to_learn": "يريد تعلّم",
+    "top_badge": "TOP",
+    "match_percent": "{score}%",
+    "match_label": "تطابق",
+    "rating_sessions": "{rating} · {count} جلسة",
+    "view_profile": "عرض الملف ←",
+    "new_today": "{count} اقتراح اليوم",
+    "discover_people": "اكتشف أشخاصاً للمقايضة معهم",
+    "no_matches_title": "لا توجد تطابقات بعد",
+    "no_matches_subtitle": "حدّث مهاراتك للعثور على تطابقات رائعة!",
+    "load_more": "تحميل المزيد",
+    "all_caught_up": "لقد رأيت جميع تطابقاتك",
+    "retry": "إعادة المحاولة",
+    "error_generic": "حدث خطأ ما. يرجى المحاولة مجدداً."
+  },
   "profile": {
     "title": "الملف الشخصي",
     "step_of": "خطوة {current} من {total}",

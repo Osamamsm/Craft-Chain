@@ -70,6 +70,29 @@
   "barter": {
     "my_barters": "My Barters"
   },
+  "match": {
+    "filter_all": "All",
+    "filter_tech": "Tech",
+    "filter_design": "Design",
+    "filter_languages": "Languages",
+    "filter_crafts": "Crafts",
+    "filter_business": "Business",
+    "teaches": "Teaches",
+    "wants_to_learn": "Wants to Learn",
+    "top_badge": "TOP",
+    "match_percent": "{score}%",
+    "match_label": "match",
+    "rating_sessions": "{rating} · {count} sessions",
+    "view_profile": "View Profile →",
+    "new_today": "{count} suggestions today",
+    "discover_people": "Discover people to barter with",
+    "no_matches_title": "No matches yet",
+    "no_matches_subtitle": "Update your skills to start finding great matches!",
+    "load_more": "Load More",
+    "all_caught_up": "You've seen all your matches",
+    "retry": "Retry",
+    "error_generic": "Something went wrong. Please try again."
+  },
   "profile": {
     "title": "Profile",
     "step_of": "Step {current} of {total}",
