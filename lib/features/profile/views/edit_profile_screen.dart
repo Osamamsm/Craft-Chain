@@ -1,3 +1,4 @@
+import 'package:craft_chain/core/constants/app_skills.dart';
 import 'package:craft_chain/core/theme/app_colors.dart';
 import 'package:craft_chain/core/theme/app_text_styles.dart';
 import 'package:craft_chain/core/widgets/skill_chip.dart';
@@ -23,82 +24,29 @@ class EditProfileScreen extends StatefulWidget {
 }
 
 class _EditProfileScreenState extends State<EditProfileScreen> {
-  late final TextEditingController _nameCtrl;
-  late final TextEditingController _cityCtrl;
-  late final TextEditingController _bioCtrl;
+  late final String _name, _city, _bio;
   late Set<String> _canTeach;
   late Set<String> _wantsToLearn;
 
-  static const _kAllSkills = [
-    'Flutter',
-    'Dart',
-    'Firebase',
-    'React',
-    'TypeScript',
-    'Node.js',
-    'Python',
-    'ML / AI',
-    'Data Science',
-    'Swift',
-    'Kotlin',
-    'Figma',
-    'Illustrator',
-    'Photoshop',
-    'Branding',
-    'Motion Design',
-    'Calligraphy',
-    'Photography',
-    'Video Editing',
-    'Music',
-    'Drawing',
-    'Animation',
-    'Painting',
-    'Podcasting',
-    'English',
-    'Arabic',
-    'French',
-    'Spanish',
-    'Chinese',
-    'German',
-    'Marketing',
-    'SEO',
-    'Copywriting',
-    'Project Management',
-    'Entrepreneurship',
-    'Finance',
-    'Public Speaking',
-    'Sales',
-    'Riverpod',
-    'UI Design',
-    'UI/UX',
-    'After Effects',
-  ];
+  final List<String> allSkills = AppSkills.flat;
 
   @override
   void initState() {
     super.initState();
-    _nameCtrl = TextEditingController(text: widget.user.name);
-    _cityCtrl = TextEditingController(text: widget.user.city);
-    _bioCtrl = TextEditingController(text: widget.user.bio);
+    _name = widget.user.name;
+    _city = widget.user.city;
+    _bio = widget.user.bio;
     _canTeach = Set<String>.from(widget.user.canTeach);
     _wantsToLearn = Set<String>.from(widget.user.wantsToLearn);
   }
 
-  @override
-  void dispose() {
-    _nameCtrl.dispose();
-    _cityCtrl.dispose();
-    _bioCtrl.dispose();
-    super.dispose();
-  }
-
   Future<void> _onSave(BuildContext context) async {
-    if (_nameCtrl.text.trim().isEmpty || _cityCtrl.text.trim().isEmpty) return;
+    if (_name.trim().isEmpty || _city.trim().isEmpty) return;
 
     await context.read<ProfileCubit>().saveProfile(
-      name: _nameCtrl.text.trim(),
-      city: _cityCtrl.text.trim(),
-      bio: _bioCtrl.text.trim(),
+      name: _name,
+      city: _city,
+      bio: _bio,
       canTeach: _canTeach.toList(),
       wantsToLearn: _wantsToLearn.toList(),
     );
@@ -177,15 +125,21 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 const SizedBox(height: 20),
 
                 LabeledTextField(
+                  initialValue: _name,
                   label: 'profile.full_name_label'.tr(),
-                  controller: _nameCtrl,
+                  onSaved: (value) {
+                    _name = value!;
+                  },
                   hintText: 'profile.full_name_hint'.tr(),
                 ),
                 const SizedBox(height: 20),
 
                 LabeledTextField(
+                  initialValue: _city,
                   label: 'profile.city_label'.tr(),
-                  controller: _cityCtrl,
+                  onSaved: (value) {
+                    _city = value!;
+                  },
                   hintText: 'profile.city_hint'.tr(),
                   prefixIcon: Icon(Icons.location_on_outlined),
                 ),
@@ -200,7 +154,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 const SizedBox(height: 10),
 
                 SkillSelector(
-                  allSkills: _kAllSkills,
+                  allSkills: allSkills,
                   selected: _canTeach,
                   type: SkillChipType.teach,
                   onToggle: (skill) => setState(() {
@@ -219,7 +173,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 ),
                 const SizedBox(height: 10),
                 SkillSelector(
-                  allSkills: _kAllSkills,
+                  allSkills: allSkills,
                   selected: _wantsToLearn,
                   type: SkillChipType.learn,
                   onToggle: (skill) => setState(() {
@@ -231,8 +185,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 const SizedBox(height: 20),
 
                 LabeledTextField(
+                  initialValue: _bio,
                   label: 'profile.bio_label'.tr(),
-                  controller: _bioCtrl,
+                  onSaved: (value) {
+                    _bio = value!;
+                  },
                   hintText: 'profile.bio_hint'.tr(),
                   minLines: 4,
                   maxLines: 8,

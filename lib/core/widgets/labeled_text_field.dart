@@ -18,7 +18,6 @@ class LabeledTextField extends StatelessWidget {
   const LabeledTextField({
     super.key,
     required this.label,
-    required this.controller,
     required this.hintText,
     this.prefixIcon,
     this.minLines,
@@ -26,10 +25,12 @@ class LabeledTextField extends StatelessWidget {
     this.maxLength,
     this.keyboardType,
     this.textCapitalization = TextCapitalization.sentences,
+    required this.onSaved, required this.initialValue,
   });
 
   final String label;
-  final TextEditingController controller;
+  final String initialValue;
+  final void Function(String?) onSaved;
   final String hintText;
   final Widget? prefixIcon;
   final int? minLines;
@@ -41,7 +42,8 @@ class LabeledTextField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start, // fixes centering on wide screens
+      crossAxisAlignment:
+          CrossAxisAlignment.start, // fixes centering on wide screens
       children: [
         Text(
           label.toUpperCase(),
@@ -50,8 +52,9 @@ class LabeledTextField extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 6),
-        TextField(
-          controller: controller,
+        TextFormField(
+          initialValue: initialValue,
+          onSaved: onSaved,
           keyboardType: keyboardType,
           textCapitalization: textCapitalization,
           minLines: minLines,
