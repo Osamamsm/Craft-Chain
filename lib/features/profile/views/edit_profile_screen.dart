@@ -24,9 +24,11 @@ class EditProfileScreen extends StatefulWidget {
 }
 
 class _EditProfileScreenState extends State<EditProfileScreen> {
-  late final String _name, _city, _bio;
+  late String _name, _city, _bio;
   late Set<String> _canTeach;
   late Set<String> _wantsToLearn;
+
+  final _formKey = GlobalKey<FormState>();
 
   final List<String> allSkills = AppSkills.flat;
 
@@ -42,6 +44,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   Future<void> _onSave(BuildContext context) async {
     if (_name.trim().isEmpty || _city.trim().isEmpty) return;
+
+    _formKey.currentState!.save();
 
     await context.read<ProfileCubit>().saveProfile(
       name: _name,
@@ -115,88 +119,91 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         child: Center(
           child: ConstrainedBox(
             constraints: const BoxConstraints(maxWidth: 640),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _AvatarSection(user: widget.user),
-                const SizedBox(height: 28),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _AvatarSection(user: widget.user),
+                  const SizedBox(height: 28),
 
-                _GenderDisplay(gender: widget.user.gender),
-                const SizedBox(height: 20),
+                  _GenderDisplay(gender: widget.user.gender),
+                  const SizedBox(height: 20),
 
-                LabeledTextField(
-                  initialValue: _name,
-                  label: 'profile.full_name_label'.tr(),
-                  onSaved: (value) {
-                    _name = value!;
-                  },
-                  hintText: 'profile.full_name_hint'.tr(),
-                ),
-                const SizedBox(height: 20),
-
-                LabeledTextField(
-                  initialValue: _city,
-                  label: 'profile.city_label'.tr(),
-                  onSaved: (value) {
-                    _city = value!;
-                  },
-                  hintText: 'profile.city_hint'.tr(),
-                  prefixIcon: Icon(Icons.location_on_outlined),
-                ),
-                const SizedBox(height: 20),
-
-                Text(
-                  'profile.edit_teaches_label'.tr(),
-                  style: AppTextStyles.labelUppercase.copyWith(
-                    color: context.colors.secondaryText,
+                  LabeledTextField(
+                    initialValue: _name,
+                    label: 'profile.full_name_label'.tr(),
+                    onSaved: (value) {
+                      _name = value!;
+                    },
+                    hintText: 'profile.full_name_hint'.tr(),
                   ),
-                ),
-                const SizedBox(height: 10),
+                  const SizedBox(height: 20),
 
-                SkillSelector(
-                  allSkills: allSkills,
-                  selected: _canTeach,
-                  type: SkillChipType.teach,
-                  onToggle: (skill) => setState(() {
-                    _canTeach.contains(skill)
-                        ? _canTeach.remove(skill)
-                        : _canTeach.add(skill);
-                  }),
-                ),
-                const SizedBox(height: 20),
-
-                Text(
-                  'profile.edit_learn_label'.tr(),
-                  style: AppTextStyles.labelUppercase.copyWith(
-                    color: context.colors.secondaryText,
+                  LabeledTextField(
+                    initialValue: _city,
+                    label: 'profile.city_label'.tr(),
+                    onSaved: (value) {
+                      _city = value!;
+                    },
+                    hintText: 'profile.city_hint'.tr(),
+                    prefixIcon: Icon(Icons.location_on_outlined),
                   ),
-                ),
-                const SizedBox(height: 10),
-                SkillSelector(
-                  allSkills: allSkills,
-                  selected: _wantsToLearn,
-                  type: SkillChipType.learn,
-                  onToggle: (skill) => setState(() {
-                    _wantsToLearn.contains(skill)
-                        ? _wantsToLearn.remove(skill)
-                        : _wantsToLearn.add(skill);
-                  }),
-                ),
-                const SizedBox(height: 20),
+                  const SizedBox(height: 20),
 
-                LabeledTextField(
-                  initialValue: _bio,
-                  label: 'profile.bio_label'.tr(),
-                  onSaved: (value) {
-                    _bio = value!;
-                  },
-                  hintText: 'profile.bio_hint'.tr(),
-                  minLines: 4,
-                  maxLines: 8,
-                  maxLength: 800,
-                ),
-                const SizedBox(height: 32),
-              ],
+                  Text(
+                    'profile.edit_teaches_label'.tr(),
+                    style: AppTextStyles.labelUppercase.copyWith(
+                      color: context.colors.secondaryText,
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+
+                  SkillSelector(
+                    allSkills: allSkills,
+                    selected: _canTeach,
+                    type: SkillChipType.teach,
+                    onToggle: (skill) => setState(() {
+                      _canTeach.contains(skill)
+                          ? _canTeach.remove(skill)
+                          : _canTeach.add(skill);
+                    }),
+                  ),
+                  const SizedBox(height: 20),
+
+                  Text(
+                    'profile.edit_learn_label'.tr(),
+                    style: AppTextStyles.labelUppercase.copyWith(
+                      color: context.colors.secondaryText,
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  SkillSelector(
+                    allSkills: allSkills,
+                    selected: _wantsToLearn,
+                    type: SkillChipType.learn,
+                    onToggle: (skill) => setState(() {
+                      _wantsToLearn.contains(skill)
+                          ? _wantsToLearn.remove(skill)
+                          : _wantsToLearn.add(skill);
+                    }),
+                  ),
+                  const SizedBox(height: 20),
+
+                  LabeledTextField(
+                    initialValue: _bio,
+                    label: 'profile.bio_label'.tr(),
+                    onSaved: (value) {
+                      _bio = value!;
+                    },
+                    hintText: 'profile.bio_hint'.tr(),
+                    minLines: 4,
+                    maxLines: 8,
+                    maxLength: 800,
+                  ),
+                  const SizedBox(height: 32),
+                ],
+              ),
             ),
           ),
         ),
