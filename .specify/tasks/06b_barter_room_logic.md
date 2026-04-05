@@ -23,7 +23,7 @@ Add these to the existing abstract + impl:
 
 - `Future<Barter> getBarter(String barterId)`
 - `Stream<List<Message>> messagesStream(String barterId)` — ordered by `createdAt` ascending.
-- `Future<void> sendMessage(String barterId, String senderId, String text)` — creates message doc with `serverTimestamp()`.
+- `Future<void> sendMessage(String barterId, String senderId, String text)` — creates message doc with `serverTimestamp()`. **Also updates** the parent barter doc's `lastMessageText` and `lastMessageTime` fields (denormalized for chat list sorting). **Also removes** both user IDs from `hiddenBy` (via `arrayRemove`) so the conversation resurfaces if either user had previously hidden it.
 - `Future<void> markAsCompleted(String barterId)` — sets status to `'completed'`, `completedAt`.
 - `Future<void> updateSchedule(String barterId, DateTime time, String platform)`
 - `Future<void> incrementBarterCount(String userId)`
@@ -41,7 +41,8 @@ Add these to the existing abstract + impl:
 ## Acceptance Criteria
 
 - [ ] Messages stream in real time via repository.
-- [ ] `sendMessage()` creates doc with `serverTimestamp()`.
+- [ ] `sendMessage()` creates doc with `serverTimestamp()` and updates `lastMessageText`/`lastMessageTime` on the barter doc.
+- [ ] `sendMessage()` auto-unhides the barter for both users.
 - [ ] `markAsCompleted()` sets status and increments both users' barter counts.
 - [ ] Only repository impl files import Firebase packages.
 

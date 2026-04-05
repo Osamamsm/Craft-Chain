@@ -2,7 +2,7 @@
 
 ## What This Task Builds
 
-The barter repository (abstract + impl), barter model, and barter request ViewModel for creating, accepting, and declining requests.
+The barter repository (abstract + impl), barter model, and barter request ViewModel for creating, accepting, declining requests, **and managing the user's conversation list** (active/completed barters with soft-delete).
 
 ## Files to Create
 
@@ -17,17 +17,23 @@ The barter repository (abstract + impl), barter model, and barter request ViewMo
 
 ### `barter.dart` (Model)
 
-- `freezed` immutable data class: `barterId`, `user1Id`, `user2Id`, `user1Teaches`, `user2Teaches`, `status`, `scheduledAt`, `scheduledPlatform`, `createdAt`, `completedAt`.
+- `freezed` immutable data class: `barterId`, `user1Id`, `user2Id`, `user1Teaches`, `user2Teaches`, `status`, `scheduledAt`, `scheduledPlatform`, `createdAt`, `completedAt`, `hiddenBy`, `lastMessageText`, `lastMessageTime`.
+- `hiddenBy` is a `List<String>` of user IDs who have soft-deleted this chat from their view. Defaults to `[]`.
+- `lastMessageText` (`String?`) and `lastMessageTime` (`DateTime?`) are denormalized fields updated every time a new message is sent, to allow efficient sorting without a sub-collection query per barter.
 
 ### `barter_repository.dart` (Abstract)
 
 - Methods:
-  - `Future<void> createBarterRequest(...)` — creates barter doc with `status: 'pending'`.
+  - `Future<void> createBarterRequest(...)` — creates barter doc with `status: 'pending'`, `hiddenBy: []`.
   - `Future<void> acceptRequest(String barterId)` — sets status to `'active'`.
   - `Future<void> declineRequest(String barterId)` — sets status to `'cancelled'`.
   - `Future<List<Barter>> getReceivedRequests(String userId)` — pending requests where user is `user2Id`.
   - `Future<List<Barter>> getSentRequests(String userId)` — pending requests where user is `user1Id`.
   - `Future<bool> hasDuplicateRequest(String user1Id, String user2Id, String skill1, String skill2)`.
+  - `Stream<List<Barter>> barterConversationsStream(String userId)` — real-time stream of barters where the user is `user1Id` or `user2Id`, status is `'active'` or `'completed'`, and `hiddenBy` does NOT contain the user's ID. Ordered by `lastMessageTime` descending.
+  - `Future<void> hideBarter(String barterId, String userId)` — adds `userId` to the `hiddenBy` array (Firestore `arrayUnion`). This is a soft-delete — the barter and messages remain intact.
+  - `Future<void> unhideBarter(String barterId, String userId)` — removes `userId` from the `hiddenBy` array (Firestore `arrayRemove`). Used for the "Undo" snackbar action.
+  - `Future<int> getUnreadCount(String barterId, String userId)` — counts messages in the subcollection where `senderId != userId` and `isRead == false`.
 
 ### `barter_repository_impl.dart` (Firebase Implementation)
 
@@ -40,6 +46,8 @@ The barter repository (abstract + impl), barter model, and barter request ViewMo
 - Gets `BarterRepository` via `ref.read(barterRepositoryProvider)`.
 - `sendRequest` validates: no self-barter, no duplicates (via repo), then calls `repository.createBarterRequest`.
 - `acceptRequest` / `declineRequest` call the repository.
+- Exposes `barterConversationsStream(userId)` for the Chats tab.
+- `hideBarter(barterId)` / `unhideBarter(barterId)` — delegate to repository for soft-delete and undo.
 - Never imports `cloud_firestore`.
 
 ## Acceptance Criteria
@@ -48,6 +56,9 @@ The barter repository (abstract + impl), barter model, and barter request ViewMo
 - [ ] Only `barter_repository_impl.dart` imports Firebase packages.
 - [ ] Self-barter and duplicate requests are rejected.
 - [ ] All timestamps use `FieldValue.serverTimestamp()`.
+- [ ] `barterConversationsStream` returns real-time list filtered by status and `hiddenBy`.
+- [ ] `hideBarter` / `unhideBarter` correctly add/remove userId from the `hiddenBy` array.
+- [ ] `getUnreadCount` returns correct count of unread messages from the other user.
 
 ## What NOT to Do
 

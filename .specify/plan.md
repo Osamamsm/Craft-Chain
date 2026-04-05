@@ -95,6 +95,7 @@ lib/
     │       ├── barter_room_screen.dart
     │       └── widgets/
     │           ├── barter_request_sheet.dart
+    │           ├── barter_chat_tile.dart
     │           └── message_bubble.dart
     └── explore/
         ├── models/
@@ -480,6 +481,9 @@ function cosineSimilarity(vecA, vecB) {
 | user1Teaches      | string            | Skill user1 is teaching                                  |
 | user2Teaches      | string            | Skill user2 is teaching                                  |
 | status            | string            | `'pending'` / `'active'` / `'completed'` / `'cancelled'` |
+| hiddenBy          | string[]          | User IDs who soft-deleted this from their chat list       |
+| lastMessageText   | string \| null    | Denormalized last message preview for chat list sorting   |
+| lastMessageTime   | Timestamp \| null | Denormalized last message time for chat list sorting      |
 | scheduledAt       | Timestamp \| null | Agreed session time                                      |
 | scheduledPlatform | string \| null    | e.g., `'Zoom'`, `'Google Meet'`                          |
 | createdAt         | Timestamp         | `serverTimestamp()`                                      |

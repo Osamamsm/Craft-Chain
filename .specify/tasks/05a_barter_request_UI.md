@@ -2,7 +2,7 @@
 
 ## What This Task Builds
 
-The bottom sheet for sending a barter request and the screen for viewing incoming/outgoing pending requests.
+The bottom sheet for sending a barter request and the main Barters screen — which serves as the hub for **active/past conversations**, **received requests**, and **sent requests**.
 
 > **Figma**: Before starting, the user will provide the Figma URL for these screens. Match the design exactly.
 
@@ -11,6 +11,7 @@ The bottom sheet for sending a barter request and the screen for viewing incomin
 | File                          | Location                             |
 | ----------------------------- | ------------------------------------ |
 | `barter_request_sheet.dart`   | `lib/features/barter/views/widgets/` |
+| `barter_chat_tile.dart`       | `lib/features/barter/views/widgets/` |
 | `barter_requests_screen.dart` | `lib/features/barter/views/`         |
 
 ## UI Details
@@ -31,15 +32,36 @@ The bottom sheet for sending a barter request and the screen for viewing incomin
 
 ### Barter Requests Screen
 
-- Accessible from the bottom nav (Requests tab).
-- **Two tabs** at the top: "Received" and "Sent".
-- **Received tab**: List of incoming pending requests.
+- Accessible from the bottom nav (Barters tab).
+- **Three tabs** at the top: **"Chats"** (default), **"Received"**, and **"Sent"**.
+
+#### Chats Tab (default — index 0)
+
+- Shows all barter conversations the current user is part of where `status` is `'active'` or `'completed'`.
+- Sorted by most-recent message timestamp (newest first).
+- Each item is a `BarterChatTile` widget displaying:
+  - Other user's `UserAvatar` (48px).
+  - Other user's name (bold) and the exchange summary: "Flutter ↔ Calligraphy".
+  - Last message preview text (single line, truncated) and its relative timestamp (e.g. "2m", "1h", "Yesterday").
+  - A small status badge: green dot for `'active'`, gray checkmark for `'completed'`.
+  - Unread message count badge (if > 0) on the trailing side.
+- Tapping a tile navigates to the Barter Room screen (`/barter-room/:barterId`).
+- **Swipe to delete** (using `Dismissible`): swiping a tile reveals a red delete background. On confirm, the chat is hidden from the user's list (soft-delete via a `hiddenBy` array field on the barter doc — does NOT delete the barter or messages). A snackbar with "Undo" appears.
+- **Empty state**: "No conversations yet — accept a barter request to start chatting!" with the `EmptyState` widget.
+
+#### Received Tab
+
+- List of incoming pending requests (`status == 'pending'`, current user is `user2Id`).
   - Each card shows: requester's avatar, name, "wants to teach you {skill}" and "wants to learn {skill}".
   - Two buttons: "Accept" (filled, green) and "Decline" (outlined, red).
-- **Sent tab**: List of outgoing pending requests.
+- **Empty state**: "No pending requests" with the `EmptyState` widget.
+
+#### Sent Tab
+
+- List of outgoing pending requests (`status == 'pending'`, current user is `user1Id`).
   - Each card shows: recipient's avatar, name, the skills being exchanged, and status ("Pending").
   - No action buttons — just informational.
-- **Empty state**: "No pending requests" with the `EmptyState` widget.
+- **Empty state**: "No sent requests" with the `EmptyState` widget.
 
 ## Existing Widgets to Reuse
 
@@ -54,9 +76,13 @@ The bottom sheet for sending a barter request and the screen for viewing incomin
 - [ ] Submit is disabled until both skills are selected.
 - [ ] Loading state shows during submission.
 - [ ] Success closes sheet and shows snackbar.
-- [ ] Requests screen shows received and sent tabs.
+- [ ] Requests screen shows three tabs: Chats (default), Received, Sent.
+- [ ] Chats tab lists active and completed barter conversations sorted by last message.
+- [ ] Each chat tile shows avatar, name, exchange skills, last message preview, timestamp, and unread badge.
+- [ ] Tapping a chat tile navigates to the Barter Room screen.
+- [ ] Swipe-to-delete hides a chat from the user's list with undo support.
 - [ ] Accept/Decline buttons are visible on received requests.
-- [ ] Empty states show when no requests exist.
+- [ ] Empty states show for each tab when no items exist.
 - [ ] All colors and text styles from theme constants.
 - [ ] Responsive on mobile and web.
 - [ ] Looks correct in both light and dark themes.
