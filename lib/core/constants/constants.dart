@@ -23,6 +23,9 @@ class Constants {
       labelKey: 'nav.profile',
     ),
   ];
+
+static String kFakeCurrentUserId = 'u1';
+
 }
 
 class NavItem {
