@@ -4,7 +4,9 @@ import 'package:craft_chain/features/auth/views/forgot_password_screen.dart';
 import 'package:craft_chain/features/auth/views/sign_in_screen.dart';
 import 'package:craft_chain/features/auth/views/sign_up_screen.dart';
 import 'package:craft_chain/features/auth/views/welcome_screen.dart';
+import 'package:craft_chain/features/barter/models/barter.dart';
 import 'package:craft_chain/features/barter/views/barter_requests_view.dart';
+import 'package:craft_chain/features/barter/views/barter_room_screen.dart';
 import 'package:craft_chain/features/explore/views/explore_screen.dart';
 import 'package:craft_chain/features/home/main_shell.dart';
 import 'package:craft_chain/features/matching/views/match_feed_screen.dart';
@@ -120,6 +122,14 @@ final appRouter = GoRouter(
           ],
         ),
       ],
+    ),
+    GoRoute(
+      path: '/barter-room/:barterId',
+      name: BarterRoomScreen.routeName,
+      builder: (context, state) {
+        final barter = state.extra! as BarterModel;
+        return BarterRoomScreen(barter: barter);
+      },
     ),
   ],
 );

@@ -1,8 +1,11 @@
 import 'package:craft_chain/core/theme/app_colors.dart';
 import 'package:craft_chain/core/theme/app_text_styles.dart';
+import 'package:craft_chain/features/barter/models/barter.dart';
 import 'package:craft_chain/features/barter/viewmodels/barter_request_cubit/barter_request_cubit.dart';
 import 'package:craft_chain/features/barter/viewmodels/barter_request_cubit/barter_request_state.dart';
-import 'package:craft_chain/features/barter/views/widgets/chats_tab.dart';
+import 'package:craft_chain/features/barter/views/barter_room_screen.dart';
+import 'package:craft_chain/features/barter/views/widgets/chats_skeleton_list.dart';
+import 'package:craft_chain/features/barter/views/widgets/dismissible_chat_tile.dart';
 import 'package:craft_chain/features/barter/views/widgets/received_tab.dart';
 import 'package:craft_chain/features/barter/views/widgets/sent_tab.dart';
 import 'package:craft_chain/features/barter/views/widgets/tab_with_badge.dart';
@@ -20,6 +23,9 @@ class DesktopBarterViewBody extends StatefulWidget {
 class _DesktopBarterViewBodyState extends State<DesktopBarterViewBody>
     with SingleTickerProviderStateMixin {
   late final TabController _tabController;
+
+  /// The currently selected barter (shown in the right panel).
+  BarterModel? _selectedBarter;
 
   @override
   void initState() {
@@ -46,6 +52,14 @@ class _DesktopBarterViewBodyState extends State<DesktopBarterViewBody>
     }
   }
 
+  void _openRoom(BarterModel barter) {
+    setState(() => _selectedBarter = barter);
+  }
+
+  void _closeRoom() {
+    setState(() => _selectedBarter = null);
+  }
+
   @override
   void dispose() {
     _tabController.removeListener(_onTabChanged);
@@ -61,6 +75,7 @@ class _DesktopBarterViewBodyState extends State<DesktopBarterViewBody>
       backgroundColor: colors.background,
       body: Row(
         children: [
+          // ── Left panel: conversation list ──────────────────────────────
           ConstrainedBox(
             constraints: const BoxConstraints(maxWidth: 420),
             child: Container(
@@ -85,8 +100,9 @@ class _DesktopBarterViewBodyState extends State<DesktopBarterViewBody>
                       controller: _tabController,
                       labelColor: colors.primary,
                       unselectedLabelColor: colors.secondaryText,
-                      labelStyle: AppTextStyles.bodyMedium
-                          .copyWith(fontWeight: FontWeight.w600),
+                      labelStyle: AppTextStyles.bodyMedium.copyWith(
+                        fontWeight: FontWeight.w600,
+                      ),
                       unselectedLabelStyle: AppTextStyles.bodyMedium,
                       indicatorColor: colors.primary,
                       indicatorWeight: 2.5,
@@ -111,14 +127,17 @@ class _DesktopBarterViewBodyState extends State<DesktopBarterViewBody>
                       ],
                     ),
                   ),
-                  // Tab views
+                  // Tab views — chats tab uses desktop-specific tile tap
                   Expanded(
                     child: TabBarView(
                       controller: _tabController,
-                      children: const [
-                        ChatsTab(),
-                        ReceivedTab(),
-                        SentTab(),
+                      children: [
+                        _DesktopChatsTab(
+                          onTileTap: _openRoom,
+                          selectedBarterId: _selectedBarter?.barterId,
+                        ),
+                        const ReceivedTab(),
+                        const SentTab(),
                       ],
                     ),
                   ),
@@ -127,15 +146,19 @@ class _DesktopBarterViewBodyState extends State<DesktopBarterViewBody>
             ),
           ),
 
-          // ── Vertical divider ────────────────────────────────────────────
-          VerticalDivider(
-            width: 1,
-            color: colors.inputBorder,
-          ),
+          // ── Vertical divider ─────────────────────────────────────────────
+          VerticalDivider(width: 1, color: colors.inputBorder),
 
-          // ── Right panel: placeholder / barter room ─────────────────────
+          // ── Right panel: barter room or empty hint ────────────────────────
           Expanded(
-            child: _DesktopEmptyPanel(),
+            child: _selectedBarter != null
+                ? BarterRoomScreen(
+                    key: ValueKey(_selectedBarter!.barterId),
+                    barter: _selectedBarter!,
+                    showBackButton: false,
+                    onClose: _closeRoom,
+                  )
+                : const _DesktopEmptyPanel(),
           ),
         ],
       ),
@@ -143,7 +166,59 @@ class _DesktopBarterViewBodyState extends State<DesktopBarterViewBody>
   }
 }
 
+// ── Desktop-specific chats list (highlights selected, calls onTileTap) ────────
+
+class _DesktopChatsTab extends StatelessWidget {
+  const _DesktopChatsTab({required this.onTileTap, this.selectedBarterId});
+
+  final ValueChanged<BarterModel> onTileTap;
+  final String? selectedBarterId;
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<BarterRequestCubit, BarterRequestState>(
+      buildWhen: (prev, curr) =>
+          prev.chats != curr.chats ||
+          prev.isLoadingChats != curr.isLoadingChats,
+      builder: (context, state) {
+        if (state.isLoadingChats) {
+          return const ChatsSkeletonList();
+        }
+        if (state.chats.isEmpty) {
+          return Center(
+            child: Text(
+              'barter.chats_empty_title'.tr(),
+              style: AppTextStyles.bodyMedium.copyWith(
+                color: context.colors.secondaryText,
+              ),
+            ),
+          );
+        }
+        return ListView.separated(
+          padding: const EdgeInsets.symmetric(vertical: 8),
+          itemCount: state.chats.length,
+          separatorBuilder: (ctx, idx) =>
+              Divider(height: 1, indent: 76, color: context.colors.inputBorder),
+          itemBuilder: (ctx, index) {
+            final barter = state.chats[index];
+            final isSelected = barter.barterId == selectedBarterId;
+            return DismissibleChatTile(
+              barter: barter,
+              isSelected: isSelected,
+              onTap: () => onTileTap(barter),
+            );
+          },
+        );
+      },
+    );
+  }
+}
+
+// ── Empty right panel ─────────────────────────────────────────────────────────
+
 class _DesktopEmptyPanel extends StatelessWidget {
+  const _DesktopEmptyPanel();
+
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
@@ -167,9 +242,7 @@ class _DesktopEmptyPanel extends StatelessWidget {
           const SizedBox(height: 20),
           Text(
             'barter.select_chat'.tr(),
-            style: AppTextStyles.titleMedium.copyWith(
-              color: colors.onSurface,
-            ),
+            style: AppTextStyles.titleMedium.copyWith(color: colors.onSurface),
           ),
           const SizedBox(height: 8),
           Text(
