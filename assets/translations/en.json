@@ -97,7 +97,22 @@
     "what_you_teach": "What will you teach them?",
     "what_you_learn": "What do you want to learn from {name}?",
     "send_request": "Send Request",
-    "request_sent_snackbar": "Barter request sent! 🎉"
+    "request_sent_snackbar": "Barter request sent! 🎉",
+    "room_you": "You →",
+    "room_them": "Them →",
+    "room_no_session": "No session scheduled yet — agree on a time in the chat!",
+    "room_soon": "Soon",
+    "room_empty_title": "Start the conversation",
+    "room_empty_subtitle": "Send a message to get started!",
+    "room_completed_banner": "This barter has been completed. Chat history is preserved.",
+    "room_mark_complete": "Mark as Completed",
+    "room_already_completed": "Barter completed ✓",
+    "room_complete_title": "Mark as Completed?",
+    "room_complete_body": "This will mark the barter as completed. Both of you will be prompted to leave a review. This cannot be undone.",
+    "room_cancel": "Cancel",
+    "room_confirm": "Confirm",
+    "room_input_hint": "Type a message…",
+    "room_input_disabled": "Barter completed — chat is read-only"
   },
   "match": {
     "filter_all": "All",
