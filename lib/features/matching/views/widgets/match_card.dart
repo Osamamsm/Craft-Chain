@@ -24,12 +24,17 @@ class MatchCard extends StatelessWidget {
     super.key,
     required this.suggestion,
     this.isTopMatch = false,
+    this.showMatchScore = true,
   });
 
   final MatchSuggestion suggestion;
 
   /// When `true`, shows a "TOP" badge over the avatar (highest score in feed).
   final bool isTopMatch;
+
+  /// When `false`, hides the match score badge and progress bar.
+  /// Set to `false` in the explore screen where AI scoring is not used.
+  final bool showMatchScore;
 
   @override
   Widget build(BuildContext context) {
@@ -53,13 +58,16 @@ class MatchCard extends StatelessWidget {
               suggestion: suggestion,
               isTopMatch: isTopMatch,
               scoreColor: scoreColor,
+              showMatchScore: showMatchScore,
             ),
-            const SizedBox(height: 10),
-            _MatchBar(
-              score: suggestion.matchScore,
-              scoreColor: scoreColor,
-              borderColor: colors.inputBorder,
-            ),
+            if (showMatchScore) ...[
+              const SizedBox(height: 10),
+              _MatchBar(
+                score: suggestion.matchScore,
+                scoreColor: scoreColor,
+                borderColor: colors.inputBorder,
+              ),
+            ],
             const SizedBox(height: 10),
             _SkillSection(
               labelKey: 'match.teaches',
@@ -91,11 +99,13 @@ class _CardHeader extends StatelessWidget {
     required this.suggestion,
     required this.isTopMatch,
     required this.scoreColor,
+    this.showMatchScore = true,
   });
 
   final MatchSuggestion suggestion;
   final bool isTopMatch;
   final Color scoreColor;
+  final bool showMatchScore;
 
   @override
   Widget build(BuildContext context) {
@@ -152,8 +162,10 @@ class _CardHeader extends StatelessWidget {
                   ],
                 ),
               ),
-              const SizedBox(width: 8),
-              _ScoreBadge(score: suggestion.matchScore, color: scoreColor),
+              if (showMatchScore) ...[
+                const SizedBox(width: 8),
+                _ScoreBadge(score: suggestion.matchScore, color: scoreColor),
+              ],
             ],
           ),
         ),
