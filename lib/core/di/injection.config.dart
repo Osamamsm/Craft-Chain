@@ -17,6 +17,8 @@ import 'package:craft_chain/features/barter/viewmodels/barter_request_cubit/bart
     as _i751;
 import 'package:craft_chain/features/barter/viewmodels/barter_room_cubit/barter_room_cubit.dart'
     as _i817;
+import 'package:craft_chain/features/explore/view_model/explore_cubit/explore_cubit.dart'
+    as _i1015;
 import 'package:craft_chain/features/matching/view_model/match_feed_cubit/match_feed_cubit.dart'
     as _i1036;
 import 'package:craft_chain/features/profile/viewmodels/profile_cubit/profile_cubit.dart'
@@ -37,6 +39,7 @@ extension GetItInjectableX on _i174.GetIt {
     gh.factory<_i454.AuthCubit>(() => _i454.AuthCubit());
     gh.factory<_i751.BarterRequestCubit>(() => _i751.BarterRequestCubit());
     gh.factory<_i817.BarterRoomCubit>(() => _i817.BarterRoomCubit());
+    gh.factory<_i1015.ExploreCubit>(() => _i1015.ExploreCubit());
     gh.factory<_i1036.MatchFeedCubit>(() => _i1036.MatchFeedCubit());
     gh.factory<_i752.ProfileCubit>(() => _i752.ProfileCubit());
     gh.factory<_i97.ProfileSetupCubit>(() => _i97.ProfileSetupCubit());
