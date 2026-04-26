@@ -65,7 +65,15 @@
     "your_matches": "Your Matches"
   },
   "explore": {
-    "title": "Explore"
+    "title": "Explore",
+    "search_hint": "Search by skill or name...",
+    "clear": "Clear search",
+    "initial_title": "Find someone to barter with",
+    "initial_subtitle": "Search for a skill or a name to discover people in the community.",
+    "no_results_title": "No users found",
+    "no_results_subtitle": "Try a different skill name or username.",
+    "error_generic": "Something went wrong. Please try again.",
+    "retry": "Retry"
   },
   "barter": {
     "my_barters": "My Barters",
