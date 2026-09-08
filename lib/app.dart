@@ -1,8 +1,7 @@
 import 'package:craft_chain/core/navigation/app_router.dart';
 import 'package:craft_chain/core/theme/app_theme.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:material_ui/material_ui.dart';
 
 class CraftChainApp extends StatelessWidget {
   const CraftChainApp({super.key});
@@ -20,9 +19,7 @@ class CraftChainApp extends StatelessWidget {
       supportedLocales: context.supportedLocales,
       localizationsDelegates: [
         ...context.localizationDelegates,
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
+        ...GlobalMaterialLocalizations.delegates,
       ],
     );
   }

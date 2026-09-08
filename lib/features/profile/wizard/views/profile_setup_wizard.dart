@@ -3,7 +3,7 @@ import 'package:craft_chain/features/profile/wizard/views/widgets/step4_learn_sk
 import 'package:craft_chain/features/profile/wizard/views/widgets/step3_teach_skills.dart';
 import 'package:craft_chain/features/profile/wizard/views/widgets/step2_photo_city.dart';
 import 'package:craft_chain/features/profile/wizard/views/widgets/step1_name_gender.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';

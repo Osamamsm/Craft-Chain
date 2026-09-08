@@ -4,7 +4,7 @@ import 'package:craft_chain/core/widgets/section_label.dart';
 import 'package:craft_chain/core/widgets/skill_chip.dart';
 import 'package:craft_chain/features/auth/models/app_user.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Displays a user's bio, skills they teach, and skills they want to learn.
 ///

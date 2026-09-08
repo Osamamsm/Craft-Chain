@@ -1,7 +1,7 @@
 import 'package:craft_chain/core/layout/responsive_layout.dart';
 import 'package:craft_chain/features/home/widgets/mobile_shell.dart';
 import 'package:craft_chain/features/home/widgets/web_shell.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:go_router/go_router.dart';
 
 

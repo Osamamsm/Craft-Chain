@@ -1,5 +1,5 @@
 import 'package:craft_chain/core/theme/app_colors.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 class ChatsSkeletonList extends StatelessWidget {

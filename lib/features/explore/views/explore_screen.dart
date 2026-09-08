@@ -6,7 +6,7 @@ import 'package:craft_chain/features/explore/view_model/explore_cubit/explore_st
 import 'package:craft_chain/features/explore/views/widgets/explore_body.dart';
 import 'package:craft_chain/features/explore/views/widgets/search_bar.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:flutter/material.dart' hide SearchBar;
+import 'package:material_ui/material_ui.dart' hide SearchBar;
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ExploreScreen extends StatelessWidget {

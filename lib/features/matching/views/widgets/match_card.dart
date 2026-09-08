@@ -5,7 +5,7 @@ import 'package:craft_chain/core/widgets/user_avatar.dart';
 import 'package:craft_chain/features/matching/model/models/match_suggestion.dart';
 import 'package:craft_chain/features/profile/views/profile_screen.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:go_router/go_router.dart';
 
 /// Card widget that displays a single [MatchSuggestion] in the feed.

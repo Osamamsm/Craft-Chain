@@ -1,5 +1,5 @@
 import 'package:craft_chain/core/widgets/skill_chip.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// A wrap of tappable [SkillChip]s that toggles selection.
 ///

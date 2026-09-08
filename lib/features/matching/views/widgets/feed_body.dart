@@ -6,7 +6,7 @@ import 'package:craft_chain/features/matching/view_model/match_feed_cubit/match_
 import 'package:craft_chain/features/matching/view_model/match_feed_cubit/match_feed_state.dart';
 import 'package:craft_chain/features/matching/views/widgets/match_card.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:skeletonizer/skeletonizer.dart';

@@ -1,6 +1,6 @@
 import 'package:craft_chain/core/theme/app_colors.dart';
 import 'package:craft_chain/core/theme/app_text_styles.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Inline error banner used below auth forms when login/signup fails.
 class AuthErrorBanner extends StatelessWidget {

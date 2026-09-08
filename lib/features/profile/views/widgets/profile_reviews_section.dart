@@ -5,7 +5,7 @@ import 'package:craft_chain/core/widgets/section_label.dart';
 import 'package:craft_chain/features/profile/model/review.dart';
 import 'package:craft_chain/features/profile/views/widgets/review_card.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Displays the reviews header (label + count badge) followed by a list of
 /// [ReviewCard]s, or an empty state if there are none.

@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Switches between [mobileLayout] and [desktopLayout] at a 700-px breakpoint.
 class ResponsiveLayout extends StatelessWidget {

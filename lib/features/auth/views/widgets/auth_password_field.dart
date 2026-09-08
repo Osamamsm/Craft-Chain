@@ -2,7 +2,7 @@ import 'package:craft_chain/core/theme/app_colors.dart';
 import 'package:craft_chain/core/utils/auth_validators.dart';
 import 'package:craft_chain/features/auth/views/widgets/auth_form_field.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Pre-configured password field with built-in show/hide visibility toggle.
 /// Manages its own obscure state — no need for the parent to track it.

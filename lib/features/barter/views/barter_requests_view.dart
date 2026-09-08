@@ -3,7 +3,7 @@ import 'package:craft_chain/core/layout/responsive_layout.dart';
 import 'package:craft_chain/features/barter/viewmodels/barter_request_cubit/barter_request_cubit.dart';
 import 'package:craft_chain/features/barter/views/widgets/desktop_barter_view_body.dart';
 import 'package:craft_chain/features/barter/views/widgets/mobile_barter_view_body.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class BarterRequestsView extends StatelessWidget {

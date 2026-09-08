@@ -6,7 +6,7 @@ import 'package:craft_chain/features/matching/view_model/match_feed_cubit/match_
 import 'package:craft_chain/features/matching/views/widgets/feed_body.dart';
 import 'package:craft_chain/features/matching/views/widgets/filter_chips_bar.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class MatchFeedScreen extends StatelessWidget {

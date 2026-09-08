@@ -1,7 +1,7 @@
 import 'package:craft_chain/core/theme/app_colors.dart';
 import 'package:craft_chain/core/theme/app_text_styles.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Displays the scheduled session info when [scheduledAt] is set,
 /// or a subtle empty-state hint when no session has been agreed yet.
