@@ -47,3 +47,4 @@ app.*.map.json
 # Tooling config (local only)
 mcp_config.json
 devtools_options.yaml
+.env
