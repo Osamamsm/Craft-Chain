@@ -1,7 +1,6 @@
 import 'package:craft_chain/features/barter/models/barter.dart';
 import 'package:craft_chain/features/barter/viewmodels/barter_request_cubit/barter_request_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:injectable/injectable.dart';
 
 // ── Fake current-user ID (matches the profile feature constant) ──────────────
 const kFakeBarterCurrentUserId = 'user_me';
@@ -129,7 +128,6 @@ final _fakeSent = <BarterModel>[
 
 // ── Cubit ─────────────────────────────────────────────────────────────────────
 
-@injectable
 class BarterRequestCubit extends Cubit<BarterRequestState> {
   BarterRequestCubit() : super(const BarterRequestState());
 
@@ -138,24 +136,27 @@ class BarterRequestCubit extends Cubit<BarterRequestState> {
   Future<void> loadChats() async {
     emit(state.copyWith(isLoadingChats: true, clearError: true));
     await Future<void>.delayed(const Duration(milliseconds: 900));
-    final chats = _fakeChats
-        .where((b) => !b.hiddenBy.contains(kFakeBarterCurrentUserId))
-        .toList()
-      ..sort((a, b) {
-        final ta = a.lastMessageTime ?? DateTime(2000);
-        final tb = b.lastMessageTime ?? DateTime(2000);
-        return tb.compareTo(ta);
-      });
+    final chats =
+        _fakeChats
+            .where((b) => !b.hiddenBy.contains(kFakeBarterCurrentUserId))
+            .toList()
+          ..sort((a, b) {
+            final ta = a.lastMessageTime ?? DateTime(2000);
+            final tb = b.lastMessageTime ?? DateTime(2000);
+            return tb.compareTo(ta);
+          });
     emit(state.copyWith(chats: chats, isLoadingChats: false));
   }
 
   Future<void> loadReceived() async {
     emit(state.copyWith(isLoadingReceived: true, clearError: true));
     await Future<void>.delayed(const Duration(milliseconds: 700));
-    emit(state.copyWith(
-      received: List.of(_fakeReceived),
-      isLoadingReceived: false,
-    ));
+    emit(
+      state.copyWith(
+        received: List.of(_fakeReceived),
+        isLoadingReceived: false,
+      ),
+    );
   }
 
   Future<void> loadSent() async {
@@ -171,8 +172,9 @@ class BarterRequestCubit extends Cubit<BarterRequestState> {
     // Update the fake in-memory store so it stays hidden across reloads.
     final idx = _fakeChats.indexWhere((b) => b.barterId == barterId);
     if (idx != -1) {
-      final updated = _fakeChats[idx]
-          .copyWith(hiddenBy: [..._fakeChats[idx].hiddenBy, kFakeBarterCurrentUserId]);
+      final updated = _fakeChats[idx].copyWith(
+        hiddenBy: [..._fakeChats[idx].hiddenBy, kFakeBarterCurrentUserId],
+      );
       _fakeChats[idx] = updated;
     }
     final updatedChats = state.chats
@@ -199,8 +201,9 @@ class BarterRequestCubit extends Cubit<BarterRequestState> {
   // ── Received-tab actions ────────────────────────────────────────────────────
 
   Future<void> acceptRequest(String barterId) async {
-    final updatedReceived =
-        state.received.where((b) => b.barterId != barterId).toList();
+    final updatedReceived = state.received
+        .where((b) => b.barterId != barterId)
+        .toList();
     emit(state.copyWith(received: updatedReceived));
     await Future<void>.delayed(const Duration(milliseconds: 600));
     // Simulate moving to the chats list.
@@ -212,11 +215,11 @@ class BarterRequestCubit extends Cubit<BarterRequestState> {
   }
 
   Future<void> declineRequest(String barterId) async {
-    final updatedReceived =
-        state.received.where((b) => b.barterId != barterId).toList();
+    final updatedReceived = state.received
+        .where((b) => b.barterId != barterId)
+        .toList();
     emit(state.copyWith(received: updatedReceived));
     await Future<void>.delayed(const Duration(milliseconds: 400));
     _fakeReceived.removeWhere((b) => b.barterId == barterId);
   }
-
 }

@@ -3,7 +3,6 @@ import 'package:craft_chain/features/barter/models/barter.dart';
 import 'package:craft_chain/features/barter/models/message.dart';
 import 'package:craft_chain/features/barter/viewmodels/barter_room_cubit/barter_room_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:injectable/injectable.dart';
 
 final _now = DateTime.now();
 
@@ -108,7 +107,6 @@ final _fakeMessages = <String, List<MessageModel>>{
   ],
 };
 
-@injectable
 class BarterRoomCubit extends Cubit<BarterRoomState> {
   BarterRoomCubit() : super(const BarterRoomState());
 

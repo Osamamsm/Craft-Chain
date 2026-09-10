@@ -2,7 +2,6 @@ import 'package:craft_chain/features/auth/models/app_user.dart';
 import 'package:craft_chain/features/profile/model/review.dart';
 import 'package:craft_chain/features/profile/viewmodels/profile_cubit/profile_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:injectable/injectable.dart';
 
 export 'profile_state.dart';
 
@@ -166,7 +165,6 @@ final _kFakeReviews = <String, List<Review>>{
 
 // ── Cubit ─────────────────────────────────────────────────────────────────────
 
-@injectable
 class ProfileCubit extends Cubit<ProfileState> {
   ProfileCubit() : super(ProfileInitial());
 

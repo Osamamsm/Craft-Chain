@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:craft_chain/features/explore/view_model/explore_cubit/explore_state.dart';
 import 'package:craft_chain/features/matching/model/models/match_suggestion.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:injectable/injectable.dart';
 
 // ── Fake data (UI-only) ───────────────────────────────────────────────────────
 // TODO: remove this and call the real ExploreRepository once it's implemented.
@@ -133,14 +132,12 @@ const _kFakeUsers = <MatchSuggestion>[
 
 // ── Cubit ─────────────────────────────────────────────────────────────────────
 
-@injectable
 class ExploreCubit extends Cubit<ExploreState> {
   ExploreCubit() : super(ExploreInitial());
 
   static const _kDebounce = Duration(milliseconds: 300);
 
   Timer? _debounceTimer;
-
 
   void onQueryChanged(String query) {
     _debounceTimer?.cancel();
@@ -171,13 +168,14 @@ class ExploreCubit extends Cubit<ExploreState> {
     if (isClosed) return;
 
     final q = query.toLowerCase();
-    final results = _kFakeUsers.where((u) {
-      return u.name.toLowerCase().contains(q) ||
-          u.canTeach.any((s) => s.toLowerCase().contains(q)) ||
-          u.wantsToLearn.any((s) => s.toLowerCase().contains(q));
-    }).toList()
-      // Results ordered by rating descending, per spec.
-      ..sort((a, b) => b.rating.compareTo(a.rating));
+    final results =
+        _kFakeUsers.where((u) {
+            return u.name.toLowerCase().contains(q) ||
+                u.canTeach.any((s) => s.toLowerCase().contains(q)) ||
+                u.wantsToLearn.any((s) => s.toLowerCase().contains(q));
+          }).toList()
+          // Results ordered by rating descending, per spec.
+          ..sort((a, b) => b.rating.compareTo(a.rating));
 
     emit(ExploreSuccess(results: results, query: query));
   }

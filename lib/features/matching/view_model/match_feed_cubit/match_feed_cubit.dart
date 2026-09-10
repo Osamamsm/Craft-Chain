@@ -1,7 +1,6 @@
 import 'package:craft_chain/features/matching/model/models/match_suggestion.dart';
 import 'package:craft_chain/features/matching/view_model/match_feed_cubit/match_feed_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:injectable/injectable.dart';
 
 // ── Fake data (UI-only) ───────────────────────────────────────────────────────
 // TODO: remove this and call the real repository once it's implemented.
@@ -113,30 +112,63 @@ const _kFakeMatches = <MatchSuggestion>[
 
 const _kCategorySkills = <MatchFeedFilter, List<String>>{
   MatchFeedFilter.tech: [
-    'Flutter', 'Dart', 'Firebase', 'React', 'Node.js', 'Python',
-    'Swift', 'Kotlin', 'ML / AI', 'Data Science', 'UI/UX',
-    'TypeScript', 'Vue.js',
+    'Flutter',
+    'Dart',
+    'Firebase',
+    'React',
+    'Node.js',
+    'Python',
+    'Swift',
+    'Kotlin',
+    'ML / AI',
+    'Data Science',
+    'UI/UX',
+    'TypeScript',
+    'Vue.js',
   ],
   MatchFeedFilter.design: [
-    'Figma', 'Illustrator', 'Photoshop', 'Branding',
-    '3D Modeling', 'Motion Design', 'Sketch', 'After Effects',
+    'Figma',
+    'Illustrator',
+    'Photoshop',
+    'Branding',
+    '3D Modeling',
+    'Motion Design',
+    'Sketch',
+    'After Effects',
   ],
   MatchFeedFilter.crafts: [
-    'Calligraphy', 'Photography', 'Video Editing', 'Music',
-    'Drawing', 'Animation', 'Painting', 'Podcasting',
+    'Calligraphy',
+    'Photography',
+    'Video Editing',
+    'Music',
+    'Drawing',
+    'Animation',
+    'Painting',
+    'Podcasting',
   ],
   MatchFeedFilter.languages: [
-    'English', 'Arabic', 'French', 'Spanish',
-    'German', 'Chinese', 'Italian', 'Japanese',
+    'English',
+    'Arabic',
+    'French',
+    'Spanish',
+    'German',
+    'Chinese',
+    'Italian',
+    'Japanese',
   ],
   MatchFeedFilter.business: [
-    'Marketing', 'SEO', 'Copywriting', 'Project Management',
-    'Entrepreneurship', 'Finance', 'Public Speaking', 'Sales',
+    'Marketing',
+    'SEO',
+    'Copywriting',
+    'Project Management',
+    'Entrepreneurship',
+    'Finance',
+    'Public Speaking',
+    'Sales',
   ],
 };
 
 // ── Cubit ─────────────────────────────────────────────────────────────────────
-@injectable
 class MatchFeedCubit extends Cubit<MatchFeedState> {
   MatchFeedCubit() : super(MatchFeedInitial());
 
