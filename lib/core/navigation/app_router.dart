@@ -1,9 +1,9 @@
 import 'package:craft_chain/core/di/injection.dart';
-import 'package:craft_chain/features/auth/models/app_user.dart';
-import 'package:craft_chain/features/auth/views/forgot_password_screen.dart';
-import 'package:craft_chain/features/auth/views/sign_in_screen.dart';
-import 'package:craft_chain/features/auth/views/sign_up_screen.dart';
-import 'package:craft_chain/features/auth/views/welcome_screen.dart';
+import 'package:craft_chain/core/data/models/app_user.dart';
+import 'package:craft_chain/features/auth/presentation/views/forgot_password_screen.dart';
+import 'package:craft_chain/features/auth/presentation/views/sign_in_screen.dart';
+import 'package:craft_chain/features/auth/presentation/views/sign_up_screen.dart';
+import 'package:craft_chain/features/auth/presentation/views/welcome_screen.dart';
 import 'package:craft_chain/features/barter/models/barter.dart';
 import 'package:craft_chain/features/barter/views/barter_requests_view.dart';
 import 'package:craft_chain/features/barter/views/barter_room_screen.dart';

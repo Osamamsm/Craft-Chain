@@ -1,7 +1,7 @@
 import 'package:craft_chain/core/layout/responsive_layout.dart';
-import 'package:craft_chain/features/auth/views/sign_in_screen.dart';
-import 'package:craft_chain/features/auth/views/sign_up_screen.dart';
-import 'package:craft_chain/features/auth/views/widgets/craft_chain_branding_panel.dart';
+import 'package:craft_chain/features/auth/presentation/views/sign_in_screen.dart';
+import 'package:craft_chain/features/auth/presentation/views/sign_up_screen.dart';
+import 'package:craft_chain/features/auth/presentation/widgets/craft_chain_branding_panel.dart';
 import 'package:craft_chain/core/theme/app_colors.dart';
 import 'package:craft_chain/core/theme/app_text_styles.dart';
 import 'package:easy_localization/easy_localization.dart';

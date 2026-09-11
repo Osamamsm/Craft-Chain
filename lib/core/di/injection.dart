@@ -1,5 +1,5 @@
 import 'package:craft_chain/core/logic/image_picker_cubit/image_picker_cubit.dart';
-import 'package:craft_chain/features/auth/view_model/auth_cubit/auth_cubit.dart';
+import 'package:craft_chain/features/auth/presentation/Cubits/auth_cubit/auth_cubit.dart';
 import 'package:craft_chain/features/barter/view_model/barter_request_cubit/barter_request_cubit.dart';
 import 'package:craft_chain/features/barter/view_model/barter_room_cubit/barter_room_cubit.dart';
 import 'package:craft_chain/features/barter/view_model/create_barter_cubit/create_barter_cubit.dart';

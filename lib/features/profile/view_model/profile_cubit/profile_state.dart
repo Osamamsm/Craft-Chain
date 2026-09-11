@@ -1,4 +1,4 @@
-import 'package:craft_chain/features/auth/models/app_user.dart';
+import 'package:craft_chain/core/data/models/app_user.dart';
 import 'package:craft_chain/features/profile/model/review.dart';
 
 // ── States ────────────────────────────────────────────────────────────────────

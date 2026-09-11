@@ -5,7 +5,7 @@ import 'package:craft_chain/core/widgets/skill_chip.dart';
 import 'package:craft_chain/core/widgets/skill_selector.dart';
 import 'package:craft_chain/core/widgets/user_avatar.dart';
 import 'package:craft_chain/core/widgets/labeled_text_field.dart';
-import 'package:craft_chain/features/auth/models/app_user.dart';
+import 'package:craft_chain/core/data/models/app_user.dart';
 import 'package:craft_chain/features/profile/view_model/profile_cubit/profile_cubit.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:material_ui/material_ui.dart';

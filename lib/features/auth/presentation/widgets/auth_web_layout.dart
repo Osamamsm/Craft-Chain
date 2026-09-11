@@ -1,6 +1,6 @@
 import 'package:craft_chain/core/theme/app_colors.dart';
 import 'package:craft_chain/core/theme/app_text_styles.dart';
-import 'package:craft_chain/features/auth/views/widgets/craft_chain_branding_panel.dart';
+import 'package:craft_chain/features/auth/presentation/widgets/craft_chain_branding_panel.dart';
 import 'package:material_ui/material_ui.dart';
 
 /// Shared 50/50 split scaffold for all web auth screens.
