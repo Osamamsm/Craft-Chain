@@ -1,7 +1,7 @@
 import 'package:craft_chain/core/constants/constants.dart';
 import 'package:craft_chain/features/barter/models/barter.dart';
 import 'package:craft_chain/features/barter/models/message.dart';
-import 'package:craft_chain/features/barter/viewmodels/barter_room_cubit/barter_room_state.dart';
+import 'package:craft_chain/features/barter/view_model/barter_room_cubit/barter_room_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 final _now = DateTime.now();

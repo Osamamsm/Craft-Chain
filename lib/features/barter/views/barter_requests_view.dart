@@ -1,6 +1,6 @@
 import 'package:craft_chain/core/di/injection.dart';
 import 'package:craft_chain/core/layout/responsive_layout.dart';
-import 'package:craft_chain/features/barter/viewmodels/barter_request_cubit/barter_request_cubit.dart';
+import 'package:craft_chain/features/barter/view_model/barter_request_cubit/barter_request_cubit.dart';
 import 'package:craft_chain/features/barter/views/widgets/desktop_barter_view_body.dart';
 import 'package:craft_chain/features/barter/views/widgets/mobile_barter_view_body.dart';
 import 'package:material_ui/material_ui.dart';

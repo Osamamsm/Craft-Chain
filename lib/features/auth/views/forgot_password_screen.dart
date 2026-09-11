@@ -1,6 +1,6 @@
 import 'package:craft_chain/core/theme/app_colors.dart';
 import 'package:craft_chain/core/theme/app_text_styles.dart';
-import 'package:craft_chain/features/auth/viewmodels/auth_cubit/auth_cubit.dart';
+import 'package:craft_chain/features/auth/view_model/auth_cubit/auth_cubit.dart';
 import 'package:craft_chain/features/auth/views/sign_in_screen.dart';
 import 'package:craft_chain/features/auth/views/widgets/auth_email_field.dart';
 import 'package:craft_chain/features/auth/views/widgets/auth_error_banner.dart';

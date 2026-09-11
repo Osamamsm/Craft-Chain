@@ -1,4 +1,4 @@
-import 'package:craft_chain/features/barter/viewmodels/create_barter_cubit/create_barter_state.dart';
+import 'package:craft_chain/features/barter/view_model/create_barter_cubit/create_barter_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class CreateBarterCubit extends Cubit<CreateBarterState> {

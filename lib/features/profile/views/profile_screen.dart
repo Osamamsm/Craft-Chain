@@ -4,7 +4,7 @@ import 'package:craft_chain/core/widgets/empty_state.dart';
 import 'package:craft_chain/core/widgets/user_avatar.dart';
 import 'package:craft_chain/features/auth/models/app_user.dart';
 import 'package:craft_chain/features/profile/model/review.dart';
-import 'package:craft_chain/features/profile/viewmodels/profile_cubit/profile_cubit.dart';
+import 'package:craft_chain/features/profile/view_model/profile_cubit/profile_cubit.dart';
 import 'package:craft_chain/features/profile/views/widgets/profile_action_button.dart';
 import 'package:craft_chain/features/profile/views/widgets/profile_reviews_section.dart';
 import 'package:craft_chain/features/profile/views/widgets/profile_skills_section.dart';

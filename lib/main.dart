@@ -1,6 +1,6 @@
 import 'package:craft_chain/app.dart';
 import 'package:craft_chain/core/di/injection.dart';
-import 'package:craft_chain/features/auth/viewmodels/auth_cubit/auth_cubit.dart';
+import 'package:craft_chain/features/auth/view_model/auth_cubit/auth_cubit.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:material_ui/material_ui.dart';

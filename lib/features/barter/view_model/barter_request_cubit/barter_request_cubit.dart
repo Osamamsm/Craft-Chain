@@ -1,5 +1,5 @@
 import 'package:craft_chain/features/barter/models/barter.dart';
-import 'package:craft_chain/features/barter/viewmodels/barter_request_cubit/barter_request_state.dart';
+import 'package:craft_chain/features/barter/view_model/barter_request_cubit/barter_request_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 // ── Fake current-user ID (matches the profile feature constant) ──────────────

@@ -1,6 +1,6 @@
-import 'package:craft_chain/features/profile/wizard/view_model/profile_setup_cubit/profile_setup_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
+import 'profile_setup_state.dart';
 
 // TODO(task-02b): Swap fake logic for real repository once ProfileRepositoryImpl is built.
 

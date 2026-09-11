@@ -2,7 +2,7 @@ import 'package:craft_chain/core/theme/app_colors.dart';
 import 'package:craft_chain/core/theme/app_text_styles.dart';
 import 'package:craft_chain/core/widgets/user_avatar.dart';
 import 'package:craft_chain/features/barter/models/barter.dart';
-import 'package:craft_chain/features/barter/viewmodels/barter_room_cubit/barter_room_cubit.dart';
+import 'package:craft_chain/features/barter/view_model/barter_room_cubit/barter_room_cubit.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

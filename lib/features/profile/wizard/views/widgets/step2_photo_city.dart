@@ -1,7 +1,7 @@
 import 'package:craft_chain/core/theme/app_colors.dart';
 import 'package:craft_chain/core/theme/app_text_styles.dart';
-import 'package:craft_chain/features/profile/wizard/viewmodels/profile_setup_cubit/profile_setup_cubit.dart';
-import 'package:craft_chain/features/profile/wizard/viewmodels/profile_setup_cubit/profile_setup_state.dart';
+import 'package:craft_chain/features/profile/wizard/view_model/profile_setup_cubit/profile_setup_cubit.dart';
+import 'package:craft_chain/features/profile/wizard/view_model/profile_setup_cubit/profile_setup_state.dart';
 import 'package:craft_chain/features/profile/wizard/views/widgets/avatar_picker.dart';
 import 'package:craft_chain/features/profile/wizard/views/widgets/wizard_form_widgets.dart';
 import 'package:craft_chain/features/profile/wizard/views/widgets/wizard_step_footer.dart';
