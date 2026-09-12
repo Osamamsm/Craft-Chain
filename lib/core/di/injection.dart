@@ -1,6 +1,8 @@
 import 'package:craft_chain/core/logic/image_picker_cubit/image_picker_cubit.dart';
 import 'package:craft_chain/core/supabase/auth_client.dart';
 import 'package:craft_chain/core/supabase/supabase_auth_client_impl.dart';
+import 'package:craft_chain/features/auth/data/data_source/auth_remote_data_source.dart';
+import 'package:craft_chain/features/auth/data/data_source/auth_remote_data_source_impl.dart';
 import 'package:craft_chain/features/auth/presentation/Cubits/auth_cubit/auth_cubit.dart';
 import 'package:craft_chain/features/barter/view_model/barter_request_cubit/barter_request_cubit.dart';
 import 'package:craft_chain/features/barter/view_model/barter_room_cubit/barter_room_cubit.dart';
@@ -18,6 +20,9 @@ void configureDependencies() {
   // Auth
   getIt.registerLazySingleton<AuthClient>(
     () => SupabaseAuthClientImpl(Supabase.instance.client.auth),
+  );
+  getIt.registerLazySingleton<AuthRemoteDataSource>(
+    () => AuthRemoteDataSourceImpl(getIt()),
   );
   getIt.registerFactory<AuthCubit>(() => AuthCubit());
 
