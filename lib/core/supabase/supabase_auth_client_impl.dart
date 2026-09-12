@@ -6,13 +6,17 @@ class SupabaseAuthClientImpl implements AuthClient {
   SupabaseAuthClientImpl(this._goTrueClient);
 
   @override
-  Future<void> resetPasswordForEmail({required String email}) {
-    // TODO: implement resetPasswordForEmail
+  Future<AuthResponse> signUpWithEmail({
+    required String email,
+    required String password,
+    required String name,
+  }) {
+    // TODO: implement signUp
     throw UnimplementedError();
   }
 
   @override
-  Future<AuthResponse> signIn({
+  Future<AuthResponse> signInWithEmail({
     required String email,
     required String password,
   }) {
@@ -21,18 +25,17 @@ class SupabaseAuthClientImpl implements AuthClient {
   }
 
   @override
-  Future<bool> signInWithOAuth(OAuthProvider provider, String callbackUrl) {
-    // TODO: implement signInWithOAuth
+  Future<void> resetPasswordForEmail({required String email}) {
+    // TODO: implement resetPasswordForEmail
     throw UnimplementedError();
   }
 
   @override
-  Future<AuthResponse> signUp({
+  Future<AuthResponse> verifyPasswordResetOtp({
     required String email,
-    required String password,
-    required String name,
+    required String otp,
   }) {
-    // TODO: implement signUp
+    // TODO: implement verifyPasswordResetOtp
     throw UnimplementedError();
   }
 
@@ -43,11 +46,8 @@ class SupabaseAuthClientImpl implements AuthClient {
   }
 
   @override
-  Future<AuthResponse> verifyPasswordResetOtp({
-    required String email,
-    required String otp,
-  }) {
-    // TODO: implement verifyPasswordResetOtp
+  Future<bool> signInWithOAuth(OAuthProvider provider, String callbackUrl) {
+    // TODO: implement signInWithOAuth
     throw UnimplementedError();
   }
 }
