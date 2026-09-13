@@ -4,7 +4,7 @@ import 'package:craft_chain/core/error/failures.dart';
 class ExceptionMapper {
   ExceptionMapper._();
 
-  static Failure map(Exception exception) {
+  static Failure mapExceptionToFailure(Object exception) {
     if (exception is ServerException) {
       return ServerFailure(exception.message);
     } else if (exception is AuthException) {
