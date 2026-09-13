@@ -11,8 +11,11 @@ class SupabaseAuthClientImpl implements AuthClient {
     required String password,
     required String name,
   }) {
-    // TODO: implement signUp
-    throw UnimplementedError();
+    return _goTrueClient.signUp(
+      email: email,
+      password: password,
+      data: {'name': name},
+    );
   }
 
   @override

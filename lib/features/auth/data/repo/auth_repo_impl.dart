@@ -1,3 +1,4 @@
+import 'package:craft_chain/core/error/exception_mapper.dart';
 import 'package:craft_chain/core/error/failures.dart';
 import 'package:craft_chain/features/auth/data/data_source/auth_remote_data_source.dart';
 import 'package:craft_chain/features/auth/domain/entities/user_entity.dart';
@@ -15,9 +16,17 @@ class AuthRepoImpl implements AuthRepo {
     required String email,
     required String password,
     required String name,
-  }) {
-    // TODO: implement signUpWithEmail
-    throw UnimplementedError();
+  }) async {
+    try {
+      final userModel = await _authRemoteDataSource.signUpWithEmail(
+        email: email,
+        password: password,
+        name: name,
+      );
+      return Right(userModel);
+    } catch (e) {
+      return Left(ExceptionMapper.mapExceptionToFailure(e));
+    }
   }
 
   @override

@@ -1,7 +1,8 @@
+import 'package:craft_chain/core/error/exceptions.dart';
 import 'package:craft_chain/core/supabase/auth_client.dart';
 import 'package:craft_chain/features/auth/data/data_source/auth_remote_data_source.dart';
 import 'package:craft_chain/features/auth/data/models/user_model.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:supabase_flutter/supabase_flutter.dart' hide AuthException;
 
 class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   final AuthClient _authClient;
@@ -11,9 +12,17 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     required String email,
     required String password,
     required String name,
-  }) {
-    // TODO: implement signUpWithEmail
-    throw UnimplementedError();
+  }) async {
+    final response = await _authClient.signUpWithEmail(
+      email: email,
+      password: password,
+      name: name,
+    );
+
+    if (response.user == null) {
+      throw AuthException('Signup Failed - No user returned');
+    }
+    return (UserModel.fromSupabase(response.user!));
   }
 
   @override
