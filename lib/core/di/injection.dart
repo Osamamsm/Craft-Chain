@@ -27,7 +27,7 @@ void configureDependencies() {
     () => AuthRemoteDataSourceImpl(getIt()),
   );
   getIt.registerLazySingleton<AuthRepo>(() => AuthRepoImpl(getIt()));
-  getIt.registerFactory<AuthCubit>(() => AuthCubit());
+  getIt.registerFactory<AuthCubit>(() => AuthCubit(getIt()));
 
   // Matching
   getIt.registerFactory<MatchFeedCubit>(() => MatchFeedCubit());

@@ -1,38 +1,36 @@
+import 'package:craft_chain/features/auth/domain/repo/auth_repo.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
+import 'package:supabase_flutter/supabase_flutter.dart' hide AuthState;
 import 'auth_state.dart';
 
-export 'auth_state.dart';
-
-/// Stub Cubit — Firebase will be wired in task 01b.
-/// Views call these methods; they simulate async work for now.
 class AuthCubit extends Cubit<AuthState> {
-  AuthCubit() : super(const AuthState());
+  final AuthRepo _authRepo;
+
+  AuthCubit(this._authRepo) : super(const AuthInitial());
 
   Future<void> signUp({
     required String fullName,
     required String email,
     required String password,
   }) async {
-    emit(state.copyWith(isLoading: true, clearError: true));
-    await Future.delayed(const Duration(milliseconds: 1200));
-    // TODO(task-01b): call authRepository.signUp()
-    emit(state.copyWith(isLoading: false));
+    emit(const AuthLoading());
   }
 
   Future<void> signIn({required String email, required String password}) async {
-    emit(state.copyWith(isLoading: true, clearError: true));
-    await Future.delayed(const Duration(milliseconds: 1200));
-    // TODO(task-01b): call authRepository.signIn()
-    emit(state.copyWith(isLoading: false));
+    emit(const AuthLoading());
   }
 
-  Future<void> resetPassword({required String email}) async {
-    emit(state.copyWith(isLoading: true, clearError: true));
-    await Future.delayed(const Duration(milliseconds: 1200));
-    // TODO(task-01b): call authRepository.resetPassword()
-    emit(state.copyWith(isLoading: false, isPasswordResetSent: true));
-  }
+  Future<void> resetPasswordForEmail({required String email}) async {}
 
-  void clearError() => emit(state.copyWith(clearError: true));
+  Future<void> verifyPasswordResetOtp({
+    required String email,
+    required String otp,
+  }) async {}
+
+  Future<void> updatePassword({required String password}) async {}
+
+  Future<void> signInWithOAuth(
+    OAuthProvider provider,
+    String callbackUrl,
+  ) async {}
 }

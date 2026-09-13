@@ -1,25 +1,35 @@
-/// Immutable state class for [AuthCubit].
-class AuthState {
-  const AuthState({
-    this.isLoading = false,
-    this.errorMessage,
-    this.isPasswordResetSent = false,
-  });
+import 'package:craft_chain/features/auth/domain/entities/user_entity.dart';
+import 'package:equatable/equatable.dart';
 
-  final bool isLoading;
-  final String? errorMessage;
-  final bool isPasswordResetSent;
+abstract class AuthState extends Equatable {
+  const AuthState();
 
-  AuthState copyWith({
-    bool? isLoading,
-    String? errorMessage,
-    bool clearError = false,
-    bool? isPasswordResetSent,
-  }) {
-    return AuthState(
-      isLoading: isLoading ?? this.isLoading,
-      errorMessage: clearError ? null : (errorMessage ?? this.errorMessage),
-      isPasswordResetSent: isPasswordResetSent ?? this.isPasswordResetSent,
-    );
-  }
+  @override
+  List<Object?> get props => [];
+}
+
+class AuthInitial extends AuthState {
+  const AuthInitial();
+}
+
+class AuthLoading extends AuthState {
+  const AuthLoading();
+}
+
+class AuthSuccess extends AuthState {
+  final UserEntity user;
+
+  const AuthSuccess({required this.user});
+
+  @override
+  List<Object?> get props => [user];
+}
+
+class AuthError extends AuthState {
+  final String message;
+
+  const AuthError({required this.message});
+
+  @override
+  List<Object?> get props => [message];
 }
