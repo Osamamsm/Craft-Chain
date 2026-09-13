@@ -1,7 +1,9 @@
+import 'package:craft_chain/core/error/failures.dart';
 import 'package:craft_chain/features/auth/data/data_source/auth_remote_data_source.dart';
 import 'package:craft_chain/features/auth/domain/entities/user_entity.dart';
 import 'package:craft_chain/features/auth/domain/repo/auth_repo.dart';
-import 'package:gotrue/src/types/types.dart';
+import 'package:dartz/dartz.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class AuthRepoImpl implements AuthRepo {
   final AuthRemoteDataSource _authRemoteDataSource;
@@ -9,7 +11,7 @@ class AuthRepoImpl implements AuthRepo {
   AuthRepoImpl(this._authRemoteDataSource);
 
   @override
-  Future<UserEntity> signUpWithEmail({
+  Future<Either<Failure, UserEntity>> signUpWithEmail({
     required String email,
     required String password,
     required String name,
@@ -19,7 +21,7 @@ class AuthRepoImpl implements AuthRepo {
   }
 
   @override
-  Future<UserEntity> signInWithEmail({
+  Future<Either<Failure, UserEntity>> signInWithEmail({
     required String email,
     required String password,
   }) {
@@ -28,19 +30,19 @@ class AuthRepoImpl implements AuthRepo {
   }
 
   @override
-  Future<void> resetPasswordForEmail({required String email}) {
+  Future<Either<Failure, void>> resetPasswordForEmail({required String email}) {
     // TODO: implement resetPasswordForEmail
     throw UnimplementedError();
   }
 
   @override
-  Future<void> updatePassword({required String password}) {
+  Future<Either<Failure, void>> updatePassword({required String password}) {
     // TODO: implement updatePassword
     throw UnimplementedError();
   }
 
   @override
-  Future<void> verifyPasswordResetOtp({
+  Future<Either<Failure, void>> verifyPasswordResetOtp({
     required String email,
     required String otp,
   }) {
@@ -49,7 +51,10 @@ class AuthRepoImpl implements AuthRepo {
   }
 
   @override
-  Future<bool> signInWithOAuth(OAuthProvider provider, String callbackUrl) {
+  Future<Either<Failure, bool>> signInWithOAuth(
+    OAuthProvider provider,
+    String callbackUrl,
+  ) {
     // TODO: implement signInWithOAuth
     throw UnimplementedError();
   }
