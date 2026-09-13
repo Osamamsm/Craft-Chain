@@ -28,8 +28,7 @@ class SupabaseAuthClientImpl implements AuthClient {
 
   @override
   Future<void> resetPasswordForEmail({required String email}) {
-    // TODO: implement resetPasswordForEmail
-    throw UnimplementedError();
+    return _goTrueClient.resetPasswordForEmail(email);
   }
 
   @override

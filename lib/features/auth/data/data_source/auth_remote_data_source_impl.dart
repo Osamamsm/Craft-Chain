@@ -43,8 +43,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
 
   @override
   Future<void> resetPasswordForEmail({required String email}) {
-    // TODO: implement resetPasswordForEmail
-    throw UnimplementedError();
+    return _authClient.resetPasswordForEmail(email: email);
   }
 
   @override
