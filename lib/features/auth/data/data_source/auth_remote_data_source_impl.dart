@@ -55,9 +55,8 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   }
 
   @override
-  Future<void> updatePassword({required String password}) {
-    // TODO: implement updatePassword
-    throw UnimplementedError();
+  Future<void> updatePassword({required String password}) async {
+    await _authClient.updatePassword(password: password);
   }
 
   @override

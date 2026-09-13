@@ -58,12 +58,6 @@ class AuthRepoImpl implements AuthRepo {
   }
 
   @override
-  Future<Either<Failure, void>> updatePassword({required String password}) {
-    // TODO: implement updatePassword
-    throw UnimplementedError();
-  }
-
-  @override
   Future<Either<Failure, void>> verifyPasswordResetOtp({
     required String email,
     required String otp,
@@ -73,6 +67,18 @@ class AuthRepoImpl implements AuthRepo {
         email: email,
         otp: otp,
       );
+      return const Right(null);
+    } catch (e) {
+      return Left(ExceptionMapper.mapExceptionToFailure(e));
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> updatePassword({
+    required String password,
+  }) async {
+    try {
+      await _authRemoteDataSource.updatePassword(password: password);
       return const Right(null);
     } catch (e) {
       return Left(ExceptionMapper.mapExceptionToFailure(e));

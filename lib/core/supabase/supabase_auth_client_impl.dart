@@ -45,8 +45,7 @@ class SupabaseAuthClientImpl implements AuthClient {
 
   @override
   Future<UserResponse> updatePassword({required String password}) {
-    // TODO: implement updatePassword
-    throw UnimplementedError();
+    return _goTrueClient.updateUser(UserAttributes(password: password));
   }
 
   @override
