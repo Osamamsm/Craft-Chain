@@ -33,9 +33,16 @@ class AuthRepoImpl implements AuthRepo {
   Future<Either<Failure, UserEntity>> signInWithEmail({
     required String email,
     required String password,
-  }) {
-    // TODO: implement signInWithEmail
-    throw UnimplementedError();
+  }) async {
+    try {
+      final userModel = await _authRemoteDataSource.signInWithEmail(
+        email: email,
+        password: password,
+      );
+      return Right(userModel as UserEntity);
+    } catch (e) {
+      return Left(ExceptionMapper.mapExceptionToFailure(e));
+    }
   }
 
   @override
