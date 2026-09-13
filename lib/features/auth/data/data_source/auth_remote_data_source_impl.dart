@@ -51,8 +51,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     required String email,
     required String otp,
   }) {
-    // TODO: implement verifyPasswordResetOtp
-    throw UnimplementedError();
+    return _authClient.verifyPasswordResetOtp(email: email, otp: otp);
   }
 
   @override

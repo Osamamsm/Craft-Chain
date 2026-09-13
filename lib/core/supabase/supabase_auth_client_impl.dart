@@ -36,8 +36,11 @@ class SupabaseAuthClientImpl implements AuthClient {
     required String email,
     required String otp,
   }) {
-    // TODO: implement verifyPasswordResetOtp
-    throw UnimplementedError();
+    return _goTrueClient.verifyOTP(
+      email: email,
+      token: otp,
+      type: OtpType.recovery,
+    );
   }
 
   @override

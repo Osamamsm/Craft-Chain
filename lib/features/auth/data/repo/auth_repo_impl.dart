@@ -67,9 +67,16 @@ class AuthRepoImpl implements AuthRepo {
   Future<Either<Failure, void>> verifyPasswordResetOtp({
     required String email,
     required String otp,
-  }) {
-    // TODO: implement verifyPasswordResetOtp
-    throw UnimplementedError();
+  }) async {
+    try {
+      await _authRemoteDataSource.verifyPasswordResetOtp(
+        email: email,
+        otp: otp,
+      );
+      return const Right(null);
+    } catch (e) {
+      return Left(ExceptionMapper.mapExceptionToFailure(e));
+    }
   }
 
   @override
