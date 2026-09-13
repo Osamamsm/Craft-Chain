@@ -9,6 +9,7 @@ class AuthEmailField extends StatelessWidget {
   const AuthEmailField({
     super.key,
     required this.colors,
+    required this.controller,
     this.onChanged,
     this.onSaved,
     this.textInputAction = TextInputAction.next,
@@ -18,6 +19,7 @@ class AuthEmailField extends StatelessWidget {
   final void Function(String)? onChanged;
   final void Function(String?)? onSaved;
   final TextInputAction textInputAction;
+  final TextEditingController controller;
 
   @override
   Widget build(BuildContext context) {
@@ -29,8 +31,7 @@ class AuthEmailField extends StatelessWidget {
       textInputAction: textInputAction,
       colors: colors,
       validator: AuthValidators.email,
-      onChanged: onChanged,
-      onSaved: onSaved,
+      controller: controller,
     );
   }
 }

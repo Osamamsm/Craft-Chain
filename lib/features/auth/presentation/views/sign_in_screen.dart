@@ -1,6 +1,7 @@
 import 'package:craft_chain/core/theme/app_colors.dart';
 import 'package:craft_chain/core/theme/app_text_styles.dart';
 import 'package:craft_chain/features/auth/presentation/Cubits/auth_cubit/auth_cubit.dart';
+import 'package:craft_chain/features/auth/presentation/Cubits/auth_cubit/auth_state.dart';
 import 'package:craft_chain/features/auth/presentation/widgets/auth_footer.dart';
 import 'package:craft_chain/features/auth/presentation/views/forgot_password_screen.dart';
 import 'package:craft_chain/features/auth/presentation/views/sign_up_screen.dart';
@@ -94,18 +95,26 @@ class _SignInForm extends StatefulWidget {
 
 class _SignInFormState extends State<_SignInForm> {
   final _formKey = GlobalKey<FormState>();
-  late String _email, _password;
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
 
   Future<void> _submit() async {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
       await context.read<AuthCubit>().signIn(
-        email: _email,
-        password: _password,
+        email: _emailController.text.trim(),
+        password: _passwordController.text.trim(),
       );
       if (!mounted) return;
       context.push(ProfileSetupWizardScreen.routePath);
     }
+  }
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
   }
 
   @override
@@ -124,8 +133,7 @@ class _SignInFormState extends State<_SignInForm> {
                   AuthEmailField(
                     colors: colors,
                     textInputAction: TextInputAction.next,
-                    onChanged: (v) => setState(() => _email = v),
-                    onSaved: (v) => _email = v?.trim() ?? '',
+                    controller: _emailController,
                   ),
                   const SizedBox(height: 16),
                   AuthPasswordField(
@@ -135,8 +143,7 @@ class _SignInFormState extends State<_SignInForm> {
                     validator: (v) => (v == null || v.isEmpty)
                         ? 'auth.validation_password_field_required'.tr()
                         : null,
-                    onChanged: (v) => setState(() => _password = v),
-                    onSaved: (v) => _password = v ?? '',
+                    controller: _passwordController,
                   ),
                   const SizedBox(height: 8),
                   ForgotPasswordLink(
@@ -145,16 +152,16 @@ class _SignInFormState extends State<_SignInForm> {
                         context.push(ForgotPasswordScreen.routePath),
                   ),
                   const SizedBox(height: 20),
-                  if (authState.errorMessage != null) ...[
+                  if (authState is AuthError) ...[
                     AuthErrorBanner(
-                      message: authState.errorMessage!,
+                      message: authState.message,
                       colors: colors,
                     ),
                     const SizedBox(height: 12),
                   ],
                   AuthSubmitButton(
                     label: 'auth.sign_in'.tr(),
-                    isLoading: authState.isLoading,
+                    isLoading: authState is AuthLoading,
                     colors: colors,
                     onPressed: _submit,
                   ),

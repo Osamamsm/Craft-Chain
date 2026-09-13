@@ -10,6 +10,7 @@ class AuthPasswordField extends StatefulWidget {
   const AuthPasswordField({
     super.key,
     required this.colors,
+    required this.controller,
     this.onChanged,
     this.onSaved,
     this.validator,
@@ -21,6 +22,7 @@ class AuthPasswordField extends StatefulWidget {
   final void Function(String)? onChanged;
   final void Function(String?)? onSaved;
   final String? Function(String?)? validator;
+  final TextEditingController controller;
 
   /// Pass a translated hint string from the parent. If null, falls back to
   /// the default 'auth.password_create_hint' translation.
@@ -50,8 +52,7 @@ class _AuthPasswordFieldState extends State<AuthPasswordField> {
         ),
         onPressed: () => setState(() => _obscure = !_obscure),
       ),
-      onChanged: widget.onChanged,
-      onSaved: widget.onSaved,
+      controller: widget.controller,
       validator: widget.validator ?? AuthValidators.password,
     );
   }

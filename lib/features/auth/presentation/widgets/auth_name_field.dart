@@ -9,6 +9,7 @@ class AuthNameField extends StatelessWidget {
   const AuthNameField({
     super.key,
     required this.colors,
+    required this.controller,
     this.onChanged,
     this.onSaved,
   });
@@ -16,6 +17,7 @@ class AuthNameField extends StatelessWidget {
   final AppColorPalette colors;
   final void Function(String)? onChanged;
   final void Function(String?)? onSaved;
+  final TextEditingController controller;
 
   @override
   Widget build(BuildContext context) {
@@ -26,8 +28,7 @@ class AuthNameField extends StatelessWidget {
       textInputAction: TextInputAction.next,
       colors: colors,
       validator: AuthValidators.fullName,
-      onChanged: onChanged,
-      onSaved: onSaved,
+      controller: controller,
     );
   }
 }
