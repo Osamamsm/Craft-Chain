@@ -55,16 +55,15 @@ class SupabaseAuthClientImpl implements AuthClient {
   }
 
   @override
-  // TODO: implement getCurrentUser
-  User? get getCurrentUser => throw UnimplementedError();
+  
+  User? get getCurrentUser => _goTrueClient.currentUser;
 
   @override
-  // TODO: implement onAuthStateChange
-  Stream<AuthState> get onAuthStateChange => throw UnimplementedError();
+  
+  Stream<AuthState> get onAuthStateChange => _goTrueClient.onAuthStateChange;
 
   @override
   Future<void> signOut() {
-    // TODO: implement signOut
-    throw UnimplementedError();
+    return _goTrueClient.signOut();
   }
 }
