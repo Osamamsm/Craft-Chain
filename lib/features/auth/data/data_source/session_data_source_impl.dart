@@ -7,17 +7,18 @@ class SessionDataSourceImpl implements SessionDataSource {
   SessionDataSourceImpl(this._authClient);
   @override
   UserModel? getCurrentUser() {
-    // TODO: implement getCurrentUser
-    throw UnimplementedError();
+    final user = _authClient.getCurrentUser;
+    return user != null ? UserModel.fromSupabase(user) : null;
   }
 
   @override
-  // TODO: implement onAuthStateChange
-  Stream<UserModel?> get onAuthStateChange => throw UnimplementedError();
+  Stream<UserModel?> get onAuthStateChange => _authClient.onAuthStateChange.map((authState) {
+        final user = authState.session?.user;
+        return user != null ? UserModel.fromSupabase(user) : null;
+      });
 
   @override
-  Future<void> signOut() {
-    // TODO: implement signOut
-    throw UnimplementedError();
+  Future<void> signOut() async{
+    return await _authClient.signOut();
   }
 }
