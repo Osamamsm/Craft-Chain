@@ -22,4 +22,10 @@ abstract class AuthClient {
   Future<UserResponse> updatePassword({required String password});
 
   Future<bool> signInWithOAuth(OAuthProvider provider, String callbackUrl);
+
+  User? get getCurrentUser;
+
+  Future<void> signOut();
+
+  Stream<AuthState> get onAuthStateChange;
 }
