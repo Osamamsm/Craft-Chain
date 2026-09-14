@@ -6,7 +6,9 @@ import 'package:craft_chain/features/auth/data/data_source/auth_remote_data_sour
 import 'package:craft_chain/features/auth/data/data_source/session_data_source.dart';
 import 'package:craft_chain/features/auth/data/data_source/session_data_source_impl.dart';
 import 'package:craft_chain/features/auth/data/repo/auth_repo_impl.dart';
+import 'package:craft_chain/features/auth/data/repo/session_repo_impl.dart';
 import 'package:craft_chain/features/auth/domain/repo/auth_repo.dart';
+import 'package:craft_chain/features/auth/domain/repo/session_repo.dart';
 import 'package:craft_chain/features/auth/presentation/Cubits/auth_cubit/auth_cubit.dart';
 import 'package:craft_chain/features/barter/view_model/barter_request_cubit/barter_request_cubit.dart';
 import 'package:craft_chain/features/barter/view_model/barter_room_cubit/barter_room_cubit.dart';
@@ -32,7 +34,10 @@ void configureDependencies() {
   getIt.registerFactory<AuthCubit>(() => AuthCubit(getIt()));
 
   // Session
-  getIt.registerLazySingleton<SessionDataSource>(() => SessionDataSourceImpl(getIt()));
+  getIt.registerLazySingleton<SessionDataSource>(
+    () => SessionDataSourceImpl(getIt()),
+  );
+  getIt.registerLazySingleton<SessionRepo>(() => SessionRepoImpl(getIt()));
 
   // Matching
   getIt.registerFactory<MatchFeedCubit>(() => MatchFeedCubit());
