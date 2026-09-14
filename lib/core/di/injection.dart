@@ -3,6 +3,8 @@ import 'package:craft_chain/core/supabase/auth_client.dart';
 import 'package:craft_chain/core/supabase/supabase_auth_client_impl.dart';
 import 'package:craft_chain/features/auth/data/data_source/auth_remote_data_source.dart';
 import 'package:craft_chain/features/auth/data/data_source/auth_remote_data_source_impl.dart';
+import 'package:craft_chain/features/auth/data/data_source/session_data_source.dart';
+import 'package:craft_chain/features/auth/data/data_source/session_data_source_impl.dart';
 import 'package:craft_chain/features/auth/data/repo/auth_repo_impl.dart';
 import 'package:craft_chain/features/auth/domain/repo/auth_repo.dart';
 import 'package:craft_chain/features/auth/presentation/Cubits/auth_cubit/auth_cubit.dart';
@@ -28,6 +30,9 @@ void configureDependencies() {
   );
   getIt.registerLazySingleton<AuthRepo>(() => AuthRepoImpl(getIt()));
   getIt.registerFactory<AuthCubit>(() => AuthCubit(getIt()));
+
+  // Session
+  getIt.registerLazySingleton<SessionDataSource>(() => SessionDataSourceImpl(getIt()));
 
   // Matching
   getIt.registerFactory<MatchFeedCubit>(() => MatchFeedCubit());
