@@ -1,6 +1,7 @@
 import 'package:craft_chain/core/layout/responsive_layout.dart';
 import 'package:craft_chain/core/theme/app_colors.dart';
 import 'package:craft_chain/core/theme/app_text_styles.dart';
+import 'package:craft_chain/features/auth/presentation/Cubits/session_cubit/session_cubit.dart';
 import 'package:craft_chain/features/matching/view_model/match_feed_cubit/match_feed_cubit.dart';
 import 'package:craft_chain/features/matching/view_model/match_feed_cubit/match_feed_state.dart';
 import 'package:craft_chain/features/matching/views/widgets/feed_body.dart';
@@ -93,6 +94,14 @@ class _MobileView extends StatelessWidget {
             ),
           ),
         ),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.logout_outlined, color: Colors.red),
+            onPressed: () {
+              context.read<SessionCubit>().signOut();
+            },
+          ),
+        ],
       ),
       body: BlocBuilder<MatchFeedCubit, MatchFeedState>(
         builder: (context, state) => FeedBody(state: state, isWeb: false),

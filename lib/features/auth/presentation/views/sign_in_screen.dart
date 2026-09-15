@@ -13,7 +13,6 @@ import 'package:craft_chain/features/auth/presentation/widgets/auth_web_layout.d
 import 'package:craft_chain/features/auth/presentation/widgets/forgot_password_link.dart';
 import 'package:craft_chain/features/auth/presentation/widgets/google_button.dart';
 import 'package:craft_chain/features/auth/presentation/widgets/or_divider.dart';
-import 'package:craft_chain/features/profile/wizard/views/profile_setup_wizard.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:craft_chain/core/layout/responsive_layout.dart';
 import 'package:material_ui/material_ui.dart';
@@ -105,8 +104,6 @@ class _SignInFormState extends State<_SignInForm> {
         email: _emailController.text.trim(),
         password: _passwordController.text.trim(),
       );
-      if (!mounted) return;
-      context.push(ProfileSetupWizardScreen.routePath);
     }
   }
 
