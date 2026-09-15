@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:craft_chain/features/auth/domain/repo/session_repo.dart';
-import 'package:craft_chain/features/auth/presentation/Cubits/session_cubit/session_cubit_state.dart';
+import 'package:craft_chain/features/auth/presentation/Cubits/session_cubit/session_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class SessionCubit extends Cubit<SessionState> {
