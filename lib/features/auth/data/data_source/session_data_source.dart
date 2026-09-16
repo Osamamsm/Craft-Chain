@@ -1,3 +1,4 @@
+import 'package:craft_chain/features/auth/data/models/session_auth_state_model.dart';
 import 'package:craft_chain/features/auth/data/models/user_model.dart';
 
 abstract class SessionDataSource {
@@ -6,5 +7,5 @@ abstract class SessionDataSource {
 
   Future<void> signOut();
 
-  Stream<UserModel?> get onAuthStateChange;
+  Stream<SessionAuthStateModel> get onAuthStateChange;
 }

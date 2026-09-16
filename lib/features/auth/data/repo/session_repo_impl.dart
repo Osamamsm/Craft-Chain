@@ -1,6 +1,7 @@
 import 'package:craft_chain/core/error/exception_mapper.dart';
 import 'package:craft_chain/core/error/failures.dart';
 import 'package:craft_chain/features/auth/data/data_source/session_data_source.dart';
+import 'package:craft_chain/features/auth/domain/entities/session_auth_state_entity.dart';
 import 'package:craft_chain/features/auth/domain/entities/user_entity.dart';
 import 'package:craft_chain/features/auth/domain/repo/session_repo.dart';
 import 'package:dartz/dartz.dart';
@@ -20,7 +21,7 @@ class SessionRepoImpl implements SessionRepo {
   }
 
   @override
-  Stream<UserEntity?> get onAuthStateChange =>
+  Stream<SessionAuthStateEntity> get onAuthStateChange =>
       _sessionDataSource.onAuthStateChange;
 
   @override
