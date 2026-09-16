@@ -1,6 +1,6 @@
 import 'package:craft_chain/core/theme/app_colors.dart';
 import 'package:craft_chain/core/utils/auth_validators.dart';
-import 'package:craft_chain/features/auth/views/widgets/auth_form_field.dart';
+import 'package:craft_chain/features/auth/presentation/widgets/auth_form_field.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:material_ui/material_ui.dart';
 
@@ -9,6 +9,7 @@ class AuthNameField extends StatelessWidget {
   const AuthNameField({
     super.key,
     required this.colors,
+    required this.controller,
     this.onChanged,
     this.onSaved,
   });
@@ -16,6 +17,7 @@ class AuthNameField extends StatelessWidget {
   final AppColorPalette colors;
   final void Function(String)? onChanged;
   final void Function(String?)? onSaved;
+  final TextEditingController controller;
 
   @override
   Widget build(BuildContext context) {
@@ -26,8 +28,7 @@ class AuthNameField extends StatelessWidget {
       textInputAction: TextInputAction.next,
       colors: colors,
       validator: AuthValidators.fullName,
-      onChanged: onChanged,
-      onSaved: onSaved,
+      controller: controller,
     );
   }
 }

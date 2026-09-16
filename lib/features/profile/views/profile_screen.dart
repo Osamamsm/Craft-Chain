@@ -2,7 +2,7 @@ import 'package:craft_chain/core/theme/app_colors.dart';
 import 'package:craft_chain/core/theme/app_text_styles.dart';
 import 'package:craft_chain/core/widgets/empty_state.dart';
 import 'package:craft_chain/core/widgets/user_avatar.dart';
-import 'package:craft_chain/features/auth/models/app_user.dart';
+import 'package:craft_chain/core/data/models/app_user.dart';
 import 'package:craft_chain/features/profile/model/review.dart';
 import 'package:craft_chain/features/profile/view_model/profile_cubit/profile_cubit.dart';
 import 'package:craft_chain/features/profile/views/widgets/profile_action_button.dart';

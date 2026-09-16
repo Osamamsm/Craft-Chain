@@ -14,8 +14,7 @@ class AuthFormField extends StatelessWidget {
     required this.hint,
     required this.prefixIcon,
     required this.colors,
-    this.onChanged,
-    this.onSaved,
+    required this.controller,
     this.validator,
     this.obscureText = false,
     this.suffix,
@@ -28,9 +27,8 @@ class AuthFormField extends StatelessWidget {
   final String hint;
   final IconData prefixIcon;
   final AppColorPalette colors;
-  final void Function(String)? onChanged;
-  final void Function(String?)? onSaved;
   final String? Function(String?)? validator;
+  final TextEditingController controller;
   final bool obscureText;
   final Widget? suffix;
   final TextInputType? keyboardType;
@@ -54,9 +52,8 @@ class AuthFormField extends StatelessWidget {
           obscureText: obscureText,
           keyboardType: keyboardType,
           textInputAction: textInputAction,
-          onChanged: onChanged,
-          onSaved: onSaved,
           validator: validator,
+          controller: controller,
           style: AppTextStyles.bodyLarge.copyWith(color: colors.onSurface),
           decoration: InputDecoration(
             hintText: hint,

@@ -1,18 +1,19 @@
 import 'package:craft_chain/core/theme/app_colors.dart';
 import 'package:craft_chain/core/theme/app_text_styles.dart';
-import 'package:craft_chain/features/auth/view_model/auth_cubit/auth_cubit.dart';
-import 'package:craft_chain/features/auth/views/widgets/auth_footer.dart';
-import 'package:craft_chain/features/auth/views/sign_in_screen.dart';
-import 'package:craft_chain/features/auth/views/widgets/auth_email_field.dart';
-import 'package:craft_chain/features/auth/views/widgets/auth_error_banner.dart';
-import 'package:craft_chain/features/auth/views/widgets/auth_name_field.dart';
-import 'package:craft_chain/features/auth/views/widgets/auth_password_field.dart';
-import 'package:craft_chain/features/auth/views/widgets/auth_submit_button.dart';
-import 'package:craft_chain/features/auth/views/widgets/auth_web_layout.dart';
-import 'package:craft_chain/features/auth/views/widgets/google_button.dart';
-import 'package:craft_chain/features/auth/views/widgets/or_divider.dart';
-import 'package:craft_chain/features/auth/views/widgets/sign_up_info_box.dart';
-import 'package:craft_chain/features/auth/views/widgets/terms_checkbox.dart';
+import 'package:craft_chain/features/auth/presentation/Cubits/auth_cubit/auth_cubit.dart';
+import 'package:craft_chain/features/auth/presentation/Cubits/auth_cubit/auth_state.dart';
+import 'package:craft_chain/features/auth/presentation/widgets/auth_footer.dart';
+import 'package:craft_chain/features/auth/presentation/views/sign_in_screen.dart';
+import 'package:craft_chain/features/auth/presentation/widgets/auth_email_field.dart';
+import 'package:craft_chain/features/auth/presentation/widgets/auth_error_banner.dart';
+import 'package:craft_chain/features/auth/presentation/widgets/auth_name_field.dart';
+import 'package:craft_chain/features/auth/presentation/widgets/auth_password_field.dart';
+import 'package:craft_chain/features/auth/presentation/widgets/auth_submit_button.dart';
+import 'package:craft_chain/features/auth/presentation/widgets/auth_web_layout.dart';
+import 'package:craft_chain/features/auth/presentation/widgets/google_button.dart';
+import 'package:craft_chain/features/auth/presentation/widgets/or_divider.dart';
+import 'package:craft_chain/features/auth/presentation/widgets/sign_up_info_box.dart';
+import 'package:craft_chain/features/auth/presentation/widgets/terms_checkbox.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:craft_chain/core/layout/responsive_layout.dart';
 import 'package:material_ui/material_ui.dart';
@@ -94,17 +95,29 @@ class _SignUpForm extends StatefulWidget {
 
 class _SignUpFormState extends State<_SignUpForm> {
   final _formKey = GlobalKey<FormState>();
-  late String _name, _email, _password;
+  final _emailController = TextEditingController();
+  final _nameController = TextEditingController();
+  final _passwordController = TextEditingController();
+  final _confirmPasswordController = TextEditingController();
 
   Future<void> _submit() async {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
       await context.read<AuthCubit>().signUp(
-        fullName: _name,
-        email: _email,
-        password: _password,
+        fullName: _nameController.text.trim(),
+        email: _emailController.text.trim(),
+        password: _passwordController.text.trim(),
       );
     }
+  }
+
+  @override
+  dispose() {
+    _emailController.dispose();
+    _nameController.dispose();
+    _passwordController.dispose();
+    _confirmPasswordController.dispose();
+    super.dispose();
   }
 
   @override
@@ -123,31 +136,31 @@ class _SignUpFormState extends State<_SignUpForm> {
                   const SizedBox(height: 20),
                   AuthNameField(
                     colors: colors,
-                    onSaved: (value) => setState(() => _name = value!),
+                    controller: _nameController,
                   ),
                   const SizedBox(height: 16),
                   AuthEmailField(
                     colors: colors,
-                    onSaved: (value) => setState(() => _email = value!),
+                    controller: _emailController,
                   ),
                   const SizedBox(height: 16),
                   AuthPasswordField(
                     colors: colors,
                     hint: 'auth.password_create_hint'.tr(),
                     textInputAction: TextInputAction.next,
-                    onChanged: (v) => setState(() => _password = v),
-                    onSaved: (value) => setState(() => _password = value!),
+                    controller: _passwordController,
                   ),
                   const SizedBox(height: 16),
                   AuthPasswordField(
                     colors: colors,
                     hint: 'auth.password_repeat_hint'.tr(),
                     textInputAction: TextInputAction.done,
+                    controller: _confirmPasswordController,
                     validator: (v) {
                       if (v == null || v.isEmpty) {
                         return 'auth.validation_confirm_password_required'.tr();
                       }
-                      if (v != _password) {
+                      if (v != _passwordController.text) {
                         return 'auth.validation_passwords_mismatch'.tr();
                       }
                       return null;
@@ -158,17 +171,14 @@ class _SignUpFormState extends State<_SignUpForm> {
                   const SizedBox(height: 16),
                   TermsCheckbox(colors: colors),
                   const SizedBox(height: 24),
-                  if (authState.errorMessage != null) ...[
-                    AuthErrorBanner(
-                      message: authState.errorMessage!,
-                      colors: colors,
-                    ),
+                  if (authState is AuthError) ...[
+                    AuthErrorBanner(message: authState.message, colors: colors),
                     const SizedBox(height: 12),
                   ],
                   AuthSubmitButton(
                     label: 'auth.create_my_account'.tr(),
                     trailingIcon: Icons.arrow_forward_rounded,
-                    isLoading: authState.isLoading,
+                    isLoading: authState is AuthLoading,
                     colors: colors,
                     onPressed: _submit,
                   ),

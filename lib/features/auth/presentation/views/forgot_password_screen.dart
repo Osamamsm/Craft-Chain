@@ -1,12 +1,13 @@
 import 'package:craft_chain/core/theme/app_colors.dart';
 import 'package:craft_chain/core/theme/app_text_styles.dart';
-import 'package:craft_chain/features/auth/view_model/auth_cubit/auth_cubit.dart';
-import 'package:craft_chain/features/auth/views/sign_in_screen.dart';
-import 'package:craft_chain/features/auth/views/widgets/auth_email_field.dart';
-import 'package:craft_chain/features/auth/views/widgets/auth_error_banner.dart';
-import 'package:craft_chain/features/auth/views/widgets/auth_submit_button.dart';
-import 'package:craft_chain/features/auth/views/widgets/auth_web_layout.dart';
-import 'package:craft_chain/features/auth/views/widgets/password_reset_success_view.dart';
+import 'package:craft_chain/features/auth/presentation/Cubits/auth_cubit/auth_cubit.dart';
+import 'package:craft_chain/features/auth/presentation/Cubits/auth_cubit/auth_state.dart';
+import 'package:craft_chain/features/auth/presentation/widgets/auth_email_field.dart';
+import 'package:craft_chain/features/auth/presentation/widgets/auth_error_banner.dart';
+import 'package:craft_chain/features/auth/presentation/widgets/auth_submit_button.dart';
+import 'package:craft_chain/features/auth/presentation/widgets/auth_web_layout.dart';
+import 'package:craft_chain/features/auth/presentation/views/sign_in_screen.dart';
+import 'package:craft_chain/features/auth/presentation/widgets/password_reset_success_body.dart';
 import 'package:craft_chain/core/layout/responsive_layout.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:material_ui/material_ui.dart';
@@ -88,12 +89,20 @@ class _ForgotPasswordForm extends StatefulWidget {
 
 class _ForgotPasswordFormState extends State<_ForgotPasswordForm> {
   final _formKey = GlobalKey<FormState>();
-  String _email = '';
+  final _emailController = TextEditingController();
 
   Future<void> _submit() async {
     if (!(_formKey.currentState?.validate() ?? false)) return;
     _formKey.currentState!.save();
-    await context.read<AuthCubit>().resetPassword(email: _email);
+    await context.read<AuthCubit>().resetPasswordForEmail(
+      email: _emailController.text.trim(),
+    );
+  }
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    super.dispose();
   }
 
   @override
@@ -101,7 +110,7 @@ class _ForgotPasswordFormState extends State<_ForgotPasswordForm> {
     final colors = context.colors;
     return BlocBuilder<AuthCubit, AuthState>(
       builder: (context, authState) {
-        if (authState.isPasswordResetSent) {
+        if (authState is PasswordResetEmailSent) {
           return PasswordResetSuccessView(
             colors: colors,
             onBackToSignIn: () => context.go(SignInScreen.routePath),
@@ -115,20 +124,16 @@ class _ForgotPasswordFormState extends State<_ForgotPasswordForm> {
                   AuthEmailField(
                     colors: colors,
                     textInputAction: TextInputAction.done,
-                    onChanged: (v) => setState(() => _email = v),
-                    onSaved: (v) => _email = v?.trim() ?? '',
+                    controller: _emailController,
                   ),
-                  if (authState.errorMessage != null) ...[
+                  if (authState is AuthError) ...[
                     const SizedBox(height: 12),
-                    AuthErrorBanner(
-                      message: authState.errorMessage!,
-                      colors: colors,
-                    ),
+                    AuthErrorBanner(message: authState.message, colors: colors),
                   ],
                   const SizedBox(height: 24),
                   AuthSubmitButton(
                     label: 'auth.send_reset_link'.tr(),
-                    isLoading: authState.isLoading,
+                    isLoading: authState is AuthLoading,
                     colors: colors,
                     onPressed: _submit,
                   ),

@@ -1,4 +1,4 @@
-package com.example.craft_chain
+package com.osama.craft_chain
 
 import io.flutter.embedding.android.FlutterActivity
 

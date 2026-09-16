@@ -1,9 +1,14 @@
+import 'dart:async';
+
 import 'package:craft_chain/core/di/injection.dart';
-import 'package:craft_chain/features/auth/models/app_user.dart';
-import 'package:craft_chain/features/auth/views/forgot_password_screen.dart';
-import 'package:craft_chain/features/auth/views/sign_in_screen.dart';
-import 'package:craft_chain/features/auth/views/sign_up_screen.dart';
-import 'package:craft_chain/features/auth/views/welcome_screen.dart';
+import 'package:craft_chain/core/data/models/app_user.dart';
+import 'package:craft_chain/features/auth/presentation/Cubits/session_cubit/session_cubit.dart';
+import 'package:craft_chain/features/auth/presentation/Cubits/session_cubit/session_state.dart';
+import 'package:craft_chain/features/auth/presentation/views/forgot_password_screen.dart';
+import 'package:craft_chain/features/auth/presentation/views/reset_password_screen.dart';
+import 'package:craft_chain/features/auth/presentation/views/sign_in_screen.dart';
+import 'package:craft_chain/features/auth/presentation/views/sign_up_screen.dart';
+import 'package:craft_chain/features/auth/presentation/views/welcome_screen.dart';
 import 'package:craft_chain/features/barter/models/barter.dart';
 import 'package:craft_chain/features/barter/views/barter_requests_view.dart';
 import 'package:craft_chain/features/barter/views/barter_room_screen.dart';
@@ -18,11 +23,47 @@ import 'package:craft_chain/features/profile/wizard/view_model/profile_setup_cub
 import 'package:craft_chain/features/profile/wizard/views/profile_setup_wizard.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:material_ui/material_ui.dart';
 
-/// Central router for CraftChain.
-/// Auth redirect logic will be added in task 01b when Firebase Auth is wired.
 final appRouter = GoRouter(
-  initialLocation: WelcomeScreen.routePath,
+  refreshListenable: GoRouterRefreshNotifier(getIt<SessionCubit>().stream),
+  redirect: (context, state) {
+    final sessionState = context.read<SessionCubit>().state;
+
+    final isAuthenticated = sessionState is Authenticated;
+    final isPasswordRecovery = sessionState is PasswordRecovery;
+
+    final isAuthRoute =
+        state.matchedLocation == SignInScreen.routePath ||
+        state.matchedLocation == SignUpScreen.routePath ||
+        state.matchedLocation == WelcomeScreen.routePath ||
+        state.matchedLocation == ForgotPasswordScreen.routePath ||
+        state.matchedLocation == ResetPasswordScreen.routePath;
+
+    if (sessionState is SessionLoading || sessionState is SessionInitial) {
+      // TODO: replace with splash screen
+      return null;
+    }
+
+    // Password recovery has priority over normal authentication.
+    if (isPasswordRecovery) {
+      if (state.matchedLocation != ResetPasswordScreen.routePath) {
+        return ResetPasswordScreen.routePath;
+      }
+
+      return null;
+    }
+
+    if (!isAuthenticated && !isAuthRoute) {
+      return WelcomeScreen.routePath;
+    }
+
+    if (isAuthenticated && isAuthRoute) {
+      return MatchFeedScreen.routePath;
+    }
+
+    return null;
+  },
   debugLogDiagnostics: false,
   routes: [
     GoRoute(
@@ -44,6 +85,11 @@ final appRouter = GoRouter(
       path: ForgotPasswordScreen.routePath,
       name: 'forgot-password',
       builder: (context, state) => const ForgotPasswordScreen(),
+    ),
+    GoRoute(
+      path: ResetPasswordScreen.routePath,
+      name: 'reset-password',
+      builder: (context, state) => const ResetPasswordScreen(),
     ),
     GoRoute(
       path: ProfileSetupWizardScreen.routePath,
@@ -137,3 +183,17 @@ final appRouter = GoRouter(
     ),
   ],
 );
+
+class GoRouterRefreshNotifier extends ChangeNotifier {
+  GoRouterRefreshNotifier(Stream<SessionState> stream) {
+    _subscription = stream.listen((_) => notifyListeners());
+  }
+
+  late final StreamSubscription _subscription;
+
+  @override
+  void dispose() {
+    _subscription.cancel();
+    super.dispose();
+  }
+}

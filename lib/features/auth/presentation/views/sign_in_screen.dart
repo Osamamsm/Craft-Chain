@@ -1,18 +1,18 @@
 import 'package:craft_chain/core/theme/app_colors.dart';
 import 'package:craft_chain/core/theme/app_text_styles.dart';
-import 'package:craft_chain/features/auth/view_model/auth_cubit/auth_cubit.dart';
-import 'package:craft_chain/features/auth/views/widgets/auth_footer.dart';
-import 'package:craft_chain/features/auth/views/forgot_password_screen.dart';
-import 'package:craft_chain/features/auth/views/sign_up_screen.dart';
-import 'package:craft_chain/features/auth/views/widgets/auth_email_field.dart';
-import 'package:craft_chain/features/auth/views/widgets/auth_error_banner.dart';
-import 'package:craft_chain/features/auth/views/widgets/auth_password_field.dart';
-import 'package:craft_chain/features/auth/views/widgets/auth_submit_button.dart';
-import 'package:craft_chain/features/auth/views/widgets/auth_web_layout.dart';
-import 'package:craft_chain/features/auth/views/widgets/forgot_password_link.dart';
-import 'package:craft_chain/features/auth/views/widgets/google_button.dart';
-import 'package:craft_chain/features/auth/views/widgets/or_divider.dart';
-import 'package:craft_chain/features/profile/wizard/views/profile_setup_wizard.dart';
+import 'package:craft_chain/features/auth/presentation/Cubits/auth_cubit/auth_cubit.dart';
+import 'package:craft_chain/features/auth/presentation/Cubits/auth_cubit/auth_state.dart';
+import 'package:craft_chain/features/auth/presentation/widgets/auth_footer.dart';
+import 'package:craft_chain/features/auth/presentation/views/forgot_password_screen.dart';
+import 'package:craft_chain/features/auth/presentation/views/sign_up_screen.dart';
+import 'package:craft_chain/features/auth/presentation/widgets/auth_email_field.dart';
+import 'package:craft_chain/features/auth/presentation/widgets/auth_error_banner.dart';
+import 'package:craft_chain/features/auth/presentation/widgets/auth_password_field.dart';
+import 'package:craft_chain/features/auth/presentation/widgets/auth_submit_button.dart';
+import 'package:craft_chain/features/auth/presentation/widgets/auth_web_layout.dart';
+import 'package:craft_chain/features/auth/presentation/widgets/forgot_password_link.dart';
+import 'package:craft_chain/features/auth/presentation/widgets/google_button.dart';
+import 'package:craft_chain/features/auth/presentation/widgets/or_divider.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:craft_chain/core/layout/responsive_layout.dart';
 import 'package:material_ui/material_ui.dart';
@@ -50,10 +50,6 @@ class _SignInMobileScaffold extends StatelessWidget {
       backgroundColor: colors.background,
       appBar: AppBar(
         backgroundColor: colors.background,
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios_new_rounded, color: colors.onSurface),
-          onPressed: () => context.pop(),
-        ),
         title: Text(
           'auth.sign_in'.tr(),
           style: AppTextStyles.titleLarge.copyWith(color: colors.onSurface),
@@ -94,18 +90,24 @@ class _SignInForm extends StatefulWidget {
 
 class _SignInFormState extends State<_SignInForm> {
   final _formKey = GlobalKey<FormState>();
-  late String _email, _password;
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
 
   Future<void> _submit() async {
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
       await context.read<AuthCubit>().signIn(
-        email: _email,
-        password: _password,
+        email: _emailController.text.trim(),
+        password: _passwordController.text.trim(),
       );
-      if (!mounted) return;
-      context.push(ProfileSetupWizardScreen.routePath);
     }
+  }
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
   }
 
   @override
@@ -124,8 +126,7 @@ class _SignInFormState extends State<_SignInForm> {
                   AuthEmailField(
                     colors: colors,
                     textInputAction: TextInputAction.next,
-                    onChanged: (v) => setState(() => _email = v),
-                    onSaved: (v) => _email = v?.trim() ?? '',
+                    controller: _emailController,
                   ),
                   const SizedBox(height: 16),
                   AuthPasswordField(
@@ -135,8 +136,7 @@ class _SignInFormState extends State<_SignInForm> {
                     validator: (v) => (v == null || v.isEmpty)
                         ? 'auth.validation_password_field_required'.tr()
                         : null,
-                    onChanged: (v) => setState(() => _password = v),
-                    onSaved: (v) => _password = v ?? '',
+                    controller: _passwordController,
                   ),
                   const SizedBox(height: 8),
                   ForgotPasswordLink(
@@ -145,16 +145,16 @@ class _SignInFormState extends State<_SignInForm> {
                         context.push(ForgotPasswordScreen.routePath),
                   ),
                   const SizedBox(height: 20),
-                  if (authState.errorMessage != null) ...[
+                  if (authState is AuthError) ...[
                     AuthErrorBanner(
-                      message: authState.errorMessage!,
+                      message: authState.message,
                       colors: colors,
                     ),
                     const SizedBox(height: 12),
                   ],
                   AuthSubmitButton(
                     label: 'auth.sign_in'.tr(),
-                    isLoading: authState.isLoading,
+                    isLoading: authState is AuthLoading,
                     colors: colors,
                     onPressed: _submit,
                   ),

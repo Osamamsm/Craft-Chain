@@ -1,0 +1,80 @@
+import 'package:craft_chain/core/error/exception_mapper.dart';
+import 'package:craft_chain/core/error/failures.dart';
+import 'package:craft_chain/features/auth/data/data_source/auth_remote_data_source.dart';
+import 'package:craft_chain/features/auth/domain/entities/user_entity.dart';
+import 'package:craft_chain/features/auth/domain/repo/auth_repo.dart';
+import 'package:dartz/dartz.dart';
+
+class AuthRepoImpl implements AuthRepo {
+  final AuthRemoteDataSource _authRemoteDataSource;
+
+  AuthRepoImpl(this._authRemoteDataSource);
+
+  @override
+  Future<Either<Failure, UserEntity>> signUpWithEmail({
+    required String email,
+    required String password,
+    required String name,
+  }) async {
+    try {
+      final userModel = await _authRemoteDataSource.signUpWithEmail(
+        email: email,
+        password: password,
+        name: name,
+      );
+      return Right(userModel);
+    } catch (e) {
+      return Left(ExceptionMapper.mapExceptionToFailure(e));
+    }
+  }
+
+  @override
+  Future<Either<Failure, UserEntity>> signInWithEmail({
+    required String email,
+    required String password,
+  }) async {
+    try {
+      final userModel = await _authRemoteDataSource.signInWithEmail(
+        email: email,
+        password: password,
+      );
+      return Right(userModel as UserEntity);
+    } catch (e) {
+      return Left(ExceptionMapper.mapExceptionToFailure(e));
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> resetPasswordForEmail({
+    required String email,
+  }) async {
+    try {
+      await _authRemoteDataSource.resetPasswordForEmail(email: email);
+      return const Right(null);
+    } catch (e) {
+      return Left(ExceptionMapper.mapExceptionToFailure(e));
+    }
+  }
+
+  @override
+  Future<Either<Failure, void>> updatePassword({
+    required String password,
+  }) async {
+    try {
+      await _authRemoteDataSource.updatePassword(password: password);
+      return const Right(null);
+    } catch (e) {
+      return Left(ExceptionMapper.mapExceptionToFailure(e));
+    }
+  }
+
+  @override
+  Future<Either<Failure, UserEntity>> signInWithGoogle() async {
+    try {
+      final userModel = await _authRemoteDataSource.signInWithGoogle();
+      return Right(userModel);
+    } catch (e) {
+      return Left(ExceptionMapper.mapExceptionToFailure(e));
+    }
+  }
+}

@@ -1,0 +1,29 @@
+import 'package:supabase_flutter/supabase_flutter.dart';
+
+abstract class AuthClient {
+  Future<AuthResponse> signUpWithEmail({
+    required String email,
+    required String password,
+    required String name,
+  });
+
+  Future<AuthResponse> signInWithEmail({
+    required String email,
+    required String password,
+  });
+
+  Future<void> resetPasswordForEmail({required String email});
+
+  Future<UserResponse> updatePassword({required String password});
+
+  Future<AuthResponse> signInWithIdToken(
+    OAuthProvider provider,
+    String idToken,
+  );
+
+  User? get getCurrentUser;
+
+  Future<void> signOut();
+
+  Stream<AuthState> get onAuthStateChange;
+}
