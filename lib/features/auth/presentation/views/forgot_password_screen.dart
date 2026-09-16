@@ -2,12 +2,10 @@ import 'package:craft_chain/core/theme/app_colors.dart';
 import 'package:craft_chain/core/theme/app_text_styles.dart';
 import 'package:craft_chain/features/auth/presentation/Cubits/auth_cubit/auth_cubit.dart';
 import 'package:craft_chain/features/auth/presentation/Cubits/auth_cubit/auth_state.dart';
-import 'package:craft_chain/features/auth/presentation/views/sign_in_screen.dart';
 import 'package:craft_chain/features/auth/presentation/widgets/auth_email_field.dart';
 import 'package:craft_chain/features/auth/presentation/widgets/auth_error_banner.dart';
 import 'package:craft_chain/features/auth/presentation/widgets/auth_submit_button.dart';
 import 'package:craft_chain/features/auth/presentation/widgets/auth_web_layout.dart';
-import 'package:craft_chain/features/auth/presentation/widgets/password_reset_success_view.dart';
 import 'package:craft_chain/core/layout/responsive_layout.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:material_ui/material_ui.dart';
@@ -110,12 +108,6 @@ class _ForgotPasswordFormState extends State<_ForgotPasswordForm> {
     final colors = context.colors;
     return BlocBuilder<AuthCubit, AuthState>(
       builder: (context, authState) {
-        // if (authState.isPasswordResetSent) {
-        //   return PasswordResetSuccessView(
-        //     colors: colors,
-        //     onBackToSignIn: () => context.go(SignInScreen.routePath),
-        //   );
-        // }
         return Form(
               key: _formKey,
               child: Column(

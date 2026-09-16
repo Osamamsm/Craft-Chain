@@ -5,6 +5,7 @@ import 'package:craft_chain/core/data/models/app_user.dart';
 import 'package:craft_chain/features/auth/presentation/Cubits/session_cubit/session_cubit.dart';
 import 'package:craft_chain/features/auth/presentation/Cubits/session_cubit/session_state.dart';
 import 'package:craft_chain/features/auth/presentation/views/forgot_password_screen.dart';
+import 'package:craft_chain/features/auth/presentation/views/reset_password_screen.dart';
 import 'package:craft_chain/features/auth/presentation/views/sign_in_screen.dart';
 import 'package:craft_chain/features/auth/presentation/views/sign_up_screen.dart';
 import 'package:craft_chain/features/auth/presentation/views/welcome_screen.dart';
@@ -30,13 +31,26 @@ final appRouter = GoRouter(
     final sessionState = context.read<SessionCubit>().state;
 
     final isAuthenticated = sessionState is Authenticated;
+    final isPasswordRecovery = sessionState is PasswordRecovery;
+
     final isAuthRoute =
         state.matchedLocation == SignInScreen.routePath ||
         state.matchedLocation == SignUpScreen.routePath ||
-        state.matchedLocation == WelcomeScreen.routePath;
+        state.matchedLocation == WelcomeScreen.routePath ||
+        state.matchedLocation == ForgotPasswordScreen.routePath ||
+        state.matchedLocation == ResetPasswordScreen.routePath;
 
     if (sessionState is SessionLoading || sessionState is SessionInitial) {
-      //Todo : replace with splash screen
+      // TODO: replace with splash screen
+      return null;
+    }
+
+    // Password recovery has priority over normal authentication.
+    if (isPasswordRecovery) {
+      if (state.matchedLocation != ResetPasswordScreen.routePath) {
+        return ResetPasswordScreen.routePath;
+      }
+
       return null;
     }
 
@@ -71,6 +85,11 @@ final appRouter = GoRouter(
       path: ForgotPasswordScreen.routePath,
       name: 'forgot-password',
       builder: (context, state) => const ForgotPasswordScreen(),
+    ),
+    GoRoute(
+      path: ResetPasswordScreen.routePath,
+      name: 'reset-password',
+      builder: (context, state) => const ResetPasswordScreen(),
     ),
     GoRoute(
       path: ProfileSetupWizardScreen.routePath,
