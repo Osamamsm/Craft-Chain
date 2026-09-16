@@ -28,7 +28,10 @@ class SupabaseAuthClientImpl implements AuthClient {
 
   @override
   Future<void> resetPasswordForEmail({required String email}) {
-    return _goTrueClient.resetPasswordForEmail(email);
+    return _goTrueClient.resetPasswordForEmail(
+      email,
+      redirectTo: 'craftchain://reset-password'
+    );
   }
 
   @override
