@@ -1,7 +1,6 @@
 import 'package:craft_chain/core/error/failures.dart';
 import 'package:craft_chain/features/auth/domain/entities/user_entity.dart';
 import 'package:dartz/dartz.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 
 abstract class AuthRepo {
   Future<Either<Failure, UserEntity>> signUpWithEmail({
@@ -24,8 +23,5 @@ abstract class AuthRepo {
 
   Future<Either<Failure, void>> updatePassword({required String password});
 
-  Future<Either<Failure, bool>> signInWithOAuth(
-    OAuthProvider provider,
-    String callbackUrl,
-  );
+  Future<Either<Failure, UserEntity>> signInWithGoogle();
 }

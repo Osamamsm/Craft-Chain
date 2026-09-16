@@ -14,7 +14,7 @@ class SupabaseAuthClientImpl implements AuthClient {
     return _goTrueClient.signUp(
       email: email,
       password: password,
-      data: {'name': name},
+      data: {'full_name': name},
     );
   }
 
@@ -49,17 +49,20 @@ class SupabaseAuthClientImpl implements AuthClient {
   }
 
   @override
-  Future<bool> signInWithOAuth(OAuthProvider provider, String callbackUrl) {
-    // TODO: implement signInWithOAuth
-    throw UnimplementedError();
+  Future<AuthResponse> signInWithIdToken(
+    OAuthProvider provider,
+    String idToken,
+  ) async {
+    return await _goTrueClient.signInWithIdToken(
+      provider: provider,
+      idToken: idToken,
+    );
   }
 
   @override
-  
   User? get getCurrentUser => _goTrueClient.currentUser;
 
   @override
-  
   Stream<AuthState> get onAuthStateChange => _goTrueClient.onAuthStateChange;
 
   @override

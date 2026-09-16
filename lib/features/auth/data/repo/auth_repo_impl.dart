@@ -4,7 +4,6 @@ import 'package:craft_chain/features/auth/data/data_source/auth_remote_data_sour
 import 'package:craft_chain/features/auth/domain/entities/user_entity.dart';
 import 'package:craft_chain/features/auth/domain/repo/auth_repo.dart';
 import 'package:dartz/dartz.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 
 class AuthRepoImpl implements AuthRepo {
   final AuthRemoteDataSource _authRemoteDataSource;
@@ -86,11 +85,13 @@ class AuthRepoImpl implements AuthRepo {
   }
 
   @override
-  Future<Either<Failure, bool>> signInWithOAuth(
-    OAuthProvider provider,
-    String callbackUrl,
-  ) {
-    // TODO: implement signInWithOAuth
-    throw UnimplementedError();
+  Future<Either<Failure, UserEntity>> signInWithGoogle(
+  ) async{
+    try {
+      final userModel = await _authRemoteDataSource.signInWithGoogle();
+      return Right(userModel);
+    } catch (e) {
+      return Left(ExceptionMapper.mapExceptionToFailure(e));
+    }
   }
 }

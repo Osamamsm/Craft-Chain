@@ -1,6 +1,5 @@
 import 'package:craft_chain/features/auth/domain/repo/auth_repo.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:supabase_flutter/supabase_flutter.dart' hide AuthState;
 import 'auth_state.dart';
 
 class AuthCubit extends Cubit<AuthState> {
@@ -46,8 +45,12 @@ class AuthCubit extends Cubit<AuthState> {
 
   Future<void> updatePassword({required String password}) async {}
 
-  Future<void> signInWithOAuth(
-    OAuthProvider provider,
-    String callbackUrl,
-  ) async {}
+  Future<void> signInWithGoogle() async {
+    emit(const AuthLoading());
+    final result = await _authRepo.signInWithGoogle();
+    result.fold(
+      (failure) => emit(AuthError(message: failure.message)),
+      (user) => emit(AuthSuccess(user: user)),
+    );
+  }
 }
