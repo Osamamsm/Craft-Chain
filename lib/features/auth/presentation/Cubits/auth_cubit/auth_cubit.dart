@@ -36,9 +36,23 @@ class AuthCubit extends Cubit<AuthState> {
     );
   }
 
-  Future<void> resetPasswordForEmail({required String email}) async {}
+  Future<void> resetPasswordForEmail({required String email}) async {
+    emit(const AuthLoading());
+    final result = await _authRepo.resetPasswordForEmail(email: email);
+    result.fold(
+      (failure) => emit(AuthError(message: failure.message)),
+      (_) => emit(PasswordResetEmailSent(email: email, message: "Password reset email sent successfully")),
+    );
+  }
 
-  Future<void> updatePassword({required String password}) async {}
+  Future<void> updatePassword({required String password}) async {
+    emit(const AuthLoading());
+    final result = await _authRepo.updatePassword(password: password);
+    result.fold(
+      (failure) => emit(AuthError(message: failure.message)),
+      (_) => emit(const PasswordUpdated(message: "Password updated successfully")),
+    );
+  }
 
   Future<void> signInWithGoogle() async {
     emit(const AuthLoading());

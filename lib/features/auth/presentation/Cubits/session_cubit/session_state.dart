@@ -29,6 +29,15 @@ class Unauthenticated extends SessionState {
   const Unauthenticated();
 }
 
+class PasswordRecovery extends SessionState {
+  final UserEntity user;
+
+  const PasswordRecovery({required this.user});
+
+  @override
+  List<Object?> get props => [user];
+}
+
 class SessionError extends SessionState {
   final String message;
 
