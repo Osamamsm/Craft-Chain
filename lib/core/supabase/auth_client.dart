@@ -14,14 +14,12 @@ abstract class AuthClient {
 
   Future<void> resetPasswordForEmail({required String email});
 
-  Future<AuthResponse> verifyPasswordResetOtp({
-    required String email,
-    required String otp,
-  });
-
   Future<UserResponse> updatePassword({required String password});
-  
-  Future<AuthResponse> signInWithIdToken(OAuthProvider provider, String idToken);
+
+  Future<AuthResponse> signInWithIdToken(
+    OAuthProvider provider,
+    String idToken,
+  );
 
   User? get getCurrentUser;
 

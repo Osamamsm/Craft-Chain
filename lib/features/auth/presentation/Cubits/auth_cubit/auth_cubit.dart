@@ -38,11 +38,6 @@ class AuthCubit extends Cubit<AuthState> {
 
   Future<void> resetPasswordForEmail({required String email}) async {}
 
-  Future<void> verifyPasswordResetOtp({
-    required String email,
-    required String otp,
-  }) async {}
-
   Future<void> updatePassword({required String password}) async {}
 
   Future<void> signInWithGoogle() async {

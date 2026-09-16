@@ -14,11 +14,6 @@ abstract class AuthRemoteDataSource {
 
   Future<void> resetPasswordForEmail({required String email});
 
-  Future<void> verifyPasswordResetOtp({
-    required String email,
-    required String otp,
-  });
-
   Future<void> updatePassword({required String password});
 
   Future<UserModel> signInWithGoogle();

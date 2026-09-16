@@ -57,22 +57,6 @@ class AuthRepoImpl implements AuthRepo {
   }
 
   @override
-  Future<Either<Failure, void>> verifyPasswordResetOtp({
-    required String email,
-    required String otp,
-  }) async {
-    try {
-      await _authRemoteDataSource.verifyPasswordResetOtp(
-        email: email,
-        otp: otp,
-      );
-      return const Right(null);
-    } catch (e) {
-      return Left(ExceptionMapper.mapExceptionToFailure(e));
-    }
-  }
-
-  @override
   Future<Either<Failure, void>> updatePassword({
     required String password,
   }) async {
@@ -85,8 +69,7 @@ class AuthRepoImpl implements AuthRepo {
   }
 
   @override
-  Future<Either<Failure, UserEntity>> signInWithGoogle(
-  ) async{
+  Future<Either<Failure, UserEntity>> signInWithGoogle() async {
     try {
       final userModel = await _authRemoteDataSource.signInWithGoogle();
       return Right(userModel);

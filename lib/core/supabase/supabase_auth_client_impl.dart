@@ -32,18 +32,6 @@ class SupabaseAuthClientImpl implements AuthClient {
   }
 
   @override
-  Future<AuthResponse> verifyPasswordResetOtp({
-    required String email,
-    required String otp,
-  }) {
-    return _goTrueClient.verifyOTP(
-      email: email,
-      token: otp,
-      type: OtpType.recovery,
-    );
-  }
-
-  @override
   Future<UserResponse> updatePassword({required String password}) {
     return _goTrueClient.updateUser(UserAttributes(password: password));
   }

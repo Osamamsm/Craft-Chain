@@ -53,14 +53,6 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   }
 
   @override
-  Future<void> verifyPasswordResetOtp({
-    required String email,
-    required String otp,
-  }) {
-    return _authClient.verifyPasswordResetOtp(email: email, otp: otp);
-  }
-
-  @override
   Future<void> updatePassword({required String password}) async {
     await _authClient.updatePassword(password: password);
   }
