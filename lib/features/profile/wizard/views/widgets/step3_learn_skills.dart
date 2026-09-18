@@ -8,13 +8,15 @@ import 'package:material_ui/material_ui.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class Step3TeachSkills extends StatelessWidget {
-  const Step3TeachSkills({super.key, 
+class Step3LearnSkills extends StatelessWidget {
+  const Step3LearnSkills({
+    super.key,
     required this.state,
     required this.searchController,
     required this.searchQuery,
     required this.isWeb,
   });
+
   final ProfileSetupState state;
   final TextEditingController searchController;
   final String searchQuery;
@@ -27,16 +29,16 @@ class Step3TeachSkills extends StatelessWidget {
       subtitleKey: 'profile.step_3_subtitle',
       isWeb: isWeb,
       body: SkillSelector(
-        selectedSkills: state.teachSkills,
-        type: SkillChipType.teach,
+        selectedSkills: state.learnSkills,
+        type: SkillChipType.learn,
         searchController: searchController,
         searchQuery: searchQuery,
-        onToggle: context.read<ProfileSetupCubit>().toggleTeachSkill,
+        onToggle: context.read<ProfileSetupCubit>().toggleLearnSkill,
       ),
       footer: WizardStepFooter(
         isValid: state.isStep3Valid,
-        isLastStep: false,
-        isLoading: false,
+        isLastStep: true,
+        isLoading: state.isLoading,
         isWeb: isWeb,
       ),
     ).animate().fadeIn(duration: 250.ms);

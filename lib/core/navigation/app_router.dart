@@ -59,7 +59,7 @@ final appRouter = GoRouter(
     }
 
     if (isAuthenticated && isAuthRoute) {
-      return MatchFeedScreen.routePath;
+      return ProfileSetupWizardScreen.routePath;
     }
 
     return null;

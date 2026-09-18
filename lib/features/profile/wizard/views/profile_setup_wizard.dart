@@ -1,8 +1,6 @@
-import 'package:craft_chain/features/profile/wizard/views/widgets/step5_bio.dart';
-import 'package:craft_chain/features/profile/wizard/views/widgets/step4_learn_skills.dart';
-import 'package:craft_chain/features/profile/wizard/views/widgets/step3_teach_skills.dart';
-import 'package:craft_chain/features/profile/wizard/views/widgets/step2_photo_city.dart';
-import 'package:craft_chain/features/profile/wizard/views/widgets/step1_name_gender.dart';
+import 'package:craft_chain/features/profile/wizard/views/widgets/step1_info.dart';
+import 'package:craft_chain/features/profile/wizard/views/widgets/step3_learn_skills.dart';
+import 'package:craft_chain/features/profile/wizard/views/widgets/step2_teach_skills.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -155,32 +153,28 @@ class _ProfileSetupWizardScreenState extends State<ProfileSetupWizardScreen> {
       controller: _pageController,
       physics: const NeverScrollableScrollPhysics(),
       children: [
-        Step1NameGender(
+        Step1Info(
           state: state,
           nameController: _nameController,
           nameFocusNode: _nameFocusNode,
-          isWeb: isWeb,
-        ),
-        Step2PhotoCity(
-          state: state,
           cityController: _cityController,
           cityFocusNode: _cityFocusNode,
+          bioController: _bioController,
           onPickPhoto: () => _pickPhoto(context),
           isWeb: isWeb,
         ),
-        Step3TeachSkills(
+        Step2TeachSkills(
           state: state,
           searchController: _teachSearchController,
           searchQuery: _teachSearch,
           isWeb: isWeb,
         ),
-        Step4LearnSkills(
+        Step3LearnSkills(
           state: state,
           searchController: _learnSearchController,
           searchQuery: _learnSearch,
           isWeb: isWeb,
         ),
-        Step5Bio(state: state, bioController: _bioController, isWeb: isWeb),
       ],
     );
   }

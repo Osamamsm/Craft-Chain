@@ -1,16 +1,10 @@
 import 'package:image_picker/image_picker.dart';
 
-enum ProfileSetupStep {
-  nameGender,
-  photoCity,
-  teachSkills,
-  learnSkills,
-  bio,
-}
+enum ProfileSetupStep { info, teachSkills, learnSkills }
 
 class ProfileSetupState {
   const ProfileSetupState({
-    this.currentStep = ProfileSetupStep.nameGender,
+    this.currentStep = ProfileSetupStep.info,
     this.name = '',
     this.gender,
     this.photoFile,
@@ -35,29 +29,27 @@ class ProfileSetupState {
   final String? errorMessage;
   final bool isComplete;
 
-
   int get stepIndex => ProfileSetupStep.values.indexOf(currentStep);
   int get totalSteps => ProfileSetupStep.values.length;
   double get progress => (stepIndex + 1) / totalSteps;
 
-  bool get isStep1Valid => name.trim().length >= 2 && gender != null;
-  bool get isStep2Valid => photoFile != null && city.trim().isNotEmpty;
-  bool get isStep3Valid => teachSkills.isNotEmpty;
-  bool get isStep4Valid => learnSkills.isNotEmpty;
-  bool get isStep5Valid => bio.trim().isNotEmpty;
+  bool get isStep1Valid =>
+      name.trim().length >= 2 &&
+      gender != null &&
+      photoFile != null &&
+      city.trim().isNotEmpty &&
+      bio.trim().isNotEmpty;
+  bool get isStep2Valid => teachSkills.isNotEmpty;
+  bool get isStep3Valid => learnSkills.isNotEmpty;
 
   bool get isCurrentStepValid {
     switch (currentStep) {
-      case ProfileSetupStep.nameGender:
+      case ProfileSetupStep.info:
         return isStep1Valid;
-      case ProfileSetupStep.photoCity:
-        return isStep2Valid;
       case ProfileSetupStep.teachSkills:
-        return isStep3Valid;
+        return isStep2Valid;
       case ProfileSetupStep.learnSkills:
-        return isStep4Valid;
-      case ProfileSetupStep.bio:
-        return isStep5Valid;
+        return isStep3Valid;
     }
   }
 

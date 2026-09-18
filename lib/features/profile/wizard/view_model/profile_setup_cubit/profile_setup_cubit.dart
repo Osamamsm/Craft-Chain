@@ -78,7 +78,7 @@ class ProfileSetupCubit extends Cubit<ProfileSetupState> {
   }
 
   Future<void> completeProfile() async {
-    if (!state.isStep5Valid) return;
+    if (!state.isStep3Valid) return;
 
     emit(state.copyWith(isLoading: true, clearError: true));
 
