@@ -16,11 +16,11 @@ import 'package:craft_chain/features/explore/view_model/explore_cubit/explore_cu
 import 'package:craft_chain/features/explore/views/explore_screen.dart';
 import 'package:craft_chain/features/home/main_shell.dart';
 import 'package:craft_chain/features/matching/views/match_feed_screen.dart';
-import 'package:craft_chain/features/profile/view_model/profile_cubit/profile_cubit.dart';
-import 'package:craft_chain/features/profile/views/edit_profile_screen.dart';
-import 'package:craft_chain/features/profile/views/profile_screen.dart';
-import 'package:craft_chain/features/profile/wizard/view_model/profile_setup_cubit/profile_setup_cubit.dart';
-import 'package:craft_chain/features/profile/wizard/views/profile_setup_wizard.dart';
+import 'package:craft_chain/features/profile/presentation/logic/profile_cubit/profile_cubit.dart';
+import 'package:craft_chain/features/profile/presentation/views/edit_profile_screen.dart';
+import 'package:craft_chain/features/profile/presentation/views/profile_screen.dart';
+import 'package:craft_chain/features/profile/presentation/logic/profile_setup_cubit/profile_setup_cubit.dart';
+import 'package:craft_chain/features/profile/presentation/views/profile_setup_wizard.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:material_ui/material_ui.dart';

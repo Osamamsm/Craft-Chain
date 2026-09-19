@@ -1,5 +1,5 @@
 import 'package:craft_chain/core/data/models/app_user.dart';
-import 'package:craft_chain/features/profile/model/review.dart';
+import 'package:craft_chain/features/profile/data/models/review.dart';
 
 // ── States ────────────────────────────────────────────────────────────────────
 

@@ -1,8 +1,8 @@
 import 'package:craft_chain/core/theme/app_colors.dart';
 import 'package:craft_chain/core/theme/app_text_styles.dart';
-import 'package:craft_chain/features/profile/wizard/view_model/profile_setup_cubit/profile_setup_cubit.dart';
-import 'package:craft_chain/features/profile/wizard/view_model/profile_setup_cubit/profile_setup_state.dart';
-import 'package:craft_chain/features/profile/wizard/views/widgets/wizard_form_widgets.dart';
+import 'package:craft_chain/features/profile/presentation/logic/profile_setup_cubit/profile_setup_cubit.dart';
+import 'package:craft_chain/features/profile/presentation/logic/profile_setup_cubit/profile_setup_state.dart';
+import 'package:craft_chain/features/profile/presentation/widgets/wizard_widgets/wizard_form_widgets.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:material_ui/material_ui.dart';

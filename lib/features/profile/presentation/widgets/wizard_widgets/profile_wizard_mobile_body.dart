@@ -1,12 +1,12 @@
-import 'package:craft_chain/features/profile/wizard/view_model/profile_setup_cubit/profile_setup_state.dart';
-import 'package:craft_chain/features/profile/wizard/views/widgets/avatar_picker.dart';
-import 'package:craft_chain/features/profile/wizard/views/widgets/profile_bio_field.dart';
-import 'package:craft_chain/features/profile/wizard/views/widgets/profile_personal_info.dart';
-import 'package:craft_chain/features/profile/wizard/views/widgets/profile_preview_card.dart';
-import 'package:craft_chain/features/profile/wizard/views/widgets/wizard_form_widgets.dart';
+import 'package:craft_chain/features/profile/presentation/logic/profile_setup_cubit/profile_setup_state.dart';
+import 'package:craft_chain/features/profile/presentation/widgets/wizard_widgets/avatar_picker.dart';
+import 'package:craft_chain/features/profile/presentation/widgets/wizard_widgets/profile_bio_field.dart';
+import 'package:craft_chain/features/profile/presentation/widgets/wizard_widgets/profile_personal_info.dart';
+import 'package:craft_chain/features/profile/presentation/widgets/wizard_widgets/profile_preview_card.dart';
+import 'package:craft_chain/features/profile/presentation/widgets/wizard_widgets/wizard_form_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:craft_chain/features/profile/wizard/view_model/profile_setup_cubit/profile_setup_cubit.dart';
+import 'package:craft_chain/features/profile/presentation/logic/profile_setup_cubit/profile_setup_cubit.dart';
 
 class ProfileWizardMobileBody extends StatelessWidget {
   const ProfileWizardMobileBody({

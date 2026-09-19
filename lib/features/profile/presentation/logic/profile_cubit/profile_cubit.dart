@@ -1,6 +1,6 @@
 import 'package:craft_chain/core/data/models/app_user.dart';
-import 'package:craft_chain/features/profile/model/review.dart';
-import 'package:craft_chain/features/profile/view_model/profile_cubit/profile_state.dart';
+import 'package:craft_chain/features/profile/data/models/review.dart';
+import 'package:craft_chain/features/profile/presentation/logic/profile_cubit/profile_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 export 'profile_state.dart';

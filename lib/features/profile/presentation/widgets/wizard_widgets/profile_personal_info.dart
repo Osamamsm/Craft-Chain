@@ -1,7 +1,7 @@
-import 'package:craft_chain/features/profile/wizard/view_model/profile_setup_cubit/profile_setup_cubit.dart';
-import 'package:craft_chain/features/profile/wizard/view_model/profile_setup_cubit/profile_setup_state.dart';
-import 'package:craft_chain/features/profile/wizard/views/widgets/gender_selector.dart';
-import 'package:craft_chain/features/profile/wizard/views/widgets/wizard_form_widgets.dart';
+import 'package:craft_chain/features/profile/presentation/logic/profile_setup_cubit/profile_setup_cubit.dart';
+import 'package:craft_chain/features/profile/presentation/logic/profile_setup_cubit/profile_setup_state.dart';
+import 'package:craft_chain/features/profile/presentation/widgets/wizard_widgets/gender_selector.dart';
+import 'package:craft_chain/features/profile/presentation/widgets/wizard_widgets/wizard_form_widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:material_ui/material_ui.dart';
 

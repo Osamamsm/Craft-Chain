@@ -1,9 +1,9 @@
-import 'package:craft_chain/features/profile/wizard/view_model/profile_setup_cubit/profile_setup_state.dart';
-import 'package:craft_chain/features/profile/wizard/views/widgets/profile_bio_field.dart';
-import 'package:craft_chain/features/profile/wizard/views/widgets/profile_location_section.dart';
-import 'package:craft_chain/features/profile/wizard/views/widgets/profile_personal_info.dart';
-import 'package:craft_chain/features/profile/wizard/views/widgets/profile_photo_card.dart';
-import 'package:craft_chain/features/profile/wizard/views/widgets/profile_preview_card.dart';
+import 'package:craft_chain/features/profile/presentation/logic/profile_setup_cubit/profile_setup_state.dart';
+import 'package:craft_chain/features/profile/presentation/widgets/wizard_widgets/profile_bio_field.dart';
+import 'package:craft_chain/features/profile/presentation/widgets/wizard_widgets/profile_location_section.dart';
+import 'package:craft_chain/features/profile/presentation/widgets/wizard_widgets/profile_personal_info.dart';
+import 'package:craft_chain/features/profile/presentation/widgets/wizard_widgets/profile_photo_card.dart';
+import 'package:craft_chain/features/profile/presentation/widgets/wizard_widgets/profile_preview_card.dart';
 import 'package:flutter/material.dart';
 
 class ProfileWizardWebBody extends StatelessWidget {

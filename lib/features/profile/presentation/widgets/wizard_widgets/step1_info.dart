@@ -1,8 +1,8 @@
-import 'package:craft_chain/features/profile/wizard/view_model/profile_setup_cubit/profile_setup_state.dart';
-import 'package:craft_chain/features/profile/wizard/views/widgets/profile_wizard_mobile_body.dart';
-import 'package:craft_chain/features/profile/wizard/views/widgets/profile_wizard_web_body.dart';
-import 'package:craft_chain/features/profile/wizard/views/widgets/wizard_step_footer.dart';
-import 'package:craft_chain/features/profile/wizard/views/widgets/wizard_step_scaffold.dart';
+import 'package:craft_chain/features/profile/presentation/logic/profile_setup_cubit/profile_setup_state.dart';
+import 'package:craft_chain/features/profile/presentation/widgets/wizard_widgets/profile_wizard_mobile_body.dart';
+import 'package:craft_chain/features/profile/presentation/widgets/wizard_widgets/profile_wizard_web_body.dart';
+import 'package:craft_chain/features/profile/presentation/widgets/wizard_widgets/wizard_step_footer.dart';
+import 'package:craft_chain/features/profile/presentation/widgets/wizard_widgets/wizard_step_scaffold.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:material_ui/material_ui.dart';
 
