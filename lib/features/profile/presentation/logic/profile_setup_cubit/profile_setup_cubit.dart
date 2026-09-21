@@ -1,89 +1,78 @@
+import 'package:craft_chain/core/constants/app_skills.dart';
+import 'package:craft_chain/features/profile/domain/repo/profile_repo.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
+
 import 'profile_setup_state.dart';
 
-// TODO(task-02b): Swap fake logic for real repository once ProfileRepositoryImpl is built.
-
 class ProfileSetupCubit extends Cubit<ProfileSetupState> {
-  ProfileSetupCubit() : super(const ProfileSetupState());
+  ProfileSetupCubit(this._repo) : super(const ProfileSetupState());
 
-  // ── Step 1 ─────────────────────────────────────────────────────────────────
+  final ProfileRepo _repo;
 
-  void updateName(String name) =>
-      emit(state.copyWith(name: name, clearError: true));
+  // ── Info step ──────────────────────────────────────────────────────────────
 
-  void updateGender(String gender) =>
-      emit(state.copyWith(gender: gender, clearError: true));
+  void updateName(String name) => _edit((s) => s.copyWith(name: name));
 
-  // ── Step 2 ─────────────────────────────────────────────────────────────────
+  void updateGender(String gender) => _edit((s) => s.copyWith(gender: gender));
 
   void updatePhoto(XFile? photo) =>
-      emit(state.copyWith(photoFile: photo, clearError: true));
+      _edit((s) => s.copyWith(photoFile: photo, clearPhoto: photo == null));
 
-  void updateCity(String city) =>
-      emit(state.copyWith(city: city, clearError: true));
+  void updateCity(String city) => _edit((s) => s.copyWith(city: city));
 
-  // ── Step 3 ─────────────────────────────────────────────────────────────────
+  void updateBio(String bio) => _edit((s) => s.copyWith(bio: bio));
 
-  void toggleTeachSkill(String skill) {
-    final updated = Set<String>.from(state.teachSkills);
-    if (updated.contains(skill)) {
-      updated.remove(skill);
-    } else {
-      updated.add(skill);
-    }
-    emit(state.copyWith(teachSkills: updated, clearError: true));
-  }
+  // ── Skills steps ───────────────────────────────────────────────────────────
 
-  // ── Step 4 ─────────────────────────────────────────────────────────────────
+  void toggleTeachSkill(Skill skill) =>
+      _edit((s) => s.copyWith(teachSkills: _toggled(s.teachSkills, skill)));
 
-  void toggleLearnSkill(String skill) {
-    final updated = Set<String>.from(state.learnSkills);
-    if (updated.contains(skill)) {
-      updated.remove(skill);
-    } else {
-      updated.add(skill);
-    }
-    emit(state.copyWith(learnSkills: updated, clearError: true));
-  }
+  void toggleLearnSkill(Skill skill) =>
+      _edit((s) => s.copyWith(learnSkills: _toggled(s.learnSkills, skill)));
 
-  // ── Step 5 ─────────────────────────────────────────────────────────────────
-
-  void updateBio(String bio) =>
-      emit(state.copyWith(bio: bio, clearError: true));
+  // ── Navigation ─────────────────────────────────────────────────────────────
 
   void nextStep() {
     if (!state.isCurrentStepValid) return;
-    final index = state.stepIndex;
-    if (index < ProfileSetupStep.values.length - 1) {
-      emit(
-        state.copyWith(
-          currentStep: ProfileSetupStep.values[index + 1],
-          clearError: true,
-        ),
-      );
-    }
+    _goToStep(state.stepIndex + 1);
   }
 
-  void previousStep() {
-    final index = state.stepIndex;
-    if (index > 0) {
-      emit(
-        state.copyWith(
-          currentStep: ProfileSetupStep.values[index - 1],
-          clearError: true,
-        ),
-      );
-    }
-  }
+  void previousStep() => _goToStep(state.stepIndex - 1);
+
+  // ── Submit ─────────────────────────────────────────────────────────────────
 
   Future<void> completeProfile() async {
-    if (!state.isStep3Valid) return;
+    if (state.isLoading || !state.isFormValid) return;
 
     emit(state.copyWith(isLoading: true, clearError: true));
 
-    await Future.delayed(const Duration(milliseconds: 1500));
+    final result = await _repo.completeProfile(params: state.toParams());
 
-    emit(state.copyWith(isLoading: false, isComplete: true));
+    if (isClosed) return;
+
+    result.fold(
+      (failure) =>
+          emit(state.copyWith(isLoading: false, errorMessage: failure.message)),
+      (_) => emit(state.copyWith(isLoading: false, isComplete: true)),
+    );
+  }
+
+  // ── Helpers ────────────────────────────────────────────────────────────────
+
+  /// Applies [change] to the current state and clears any previous error.
+  void _edit(ProfileSetupState Function(ProfileSetupState s) change) =>
+      emit(change(state).copyWith(clearError: true));
+
+  void _goToStep(int index) {
+    if (index < 0 || index >= ProfileSetupStep.values.length) return;
+    _edit((s) => s.copyWith(currentStep: ProfileSetupStep.values[index]));
+  }
+
+  /// Returns a new set with [item] added if missing, removed if present.
+  Set<Skill> _toggled(Set<Skill> source, Skill skill) {
+    final result = {...source};
+    if (!result.remove(skill)) result.add(skill);
+    return result;
   }
 }

@@ -21,13 +21,13 @@ class CompleteProfileParams {
 }
 
 class CompleteProfileSkillParams {
-  final String skillId;
-  final String proficiency;
+  final int skillId;
+  final String? proficiency;
   final double? yearsOfExperience;
 
   const CompleteProfileSkillParams({
     required this.skillId,
-    required this.proficiency,
+    this.proficiency,
     this.yearsOfExperience,
   });
 }

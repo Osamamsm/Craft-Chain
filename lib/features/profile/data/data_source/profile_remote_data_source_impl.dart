@@ -12,6 +12,7 @@ class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
   Future<void> completeProfile({
     required CompleteProfileParamsModel params,
   }) async {
+    print(params.toString());
     final photoBytes = await params.photo.readAsBytes();
 
     await _supabaseClient.functions.invoke(

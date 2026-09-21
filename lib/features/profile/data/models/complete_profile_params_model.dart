@@ -39,13 +39,13 @@ class CompleteProfileParamsModel {
 }
 
 class CompleteProfileSkillParamsModel {
-  final String skillId;
-  final String proficiency;
+  final int skillId;
+  final String? proficiency;
   final double? yearsOfExperience;
 
   CompleteProfileSkillParamsModel({
     required this.skillId,
-    required this.proficiency,
+    this.proficiency,
     this.yearsOfExperience,
   });
 

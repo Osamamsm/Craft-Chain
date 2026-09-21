@@ -63,7 +63,7 @@ void configureDependencies() {
   );
   getIt.registerLazySingleton<ProfileRepo>(() => ProfileRepoImpl(getIt()));
   getIt.registerFactory<ProfileCubit>(() => ProfileCubit());
-  getIt.registerFactory<ProfileSetupCubit>(() => ProfileSetupCubit());
+  getIt.registerFactory<ProfileSetupCubit>(() => ProfileSetupCubit(getIt()));
 
   // Core Logic
   getIt.registerFactory<ImagePickerCubit>(() => ImagePickerCubit());
