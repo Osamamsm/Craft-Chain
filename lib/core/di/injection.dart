@@ -28,9 +28,10 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 final getIt = GetIt.instance;
 
 void configureDependencies() {
+  final supabaseClient = Supabase.instance.client;
   // Auth
   getIt.registerLazySingleton<AuthClient>(
-    () => SupabaseAuthClientImpl(Supabase.instance.client.auth),
+    () => SupabaseAuthClientImpl(supabaseClient.auth),
   );
   getIt.registerLazySingleton<AuthRemoteDataSource>(
     () => AuthRemoteDataSourceImpl(getIt()),
@@ -58,7 +59,7 @@ void configureDependencies() {
 
   // Profile
   getIt.registerLazySingleton<ProfileRemoteDataSource>(
-    () => ProfileRemoteDataSourceImpl(),
+    () => ProfileRemoteDataSourceImpl(supabaseClient),
   );
   getIt.registerLazySingleton<ProfileRepo>(() => ProfileRepoImpl(getIt()));
   getIt.registerFactory<ProfileCubit>(() => ProfileCubit());

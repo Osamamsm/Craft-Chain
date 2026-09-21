@@ -7,8 +7,8 @@ class CompleteProfileParamsModel {
   final String gender;
   final String city;
   final String bio;
-  final List<CompleteProfileSkillParams> teachingSkills;
-  final List<CompleteProfileSkillParams> learningSkills;
+  final List<CompleteProfileSkillParamsModel> teachingSkills;
+  final List<CompleteProfileSkillParamsModel> learningSkills;
   final File photo;
 
   CompleteProfileParamsModel({
@@ -27,9 +27,35 @@ class CompleteProfileParamsModel {
       gender: entity.gender,
       city: entity.city,
       bio: entity.bio,
-      teachingSkills: entity.teachingSkills,
-      learningSkills: entity.learningSkills,
+      teachingSkills: entity.teachingSkills
+          .map((e) => CompleteProfileSkillParamsModel.fromEntity(e))
+          .toList(),
+      learningSkills: entity.learningSkills
+          .map((e) => CompleteProfileSkillParamsModel.fromEntity(e))
+          .toList(),
       photo: entity.photo,
+    );
+  }
+}
+
+class CompleteProfileSkillParamsModel {
+  final String skillId;
+  final String proficiency;
+  final double? yearsOfExperience;
+
+  CompleteProfileSkillParamsModel({
+    required this.skillId,
+    required this.proficiency,
+    this.yearsOfExperience,
+  });
+
+  factory CompleteProfileSkillParamsModel.fromEntity(
+    CompleteProfileSkillParams entity,
+  ) {
+    return CompleteProfileSkillParamsModel(
+      skillId: entity.skillId,
+      proficiency: entity.proficiency,
+      yearsOfExperience: entity.yearsOfExperience,
     );
   }
 }
