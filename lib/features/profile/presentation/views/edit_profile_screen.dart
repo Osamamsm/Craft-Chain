@@ -30,7 +30,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   final _formKey = GlobalKey<FormState>();
 
-  final List<String> allSkills = AppSkills.flat;
+  final List<Skill> allSkills = AppSkills.flat;
 
   @override
   void initState() {

@@ -112,7 +112,7 @@ class _ProfilePreviewCardState extends State<ProfilePreviewCard> {
                   children: [
                     ...topTeach.map(
                       (skill) => SkillChip(
-                        label: skill,
+                        label: skill.name,
                         type: SkillChipType.teach,
                         isSelected: true,
                       ),
@@ -125,7 +125,7 @@ class _ProfilePreviewCardState extends State<ProfilePreviewCard> {
                       ),
                     ...topLearn.map(
                       (skill) => SkillChip(
-                        label: skill,
+                        label: skill.name,
                         type: SkillChipType.learn,
                         isSelected: true,
                       ),

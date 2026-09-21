@@ -1,3 +1,4 @@
+import 'package:craft_chain/core/constants/app_skills.dart';
 import 'package:craft_chain/core/widgets/skill_chip.dart';
 import 'package:material_ui/material_ui.dart';
 
@@ -29,7 +30,7 @@ class SkillSelector extends StatelessWidget {
     required this.onToggle,
   });
 
-  final List<String> allSkills;
+  final List<Skill> allSkills;
   final Set<String> selected;
   final SkillChipType type;
   final void Function(String skill) onToggle;
@@ -42,10 +43,10 @@ class SkillSelector extends StatelessWidget {
       children: allSkills
           .map(
             (skill) => SkillChip(
-              label: skill,
+              label: skill.name,
               type: type,
-              isSelected: selected.contains(skill),
-              onTap: () => onToggle(skill),
+              isSelected: selected.contains(skill.name),
+              onTap: () => onToggle(skill.name),
             ),
           )
           .toList(),

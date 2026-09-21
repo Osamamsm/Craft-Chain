@@ -16,11 +16,11 @@ class SkillSelector extends StatelessWidget {
     super.key,
   });
 
-  final Set<String> selectedSkills;
+  final Set<Skill> selectedSkills;
   final SkillChipType type;
   final TextEditingController searchController;
   final String searchQuery;
-  final ValueChanged<String> onToggle;
+  final ValueChanged<Skill> onToggle;
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +33,7 @@ class SkillSelector extends StatelessWidget {
     final filteredCategories = AppSkills.all
         .map((category) {
           final filtered = category.skills
-              .where((s) => q.isEmpty || s.toLowerCase().contains(q))
+              .where((s) => q.isEmpty || s.name.toLowerCase().contains(q))
               .toList();
           return _FilteredCategory(nameKey: category.nameKey, skills: filtered);
         })
@@ -99,7 +99,7 @@ class SkillSelector extends StatelessWidget {
 class _FilteredCategory {
   const _FilteredCategory({required this.nameKey, required this.skills});
   final String nameKey;
-  final List<String> skills;
+  final List<Skill> skills;
 }
 
 class _ChipWrap extends StatelessWidget {
@@ -110,10 +110,10 @@ class _ChipWrap extends StatelessWidget {
     required this.onToggle,
     required this.showRemove,
   });
-  final List<String> skills;
-  final Set<String> selectedSkills;
+  final List<Skill> skills;
+  final Set<Skill> selectedSkills;
   final SkillChipType type;
-  final ValueChanged<String> onToggle;
+  final ValueChanged<Skill> onToggle;
   final bool showRemove;
 
   @override
@@ -127,7 +127,7 @@ class _ChipWrap extends StatelessWidget {
         children: skills
             .map(
               (s) => SkillChip(
-                label: s,
+                label: s.name,
                 type: type,
                 isSelected: selectedSkills.contains(s),
                 showRemoveIcon: showRemove && selectedSkills.contains(s),

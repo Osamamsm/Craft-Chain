@@ -33,7 +33,7 @@ class Step2TeachSkills extends StatelessWidget {
         type: SkillChipType.teach,
         searchController: searchController,
         searchQuery: searchQuery,
-        onToggle: context.read<ProfileSetupCubit>().toggleTeachSkill,
+        onToggle: (skill) => context.read<ProfileSetupCubit>().toggleTeachSkill(skill),
       ),
       footer: WizardStepFooter(
         isValid: state.isStep2Valid,
