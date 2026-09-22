@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:craft_chain/features/profile/data/data_source/profile_remote_data_source.dart';
 import 'package:craft_chain/features/profile/data/models/complete_profile_params_model.dart';
+import 'package:craft_chain/features/profile/domain/entities/user_profile_entity.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
@@ -27,6 +28,12 @@ class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
         "photo": base64Encode(photoBytes),
       },
     );
+  }
+
+  @override
+  Future<UserProfileEntity> getUserProfile({String? userId}) {
+    // TODO: implement getUserProfile
+    throw UnimplementedError();
   }
 }
 
