@@ -47,13 +47,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
     _formKey.currentState!.save();
 
-    await context.read<ProfileCubit>().saveProfile(
-      name: _name,
-      city: _city,
-      bio: _bio,
-      canTeach: _canTeach.toList(),
-      wantsToLearn: _wantsToLearn.toList(),
-    );
+    // await context.read<ProfileCubit>().saveProfile(
+    //   name: _name,
+    //   city: _city,
+    //   bio: _bio,
+    //   canTeach: _canTeach.toList(),
+    //   wantsToLearn: _wantsToLearn.toList(),
+    // );
   }
 
   @override

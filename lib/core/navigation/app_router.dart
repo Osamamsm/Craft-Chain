@@ -135,25 +135,33 @@ final appRouter = GoRouter(
           ],
         ),
         StatefulShellBranch(
-          // Own-profile tab defaults to the fake current user's profile.
-          // TODO(task-02b): replace kFakeCurrentUserId with real Firebase UID.
-          initialLocation: '/profile/$kFakeCurrentUserId',
           routes: [
+            GoRoute(
+              path: '/profile',
+              name: 'profile-root',
+              redirect: (context, state) {
+                final sessionState = context.read<SessionCubit>().state;
+                final userId = sessionState is Authenticated
+                    ? sessionState.user.id
+                    : null;
+                // Fall back to something sane if unauthenticated; your outer
+                // redirect will bounce this to /welcome anyway before it renders.
+                return userId != null
+                    ? '/profile/$userId'
+                    : WelcomeScreen.routePath;
+              },
+            ),
             GoRoute(
               path: '/profile/:userId',
               name: 'profile',
               builder: (context, state) {
                 final userId = state.pathParameters['userId']!;
                 return BlocProvider(
-                  create: (_) => getIt<ProfileCubit>()..loadProfile(userId),
-                  child: ProfileScreen(userId: userId),
+                  create: (_) => getIt<ProfileCubit>()..getUserProfile(userId: userId),
+                  child: ProfileScreen(),
                 );
               },
               routes: [
-                // /profile/:userId/edit — pushed from ProfileScreen via
-                // context.push('edit', extra: user).
-                // It inherits the ProfileCubit from the parent route so save
-                // calls update the same state.
                 GoRoute(
                   path: 'edit',
                   name: 'profile-edit',

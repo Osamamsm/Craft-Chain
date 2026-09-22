@@ -1,6 +1,6 @@
 import 'package:craft_chain/core/theme/app_colors.dart';
 import 'package:craft_chain/core/theme/app_text_styles.dart';
-import 'package:craft_chain/core/data/models/app_user.dart';
+import 'package:craft_chain/features/profile/domain/entities/user_profile_entity.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:material_ui/material_ui.dart';
 
@@ -10,7 +10,7 @@ import 'package:material_ui/material_ui.dart';
 class MobileStatsRow extends StatelessWidget {
   const MobileStatsRow({super.key, required this.user});
 
-  final AppUser user;
+  final UserProfileEntity user;
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +27,7 @@ class MobileStatsRow extends StatelessWidget {
         ),
         const SizedBox(width: 10),
         _MobileStatBox(
-          value: '${user.canTeach.length}',
+          value: '${user.teaches.length}',
           labelKey: 'profile.skills_label',
         ),
       ],
@@ -81,7 +81,7 @@ class _MobileStatBox extends StatelessWidget {
 class WebStatsRow extends StatelessWidget {
   const WebStatsRow({super.key, required this.user});
 
-  final AppUser user;
+  final UserProfileEntity user;
 
   @override
   Widget build(BuildContext context) {
@@ -102,7 +102,7 @@ class WebStatsRow extends StatelessWidget {
         ),
         const SizedBox(width: 12),
         _WebStatBox(
-          value: '${user.canTeach.length}',
+          value: '${user.teaches.length}',
           labelKey: 'profile.skills_offered_label',
           colors: colors,
         ),

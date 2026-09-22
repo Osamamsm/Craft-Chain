@@ -1,6 +1,6 @@
 import 'package:craft_chain/core/theme/app_colors.dart';
 import 'package:craft_chain/core/theme/app_text_styles.dart';
-import 'package:craft_chain/core/data/models/app_user.dart';
+import 'package:craft_chain/features/profile/domain/entities/user_profile_entity.dart';
 import 'package:craft_chain/features/profile/presentation/logic/profile_cubit/profile_cubit.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:material_ui/material_ui.dart';
@@ -21,7 +21,7 @@ class ProfileBottomAction extends StatelessWidget {
   });
 
   final bool isOwnProfile;
-  final AppUser user;
+  final UserProfileEntity user;
 
   @override
   Widget build(BuildContext context) {
@@ -64,7 +64,7 @@ class ProfileWebAction extends StatelessWidget {
   });
 
   final bool isOwnProfile;
-  final AppUser user;
+  final UserProfileEntity user;
 
   @override
   Widget build(BuildContext context) {
@@ -78,12 +78,12 @@ class ProfileWebAction extends StatelessWidget {
 
 class _EditButton {
   /// Outlined blue button — used in mobile bottom bar.
-  static Widget outlined(BuildContext context, AppUser user) {
+  static Widget outlined(BuildContext context, UserProfileEntity user) {
     final colors = context.colors;
     return OutlinedButton(
       onPressed: () => context.pushNamed(
         'profile-edit',
-        pathParameters: {'userId': user.uid},
+        pathParameters: {'userId': user.id},
         extra: {'user': user, 'cubit': context.read<ProfileCubit>()},
       ),
       style: OutlinedButton.styleFrom(
@@ -100,11 +100,11 @@ class _EditButton {
   }
 
   /// Outlined white button — used inside the gradient header on web.
-  static Widget outlinedWhite(BuildContext context, AppUser user) {
+  static Widget outlinedWhite(BuildContext context, UserProfileEntity user) {
     return OutlinedButton(
       onPressed: () => context.pushNamed(
         'profile-edit',
-        pathParameters: {'userId': user.uid},
+        pathParameters: {'userId': user.id},
         extra: {'user': user, 'cubit': context.read<ProfileCubit>()},
       ),
       style: OutlinedButton.styleFrom(

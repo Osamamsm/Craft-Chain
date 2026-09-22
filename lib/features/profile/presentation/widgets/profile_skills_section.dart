@@ -3,6 +3,7 @@ import 'package:craft_chain/core/theme/app_colors.dart';
 import 'package:craft_chain/core/widgets/section_label.dart';
 import 'package:craft_chain/core/widgets/skill_chip.dart';
 import 'package:craft_chain/core/data/models/app_user.dart';
+import 'package:craft_chain/features/profile/domain/entities/user_profile_entity.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:material_ui/material_ui.dart';
 
@@ -12,7 +13,7 @@ import 'package:material_ui/material_ui.dart';
 class ProfileSkillsSection extends StatelessWidget {
   const ProfileSkillsSection({super.key, required this.user});
 
-  final AppUser user;
+  final UserProfileEntity user;
 
   @override
   Widget build(BuildContext context) {
@@ -39,10 +40,10 @@ class ProfileSkillsSection extends StatelessWidget {
         Wrap(
           spacing: 8,
           runSpacing: 8,
-          children: user.canTeach
+          children: user.teaches
               .map(
                 (s) => SkillChip(
-                  label: s,
+                  label: s.name,
                   type: SkillChipType.teach,
                   isSelected: true,
                 ),
@@ -60,7 +61,7 @@ class ProfileSkillsSection extends StatelessWidget {
           children: user.wantsToLearn
               .map(
                 (s) => SkillChip(
-                  label: s,
+                  label: s.name,
                   type: SkillChipType.learn,
                   isSelected: true,
                 ),

@@ -2,8 +2,8 @@ import 'package:craft_chain/core/theme/app_colors.dart';
 import 'package:craft_chain/core/theme/app_text_styles.dart';
 import 'package:craft_chain/core/widgets/empty_state.dart';
 import 'package:craft_chain/core/widgets/user_avatar.dart';
-import 'package:craft_chain/core/data/models/app_user.dart';
 import 'package:craft_chain/features/profile/data/models/review.dart';
+import 'package:craft_chain/features/profile/domain/entities/user_profile_entity.dart';
 import 'package:craft_chain/features/profile/presentation/logic/profile_cubit/profile_cubit.dart';
 import 'package:craft_chain/features/profile/presentation/widgets/profile_action_button.dart';
 import 'package:craft_chain/features/profile/presentation/widgets/profile_reviews_section.dart';
@@ -17,13 +17,9 @@ import 'package:go_router/go_router.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 class ProfileScreen extends StatelessWidget {
-  const ProfileScreen({super.key, required this.userId});
-
-  final String userId;
+  const ProfileScreen({super.key});
 
   static const String routePath = '/profile/:userId';
-
-  bool get _isOwnProfile => userId == kFakeCurrentUserId;
 
   @override
   Widget build(BuildContext context) {
@@ -34,15 +30,20 @@ class ProfileScreen extends StatelessWidget {
         }
 
         final isLoading = state is ProfileLoading || state is ProfileInitial;
-        final user = state is ProfileSuccess ? state.user : AppUser.placeholder;
+        final user = state is ProfileSuccess
+            ? state.user
+            : UserProfileEntity.placeHolder();
+        final isOwnProfile = state is ProfileSuccess
+            ? state.isOwnProfile
+            : false;
         final reviews = state is ProfileSuccess ? state.reviews : <Review>[];
 
         return Skeletonizer(
           enabled: isLoading,
           child: _ProfileBody(
-            user: user,
+            user: isLoading ? UserProfileEntity.placeHolder() : user,
             reviews: reviews,
-            isOwnProfile: _isOwnProfile,
+            isOwnProfile: isOwnProfile,
           ),
         );
       },
@@ -59,7 +60,7 @@ class _ProfileBody extends StatelessWidget {
     required this.isOwnProfile,
   });
 
-  final AppUser user;
+  final UserProfileEntity user;
   final List<Review> reviews;
   final bool isOwnProfile;
 
@@ -90,7 +91,7 @@ class _MobileLayout extends StatelessWidget {
     required this.isOwnProfile,
   });
 
-  final AppUser user;
+  final UserProfileEntity user;
   final List<Review> reviews;
   final bool isOwnProfile;
 
@@ -147,7 +148,7 @@ class _MobileLayout extends StatelessWidget {
 class _MobileHeader extends StatelessWidget {
   const _MobileHeader({required this.user, required this.isOwnProfile});
 
-  final AppUser user;
+  final UserProfileEntity user;
   final bool isOwnProfile;
 
   @override
@@ -171,14 +172,17 @@ class _MobileHeader extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
               child: Row(
+                mainAxisAlignment: .center,
                 children: [
-                  IconButton(
-                    icon: const Icon(Icons.arrow_back_ios_new_rounded),
-                    color: Colors.white,
-                    onPressed: () {
-                      if (context.canPop()) context.pop();
-                    },
-                  ),
+                  context.canPop()
+                      ? IconButton(
+                          icon: const Icon(Icons.arrow_back_ios_new_rounded),
+                          color: Colors.white,
+                          onPressed: () {
+                            if (context.canPop()) context.pop();
+                          },
+                        )
+                      : SizedBox.shrink(),
                   Expanded(
                     child: Text(
                       'profile.title'.tr(),
@@ -188,8 +192,6 @@ class _MobileHeader extends StatelessWidget {
                       ),
                     ),
                   ),
-                  // For symmetry — space equal to back button width
-                  const SizedBox(width: 48),
                 ],
               ),
             ),
@@ -201,13 +203,13 @@ class _MobileHeader extends StatelessWidget {
               initials: user.initials,
               imageUrl: user.photoUrl,
               radius: 48,
-              colorSeed: user.uid.hashCode,
+              colorSeed: user.id.hashCode,
             ),
             const SizedBox(height: 14),
 
             // ── Name ────────────────────────────────────────────────────
             Text(
-              user.name,
+              user.fullName,
               style: AppTextStyles.headlineMedium.copyWith(color: Colors.white),
             ),
             const SizedBox(height: 6),
@@ -280,7 +282,7 @@ class _WebLayout extends StatelessWidget {
     required this.isOwnProfile,
   });
 
-  final AppUser user;
+  final UserProfileEntity user;
   final List<Review> reviews;
   final bool isOwnProfile;
 
@@ -332,7 +334,7 @@ class _WebLayout extends StatelessWidget {
                                       initials: user.initials,
                                       imageUrl: user.photoUrl,
                                       radius: 40,
-                                      colorSeed: user.uid.hashCode,
+                                      colorSeed: user.id.hashCode,
                                     ),
                                     const SizedBox(width: 20),
                                     // Name, city, rating
@@ -342,7 +344,7 @@ class _WebLayout extends StatelessWidget {
                                             CrossAxisAlignment.start,
                                         children: [
                                           Text(
-                                            user.name,
+                                            user.fullName,
                                             style: AppTextStyles.headlineMedium
                                                 .copyWith(color: Colors.white),
                                           ),

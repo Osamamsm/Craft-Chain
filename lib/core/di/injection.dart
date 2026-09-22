@@ -62,7 +62,7 @@ void configureDependencies() {
     () => ProfileRemoteDataSourceImpl(supabaseClient),
   );
   getIt.registerLazySingleton<ProfileRepo>(() => ProfileRepoImpl(getIt()));
-  getIt.registerFactory<ProfileCubit>(() => ProfileCubit());
+  getIt.registerFactory<ProfileCubit>(() => ProfileCubit(getIt()));
   getIt.registerFactory<ProfileSetupCubit>(() => ProfileSetupCubit(getIt()));
 
   // Core Logic
