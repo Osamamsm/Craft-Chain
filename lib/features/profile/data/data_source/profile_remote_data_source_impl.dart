@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:craft_chain/features/profile/data/data_source/profile_remote_data_source.dart';
 import 'package:craft_chain/features/profile/data/models/complete_profile_params_model.dart';
-import 'package:craft_chain/features/profile/domain/entities/user_profile_entity.dart';
+import 'package:craft_chain/features/profile/data/models/user_profile_model.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
@@ -31,9 +31,13 @@ class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
   }
 
   @override
-  Future<UserProfileEntity> getUserProfile({String? userId}) {
-    // TODO: implement getUserProfile
-    throw UnimplementedError();
+  Future<UserProfileModel> getUserProfile({String? userId}) async {
+    final response = await _supabaseClient.rpc(
+      "get_user_profile",
+      params: {"p_user_id": userId},
+    );
+
+    return UserProfileModel.fromJson(response as Map<String, dynamic>);
   }
 }
 

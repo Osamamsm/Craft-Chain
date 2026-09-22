@@ -27,8 +27,16 @@ class ProfileRepoImpl implements ProfileRepo {
   }
 
   @override
-  Future<Either<Failure, UserProfileEntity>> getUserProfile({String? userId}) {
-    // TODO: implement getUserProfile
-    throw UnimplementedError();
+  Future<Either<Failure, UserProfileEntity>> getUserProfile({
+    String? userId,
+  }) async {
+    try {
+      final userProfileModel = await _remoteDataSource.getUserProfile(
+        userId: userId,
+      );
+      return Right(userProfileModel);
+    } catch (e) {
+      return Left(ExceptionMapper.mapExceptionToFailure(e));
+    }
   }
 }
