@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:craft_chain/features/profile/data/data_source/profile_remote_data_source.dart';
 import 'package:craft_chain/features/profile/data/models/complete_profile_params_model.dart';
+import 'package:craft_chain/features/profile/data/models/update_profile_params_model.dart';
 import 'package:craft_chain/features/profile/data/models/user_profile_model.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -38,6 +39,14 @@ class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
     );
 
     return UserProfileModel.fromJson(response as Map<String, dynamic>);
+  }
+
+  @override
+  Future<void> updateProfile({required UpdateProfileParamsModel params}) async {
+    await _supabaseClient.functions.invoke(
+      'update-profile',
+      body: params.toJson(),
+    );
   }
 }
 
