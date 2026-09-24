@@ -26,4 +26,13 @@ class UpdateProfileParams {
   bool get hasSkills => teachingSkills != null || learningSkills != null;
 
   bool get hasPhoto => photo != null;
+
+  bool get isEmpty =>
+    fullName == null &&
+    gender == null &&
+    city == null &&
+    bio == null &&
+    photo == null &&
+    teachingSkills == null &&
+    learningSkills == null;
 }

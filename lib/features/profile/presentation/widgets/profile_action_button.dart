@@ -2,6 +2,7 @@ import 'package:craft_chain/core/theme/app_colors.dart';
 import 'package:craft_chain/core/theme/app_text_styles.dart';
 import 'package:craft_chain/features/profile/domain/entities/user_profile_entity.dart';
 import 'package:craft_chain/features/profile/presentation/logic/profile_cubit/profile_cubit.dart';
+import 'package:craft_chain/features/profile/presentation/views/edit_profile_screen.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -84,7 +85,7 @@ class _EditButton {
       onPressed: () => context.pushNamed(
         'profile-edit',
         pathParameters: {'userId': user.id},
-        extra: {'user': user, 'cubit': context.read<ProfileCubit>()},
+        extra: user,
       ),
       style: OutlinedButton.styleFrom(
         foregroundColor: colors.primary,

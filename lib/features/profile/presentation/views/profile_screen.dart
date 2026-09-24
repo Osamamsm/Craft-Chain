@@ -29,23 +29,21 @@ class ProfileScreen extends StatelessWidget {
           return _ErrorBody(message: state.message);
         }
 
-        final isLoading = state is ProfileLoading || state is ProfileInitial;
-        final user = state is ProfileSuccess
-            ? state.user
-            : UserProfileEntity.placeHolder();
-        final isOwnProfile = state is ProfileSuccess
-            ? state.isOwnProfile
-            : false;
-        final reviews = state is ProfileSuccess ? state.reviews : <Review>[];
-
-        return Skeletonizer(
-          enabled: isLoading,
-          child: _ProfileBody(
-            user: isLoading ? UserProfileEntity.placeHolder() : user,
-            reviews: reviews,
-            isOwnProfile: isOwnProfile,
-          ),
-        );
+        if (state is ProfileSuccess) {
+          return _ProfileBody(
+            user: state.user,
+            reviews: state.reviews,
+            isOwnProfile: state.isOwnProfile,
+          );
+        } else {
+          return Skeletonizer(
+            child: _ProfileBody(
+              user: UserProfileEntity.placeHolder(),
+              reviews: const [],
+              isOwnProfile: false,
+            ),
+          );
+        }
       },
     );
   }

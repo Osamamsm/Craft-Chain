@@ -16,34 +16,38 @@ class ProfileSuccess extends ProfileState {
     required this.isOwnProfile,
     this.isSaving = false,
     this.isSaved = false,
+    this.saveError,
   });
 
   final UserProfileEntity user;
   final List<Review> reviews;
   final bool isOwnProfile;
-
-  /// True while [ProfileCubit.saveProfile] is in progress.
   final bool isSaving;
-
-  /// Flipped to true after a successful save; consumed by BlocListener.
   final bool isSaved;
+  final String? saveError;
 
   ProfileSuccess copyWith({
     UserProfileEntity? user,
     List<Review>? reviews,
     bool? isSaving,
     bool? isSaved,
-    bool? isOwnProfile
+    bool? isOwnProfile,
+    Object? saveError = _unset,
   }) {
     return ProfileSuccess(
       user: user ?? this.user,
       reviews: reviews ?? this.reviews,
       isSaving: isSaving ?? this.isSaving,
       isSaved: isSaved ?? this.isSaved,
-      isOwnProfile: isOwnProfile ?? this.isOwnProfile
+      isOwnProfile: isOwnProfile ?? this.isOwnProfile,
+      saveError: identical(saveError, _unset)
+          ? this.saveError
+          : saveError as String?,
     );
   }
 }
+
+const _unset = Object();
 
 class ProfileFailure extends ProfileState {
   ProfileFailure({required this.message});

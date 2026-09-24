@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:craft_chain/core/di/injection.dart';
-import 'package:craft_chain/core/data/models/app_user.dart';
+import 'package:craft_chain/features/profile/domain/entities/user_profile_entity.dart';
 import 'package:craft_chain/features/auth/presentation/Cubits/session_cubit/session_cubit.dart';
 import 'package:craft_chain/features/auth/presentation/Cubits/session_cubit/session_state.dart';
 import 'package:craft_chain/features/auth/presentation/views/forgot_password_screen.dart';
@@ -151,28 +151,38 @@ final appRouter = GoRouter(
                     : WelcomeScreen.routePath;
               },
             ),
-            GoRoute(
-              path: '/profile/:userId',
-              name: 'profile',
-              builder: (context, state) {
+            ShellRoute(
+              builder: (context, state, child) {
                 final userId = state.pathParameters['userId']!;
+                final sessionState = context.read<SessionCubit>().state;
+                final isOwnProfile =
+                    sessionState is Authenticated &&
+                    sessionState.user.id == userId;
+
                 return BlocProvider(
-                  create: (_) => getIt<ProfileCubit>()..getUserProfile(userId: userId),
-                  child: ProfileScreen(),
+                  key: ValueKey(
+                    userId,
+                  ), // new cubit when viewing a different user
+                  create: (_) => getIt<ProfileCubit>()
+                    ..getUserProfile(
+                      userId: userId,
+                      isOwnProfile: isOwnProfile,
+                    ),
+                  child: child,
                 );
               },
               routes: [
                 GoRoute(
-                  path: 'edit',
+                  path: '/profile/:userId',
+                  name: 'profile',
+                  builder: (context, state) => const ProfileScreen(),
+                ),
+                GoRoute(
+                  path: '/profile/:userId/edit',
                   name: 'profile-edit',
                   builder: (context, state) {
-                    final extra = state.extra! as Map<String, dynamic>;
-                    final user = extra['user'] as AppUser;
-                    final cubit = extra['cubit'] as ProfileCubit;
-                    return BlocProvider.value(
-                      value: cubit,
-                      child: EditProfileScreen(user: user),
-                    );
+                    final user = state.extra as UserProfileEntity;
+                    return EditProfileScreen(user: user);
                   },
                 ),
               ],
