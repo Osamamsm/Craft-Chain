@@ -15,4 +15,6 @@ abstract class ProfileRepo {
   Future<Either<Failure, void>> updateProfile({
     required UpdateProfileParams params,
   });
+
+  Future<Either<Failure, bool>> isProfileComplete();
 }

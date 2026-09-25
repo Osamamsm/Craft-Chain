@@ -48,6 +48,17 @@ class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
       body: params.toJson(),
     );
   }
+
+  @override
+  Future<bool> isProfileComplete() async {
+    final response = await _supabaseClient
+        .from('users')
+        .select('is_profile_complete')
+        .eq('id', _supabaseClient.auth.currentUser!.id)
+        .single();
+
+    return response as bool;
+  }
 }
 
 List<Map<String, dynamic>> _skillsToJson(

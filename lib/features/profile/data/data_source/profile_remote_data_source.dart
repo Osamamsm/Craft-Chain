@@ -8,4 +8,6 @@ abstract class ProfileRemoteDataSource {
   Future<UserProfileModel> getUserProfile({String? userId});
 
   Future<void> updateProfile({required UpdateProfileParamsModel params});
+
+  Future<bool> isProfileComplete();
 }

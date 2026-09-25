@@ -55,4 +55,13 @@ class ProfileRepoImpl implements ProfileRepo {
       return Left(ExceptionMapper.mapExceptionToFailure(e));
     }
   }
+
+  @override
+  Future<Either<Failure, bool>> isProfileComplete() async {
+    try {
+      return Right(await _remoteDataSource.isProfileComplete());
+    } catch (e) {
+      return Left(ExceptionMapper.mapExceptionToFailure(e));
+    }
+  }
 }

@@ -71,4 +71,9 @@ class ProfileCubit extends Cubit<ProfileState> {
       },
     );
   }
+
+  Future<bool?> checkIsProfileComplete() async {
+    final result = await _profileRepo.isProfileComplete();
+    return result.fold((failure) => null, (isComplete) => isComplete);
+  }
 }
