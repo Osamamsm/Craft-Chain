@@ -3,7 +3,6 @@ import 'package:craft_chain/features/profile/presentation/widgets/wizard_widgets
 import 'package:craft_chain/features/profile/presentation/widgets/wizard_widgets/step2_teach_skills.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:craft_chain/core/theme/app_colors.dart';
 import 'package:craft_chain/features/profile/presentation/logic/profile_setup_cubit/profile_setup_cubit.dart';
@@ -11,6 +10,7 @@ import 'package:craft_chain/features/profile/presentation/logic/profile_setup_cu
 import 'package:craft_chain/features/profile/presentation/widgets/wizard_widgets/mobile_progress_bar.dart';
 import 'package:craft_chain/features/profile/presentation/widgets/wizard_widgets/wizard_web_sidebar.dart';
 
+import 'package:craft_chain/features/auth/presentation/Cubits/session_cubit/session_cubit.dart';
 import 'package:craft_chain/core/layout/responsive_layout.dart';
 
 class ProfileSetupWizardScreen extends StatefulWidget {
@@ -88,7 +88,7 @@ class _ProfileSetupWizardScreenState extends State<ProfileSetupWizardScreen> {
         _animateToPage(state.stepIndex);
 
         if (state.isComplete) {
-          context.go('/home');
+          context.read<SessionCubit>().markProfileComplete();
         }
 
         if (state.errorMessage != null) {

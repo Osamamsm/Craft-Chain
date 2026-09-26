@@ -18,11 +18,12 @@ class SessionLoading extends SessionState {
 
 class Authenticated extends SessionState {
   final UserEntity user;
+  final bool isProfileComplete;
 
-  const Authenticated({required this.user});
+  const Authenticated({required this.user, this.isProfileComplete = false});
 
   @override
-  List<Object?> get props => [user];
+  List<Object?> get props => [user, isProfileComplete];
 }
 
 class Unauthenticated extends SessionState {

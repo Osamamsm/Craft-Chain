@@ -21,6 +21,7 @@ import 'package:craft_chain/features/profile/presentation/views/edit_profile_scr
 import 'package:craft_chain/features/profile/presentation/views/profile_screen.dart';
 import 'package:craft_chain/features/profile/presentation/logic/profile_setup_cubit/profile_setup_cubit.dart';
 import 'package:craft_chain/features/profile/presentation/views/profile_setup_wizard.dart';
+import 'package:craft_chain/features/splash/presentation/screens/splash_screen.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:material_ui/material_ui.dart';
@@ -31,7 +32,12 @@ final appRouter = GoRouter(
     final sessionState = context.read<SessionCubit>().state;
 
     final isAuthenticated = sessionState is Authenticated;
+    final isProfileComplete = sessionState is Authenticated
+        ? sessionState.isProfileComplete
+        : false;
     final isPasswordRecovery = sessionState is PasswordRecovery;
+
+    final isSplashRoute = state.matchedLocation == SplashScreen.routePath;
 
     final isAuthRoute =
         state.matchedLocation == SignInScreen.routePath ||
@@ -41,8 +47,7 @@ final appRouter = GoRouter(
         state.matchedLocation == ResetPasswordScreen.routePath;
 
     if (sessionState is SessionLoading || sessionState is SessionInitial) {
-      // TODO: replace with splash screen
-      return null;
+      return isSplashRoute ? null : SplashScreen.routePath;
     }
 
     // Password recovery has priority over normal authentication.
@@ -54,18 +59,43 @@ final appRouter = GoRouter(
       return null;
     }
 
+    if (isSplashRoute) {
+      if (sessionState is PasswordRecovery) {
+        return ResetPasswordScreen.routePath;
+      }
+      if (!isAuthenticated) return WelcomeScreen.routePath;
+      return isProfileComplete
+          ? MatchFeedScreen.routePath
+          : ProfileSetupWizardScreen.routePath;
+    }
+
     if (!isAuthenticated && !isAuthRoute) {
       return WelcomeScreen.routePath;
     }
 
-    if (isAuthenticated && isAuthRoute) {
-      return MatchFeedScreen.routePath;
+    if (isAuthenticated) {
+      if (!isProfileComplete &&
+          state.matchedLocation != ProfileSetupWizardScreen.routePath) {
+        return ProfileSetupWizardScreen.routePath;
+      }
+      if (isProfileComplete &&
+          state.matchedLocation == ProfileSetupWizardScreen.routePath) {
+        return MatchFeedScreen.routePath;
+      }
+      if (isProfileComplete && isAuthRoute) {
+        return MatchFeedScreen.routePath;
+      }
     }
 
     return null;
   },
   debugLogDiagnostics: false,
   routes: [
+    GoRoute(
+      path: SplashScreen.routePath,
+      name: 'splash',
+      builder: (context, state) => const SplashScreen(),
+    ),
     GoRoute(
       path: WelcomeScreen.routePath,
       name: 'welcome',

@@ -57,7 +57,7 @@ class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
         .eq('id', _supabaseClient.auth.currentUser!.id)
         .single();
 
-    return response as bool;
+    return response['is_profile_complete'] as bool;
   }
 }
 

@@ -44,7 +44,7 @@ void configureDependencies() {
     () => SessionDataSourceImpl(getIt()),
   );
   getIt.registerLazySingleton<SessionRepo>(() => SessionRepoImpl(getIt()));
-  getIt.registerFactory<SessionCubit>(() => SessionCubit(getIt()));
+  getIt.registerLazySingleton<SessionCubit>(() => SessionCubit(getIt(), getIt()));
 
   // Matching
   getIt.registerFactory<MatchFeedCubit>(() => MatchFeedCubit());
