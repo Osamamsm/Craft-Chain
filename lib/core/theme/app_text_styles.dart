@@ -47,6 +47,12 @@ class AppTextStyles {
     height: 1.5,
   );
 
+  static const TextStyle labelMedium = TextStyle(
+    fontSize: 12,
+    fontWeight: FontWeight.w600,
+    height: 1.4,
+  );
+
   static const TextStyle labelUppercase = TextStyle(
     fontSize: 11,
     fontWeight: FontWeight.w600,

@@ -2,13 +2,15 @@ import 'dart:async';
 
 import 'package:craft_chain/features/auth/domain/repo/session_repo.dart';
 import 'package:craft_chain/features/auth/presentation/Cubits/session_cubit/session_state.dart';
+import 'package:craft_chain/features/profile/domain/repo/profile_repo.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class SessionCubit extends Cubit<SessionState> {
   final SessionRepo _sessionRepo;
+  final ProfileRepo _profileRepo;
   StreamSubscription? _authStateSubscription;
-  SessionCubit(this._sessionRepo) : super(const SessionInitial()) {
+  SessionCubit(this._sessionRepo, this._profileRepo) : super(const SessionInitial()) {
     _authStateSubscription = _sessionRepo.onAuthStateChange.listen((authState) {
       switch (authState.event) {
         case AuthChangeEvent.passwordRecovery:
@@ -19,7 +21,7 @@ class SessionCubit extends Cubit<SessionState> {
 
         case AuthChangeEvent.signedIn:
           if (authState.user != null) {
-            emit(Authenticated(user: authState.user!));
+            _checkProfileAndEmitAuthenticated(authState.user!);
           }
           break;
 
@@ -40,7 +42,7 @@ class SessionCubit extends Cubit<SessionState> {
       user,
     ) {
       if (user != null) {
-        emit(Authenticated(user: user));
+        _checkProfileAndEmitAuthenticated(user);
       } else {
         emit(const Unauthenticated());
       }
@@ -54,6 +56,21 @@ class SessionCubit extends Cubit<SessionState> {
       (failure) => emit(SessionError(message: failure.message)),
       (_) => emit(const Unauthenticated()),
     );
+  }
+
+  Future<void> _checkProfileAndEmitAuthenticated(user) async {
+    final result = await _profileRepo.isProfileComplete();
+    final isComplete = result.fold((_) => false, (complete) => complete);
+    emit(Authenticated(user: user, isProfileComplete: isComplete));
+  }
+
+  void markProfileComplete() {
+    if (state is Authenticated) {
+      emit(Authenticated(
+        user: (state as Authenticated).user,
+        isProfileComplete: true,
+      ));
+    }
   }
 
   @override

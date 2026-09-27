@@ -3,7 +3,7 @@ import 'package:craft_chain/core/theme/app_text_styles.dart';
 import 'package:craft_chain/core/widgets/skill_chip.dart';
 import 'package:craft_chain/core/widgets/user_avatar.dart';
 import 'package:craft_chain/features/matching/model/models/match_suggestion.dart';
-import 'package:craft_chain/features/profile/views/profile_screen.dart';
+import 'package:craft_chain/features/profile/presentation/views/profile_screen.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:go_router/go_router.dart';

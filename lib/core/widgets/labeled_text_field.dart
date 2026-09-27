@@ -19,18 +19,24 @@ class LabeledTextField extends StatelessWidget {
     super.key,
     required this.label,
     required this.hintText,
+    this.controller,
     this.prefixIcon,
     this.minLines,
     this.maxLines = 1,
     this.maxLength,
     this.keyboardType,
     this.textCapitalization = TextCapitalization.sentences,
-    required this.onSaved, required this.initialValue,
+    this.onSaved,
+    this.initialValue,
+    this.validator,
   });
 
   final String label;
-  final String initialValue;
-  final void Function(String?) onSaved;
+  /// When provided, [controller] takes precedence over [initialValue].
+  final TextEditingController? controller;
+  final String? initialValue;
+  final void Function(String?)? onSaved;
+  final FormFieldValidator<String>? validator;
   final String hintText;
   final Widget? prefixIcon;
   final int? minLines;
@@ -53,8 +59,10 @@ class LabeledTextField extends StatelessWidget {
         ),
         const SizedBox(height: 6),
         TextFormField(
-          initialValue: initialValue,
+          controller: controller,
+          initialValue: controller == null ? initialValue : null,
           onSaved: onSaved,
+          validator: validator,
           keyboardType: keyboardType,
           textCapitalization: textCapitalization,
           minLines: minLines,

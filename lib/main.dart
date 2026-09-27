@@ -22,8 +22,8 @@ void main() async {
       path: 'assets/translations',
       fallbackLocale: const Locale('en'),
       startLocale: const Locale('en'),
-      child: MultiBlocProvider(
-        providers: [BlocProvider(create: (_) => getIt<AuthCubit>())],
+      child: BlocProvider(
+        create: (_) => getIt<AuthCubit>(),
         child: const CraftChainApp(),
       ),
     ),

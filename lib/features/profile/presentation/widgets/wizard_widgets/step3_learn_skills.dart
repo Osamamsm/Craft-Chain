@@ -1,0 +1,46 @@
+import 'package:craft_chain/core/widgets/skill_chip.dart';
+import 'package:craft_chain/features/profile/presentation/logic/profile_setup_cubit/profile_setup_cubit.dart';
+import 'package:craft_chain/features/profile/presentation/logic/profile_setup_cubit/profile_setup_state.dart';
+import 'package:craft_chain/features/profile/presentation/widgets/wizard_widgets/skill_selector.dart';
+import 'package:craft_chain/features/profile/presentation/widgets/wizard_widgets/wizard_step_footer.dart';
+import 'package:craft_chain/features/profile/presentation/widgets/wizard_widgets/wizard_step_scaffold.dart';
+import 'package:material_ui/material_ui.dart';
+import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+class Step3LearnSkills extends StatelessWidget {
+  const Step3LearnSkills({
+    super.key,
+    required this.state,
+    required this.searchController,
+    required this.searchQuery,
+    required this.isWeb,
+  });
+
+  final ProfileSetupState state;
+  final TextEditingController searchController;
+  final String searchQuery;
+  final bool isWeb;
+
+  @override
+  Widget build(BuildContext context) {
+    return WizardStepScaffold(
+      titleKey: 'profile.step_3_title',
+      subtitleKey: 'profile.step_3_subtitle',
+      isWeb: isWeb,
+      body: SkillSelector(
+        selectedSkills: state.learnSkills,
+        type: SkillChipType.learn,
+        searchController: searchController,
+        searchQuery: searchQuery,
+        onToggle: context.read<ProfileSetupCubit>().toggleLearnSkill,
+      ),
+      footer: WizardStepFooter(
+        isValid: state.isStep3Valid,
+        isLastStep: true,
+        isLoading: state.isLoading,
+        isWeb: isWeb,
+      ),
+    ).animate().fadeIn(duration: 250.ms);
+  }
+}

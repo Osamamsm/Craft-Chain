@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:craft_chain/core/di/injection.dart';
-import 'package:craft_chain/core/data/models/app_user.dart';
+import 'package:craft_chain/features/profile/domain/entities/user_profile_entity.dart';
 import 'package:craft_chain/features/auth/presentation/Cubits/session_cubit/session_cubit.dart';
 import 'package:craft_chain/features/auth/presentation/Cubits/session_cubit/session_state.dart';
 import 'package:craft_chain/features/auth/presentation/views/forgot_password_screen.dart';
@@ -16,11 +16,12 @@ import 'package:craft_chain/features/explore/view_model/explore_cubit/explore_cu
 import 'package:craft_chain/features/explore/views/explore_screen.dart';
 import 'package:craft_chain/features/home/main_shell.dart';
 import 'package:craft_chain/features/matching/views/match_feed_screen.dart';
-import 'package:craft_chain/features/profile/view_model/profile_cubit/profile_cubit.dart';
-import 'package:craft_chain/features/profile/views/edit_profile_screen.dart';
-import 'package:craft_chain/features/profile/views/profile_screen.dart';
-import 'package:craft_chain/features/profile/wizard/view_model/profile_setup_cubit/profile_setup_cubit.dart';
-import 'package:craft_chain/features/profile/wizard/views/profile_setup_wizard.dart';
+import 'package:craft_chain/features/profile/presentation/logic/profile_cubit/profile_cubit.dart';
+import 'package:craft_chain/features/profile/presentation/views/edit_profile_screen.dart';
+import 'package:craft_chain/features/profile/presentation/views/profile_screen.dart';
+import 'package:craft_chain/features/profile/presentation/logic/profile_setup_cubit/profile_setup_cubit.dart';
+import 'package:craft_chain/features/profile/presentation/views/profile_setup_wizard.dart';
+import 'package:craft_chain/features/splash/presentation/screens/splash_screen.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:material_ui/material_ui.dart';
@@ -31,7 +32,12 @@ final appRouter = GoRouter(
     final sessionState = context.read<SessionCubit>().state;
 
     final isAuthenticated = sessionState is Authenticated;
+    final isProfileComplete = sessionState is Authenticated
+        ? sessionState.isProfileComplete
+        : false;
     final isPasswordRecovery = sessionState is PasswordRecovery;
+
+    final isSplashRoute = state.matchedLocation == SplashScreen.routePath;
 
     final isAuthRoute =
         state.matchedLocation == SignInScreen.routePath ||
@@ -41,8 +47,7 @@ final appRouter = GoRouter(
         state.matchedLocation == ResetPasswordScreen.routePath;
 
     if (sessionState is SessionLoading || sessionState is SessionInitial) {
-      // TODO: replace with splash screen
-      return null;
+      return isSplashRoute ? null : SplashScreen.routePath;
     }
 
     // Password recovery has priority over normal authentication.
@@ -54,18 +59,43 @@ final appRouter = GoRouter(
       return null;
     }
 
+    if (isSplashRoute) {
+      if (sessionState is PasswordRecovery) {
+        return ResetPasswordScreen.routePath;
+      }
+      if (!isAuthenticated) return WelcomeScreen.routePath;
+      return isProfileComplete
+          ? MatchFeedScreen.routePath
+          : ProfileSetupWizardScreen.routePath;
+    }
+
     if (!isAuthenticated && !isAuthRoute) {
       return WelcomeScreen.routePath;
     }
 
-    if (isAuthenticated && isAuthRoute) {
-      return MatchFeedScreen.routePath;
+    if (isAuthenticated) {
+      if (!isProfileComplete &&
+          state.matchedLocation != ProfileSetupWizardScreen.routePath) {
+        return ProfileSetupWizardScreen.routePath;
+      }
+      if (isProfileComplete &&
+          state.matchedLocation == ProfileSetupWizardScreen.routePath) {
+        return MatchFeedScreen.routePath;
+      }
+      if (isProfileComplete && isAuthRoute) {
+        return MatchFeedScreen.routePath;
+      }
     }
 
     return null;
   },
   debugLogDiagnostics: false,
   routes: [
+    GoRoute(
+      path: SplashScreen.routePath,
+      name: 'splash',
+      builder: (context, state) => const SplashScreen(),
+    ),
     GoRoute(
       path: WelcomeScreen.routePath,
       name: 'welcome',
@@ -135,36 +165,54 @@ final appRouter = GoRouter(
           ],
         ),
         StatefulShellBranch(
-          // Own-profile tab defaults to the fake current user's profile.
-          // TODO(task-02b): replace kFakeCurrentUserId with real Firebase UID.
-          initialLocation: '/profile/$kFakeCurrentUserId',
           routes: [
             GoRoute(
-              path: '/profile/:userId',
-              name: 'profile',
-              builder: (context, state) {
+              path: '/profile',
+              name: 'profile-root',
+              redirect: (context, state) {
+                final sessionState = context.read<SessionCubit>().state;
+                final userId = sessionState is Authenticated
+                    ? sessionState.user.id
+                    : null;
+                // Fall back to something sane if unauthenticated; your outer
+                // redirect will bounce this to /welcome anyway before it renders.
+                return userId != null
+                    ? '/profile/$userId'
+                    : WelcomeScreen.routePath;
+              },
+            ),
+            ShellRoute(
+              builder: (context, state, child) {
                 final userId = state.pathParameters['userId']!;
+                final sessionState = context.read<SessionCubit>().state;
+                final isOwnProfile =
+                    sessionState is Authenticated &&
+                    sessionState.user.id == userId;
+
                 return BlocProvider(
-                  create: (_) => getIt<ProfileCubit>()..loadProfile(userId),
-                  child: ProfileScreen(userId: userId),
+                  key: ValueKey(
+                    userId,
+                  ), // new cubit when viewing a different user
+                  create: (_) => getIt<ProfileCubit>()
+                    ..getUserProfile(
+                      userId: userId,
+                      isOwnProfile: isOwnProfile,
+                    ),
+                  child: child,
                 );
               },
               routes: [
-                // /profile/:userId/edit — pushed from ProfileScreen via
-                // context.push('edit', extra: user).
-                // It inherits the ProfileCubit from the parent route so save
-                // calls update the same state.
                 GoRoute(
-                  path: 'edit',
+                  path: '/profile/:userId',
+                  name: 'profile',
+                  builder: (context, state) => const ProfileScreen(),
+                ),
+                GoRoute(
+                  path: '/profile/:userId/edit',
                   name: 'profile-edit',
                   builder: (context, state) {
-                    final extra = state.extra! as Map<String, dynamic>;
-                    final user = extra['user'] as AppUser;
-                    final cubit = extra['cubit'] as ProfileCubit;
-                    return BlocProvider.value(
-                      value: cubit,
-                      child: EditProfileScreen(user: user),
-                    );
+                    final user = state.extra as UserProfileEntity;
+                    return EditProfileScreen(user: user);
                   },
                 ),
               ],
