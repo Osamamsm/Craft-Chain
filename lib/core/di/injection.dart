@@ -15,7 +15,7 @@ import 'package:craft_chain/features/barter/view_model/barter_request_cubit/bart
 import 'package:craft_chain/features/barter/view_model/barter_room_cubit/barter_room_cubit.dart';
 import 'package:craft_chain/features/barter/view_model/create_barter_cubit/create_barter_cubit.dart';
 import 'package:craft_chain/features/explore/view_model/explore_cubit/explore_cubit.dart';
-import 'package:craft_chain/features/matching/view_model/match_feed_cubit/match_feed_cubit.dart';
+import 'package:craft_chain/features/matching/presentation/logic/match_feed_cubit/match_feed_cubit.dart';
 import 'package:craft_chain/features/profile/data/data_source/profile_remote_data_source.dart';
 import 'package:craft_chain/features/profile/data/data_source/profile_remote_data_source_impl.dart';
 import 'package:craft_chain/features/profile/data/repo/profile_repo_impl.dart';

@@ -1,5 +1,5 @@
-import 'package:craft_chain/features/matching/model/models/match_suggestion.dart';
-import 'package:craft_chain/features/matching/view_model/match_feed_cubit/match_feed_state.dart';
+import 'package:craft_chain/features/matching/data/models/match_suggestion.dart';
+import 'package:craft_chain/features/matching/presentation/logic/match_feed_cubit/match_feed_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 // ── Fake data (UI-only) ───────────────────────────────────────────────────────

@@ -1,6 +1,6 @@
 // ── Filter enum ───────────────────────────────────────────────────────────────
 
-import 'package:craft_chain/features/matching/model/models/match_suggestion.dart';
+import 'package:craft_chain/features/matching/data/models/match_suggestion.dart';
 
 enum MatchFeedFilter { all, tech, design, languages, crafts, business }
 

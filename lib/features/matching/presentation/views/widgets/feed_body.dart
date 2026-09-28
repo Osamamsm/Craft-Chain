@@ -1,10 +1,10 @@
 import 'package:craft_chain/core/theme/app_colors.dart';
 import 'package:craft_chain/core/theme/app_text_styles.dart';
 import 'package:craft_chain/core/widgets/empty_state.dart';
-import 'package:craft_chain/features/matching/model/models/match_suggestion.dart';
-import 'package:craft_chain/features/matching/view_model/match_feed_cubit/match_feed_cubit.dart';
-import 'package:craft_chain/features/matching/view_model/match_feed_cubit/match_feed_state.dart';
-import 'package:craft_chain/features/matching/views/widgets/match_card.dart';
+import 'package:craft_chain/features/matching/data/models/match_suggestion.dart';
+import 'package:craft_chain/features/matching/presentation/logic/match_feed_cubit/match_feed_cubit.dart';
+import 'package:craft_chain/features/matching/presentation/logic/match_feed_cubit/match_feed_state.dart';
+import 'package:craft_chain/features/matching/presentation/views/widgets/match_card.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter_animate/flutter_animate.dart';
