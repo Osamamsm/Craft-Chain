@@ -35,18 +35,4 @@ class MatchModel extends MatchEntity {
         .map((e) => SkillModel.fromJson(e as Map<String, dynamic>))
         .toList();
   }
-
-  Map<String, dynamic> toJson() => {
-    'user_id': userId,
-    'full_name': fullName,
-    'photo_url': photoUrl,
-    'city': city,
-    'rating': rating,
-    'barter_count': barterCount,
-    'match_percent': matchPercent,
-    'teaches': teaches.map((e) => (e as SkillModel).toJson()).toList(),
-    'wants_to_learn': wantsToLearn
-        .map((e) => (e as SkillModel).toJson())
-        .toList(),
-  };
 }

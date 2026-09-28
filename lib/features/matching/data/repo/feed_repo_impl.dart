@@ -8,8 +8,18 @@ class FeedRepoImpl implements FeedRepo {
   final FeedDataSource _remoteDataSource;
   FeedRepoImpl(this._remoteDataSource);
   @override
-  Future<Either<Failure, List<MatchEntity>>> getMatchingUsers() {
-    // TODO: implement getMatchingUsers
-    throw UnimplementedError();
+  Future<Either<Failure, List<MatchEntity>>> getMatchingUsers({
+    required int page,
+    int? categoryId,
+  }) async {
+    try {
+      final result = await _remoteDataSource.getMatchingUsers(
+        page: page,
+        categoryId: categoryId,
+      );
+      return right(result);
+    } catch (e) {
+      return left(ServerFailure(e.toString()));
+    }
   }
 }
