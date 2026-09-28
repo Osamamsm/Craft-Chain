@@ -1,7 +1,7 @@
 import 'package:craft_chain/core/theme/app_colors.dart';
 import 'package:craft_chain/core/theme/app_text_styles.dart';
 import 'package:craft_chain/core/widgets/empty_state.dart';
-import 'package:craft_chain/features/matching/data/models/match_suggestion.dart';
+import 'package:craft_chain/features/matching/domain/entities/match_entity.dart';
 import 'package:craft_chain/features/matching/presentation/logic/match_feed_cubit/match_feed_cubit.dart';
 import 'package:craft_chain/features/matching/presentation/logic/match_feed_cubit/match_feed_state.dart';
 import 'package:craft_chain/features/matching/presentation/views/widgets/match_card.dart';
@@ -10,20 +10,6 @@ import 'package:material_ui/material_ui.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:skeletonizer/skeletonizer.dart';
-
-final _kSkeletonItems = List.generate(
-  5,
-  (_) => const MatchSuggestion(
-    userId: 'skeleton',
-    name: 'Loading Name Here',
-    city: 'Some City',
-    canTeach: ['Skill One', 'Skill Two', 'Three'],
-    wantsToLearn: ['Learn A', 'Learn B'],
-    matchScore: 82,
-    rating: 4.5,
-    barterCount: 8,
-  ),
-);
 
 class FeedBody extends StatelessWidget {
   const FeedBody({super.key, required this.state, required this.isWeb});
@@ -35,8 +21,14 @@ class FeedBody extends StatelessWidget {
   Widget build(BuildContext context) {
     if (state is MatchFeedInitial || state is MatchFeedLoading) {
       return isWeb
-          ? _WebGrid(items: _kSkeletonItems, isLoading: true)
-          : _MobileList(items: _kSkeletonItems, isLoading: true);
+          ? _WebGrid(
+              items: List.generate(5, (_) => MatchEntity.placeholder()),
+              isLoading: true,
+            )
+          : _MobileList(
+              items: List.generate(5, (_) => MatchEntity.placeholder()),
+              isLoading: true,
+            );
     }
 
     if (state is MatchFeedFailure) {
@@ -66,7 +58,7 @@ class FeedBody extends StatelessWidget {
 class _MobileList extends StatelessWidget {
   const _MobileList({required this.items, required this.isLoading});
 
-  final List<MatchSuggestion> items;
+  final List<MatchEntity> items;
   final bool isLoading;
 
   @override
@@ -107,7 +99,7 @@ class _MobileList extends StatelessWidget {
 class _WebGrid extends StatelessWidget {
   const _WebGrid({required this.items, required this.isLoading});
 
-  final List<MatchSuggestion> items;
+  final List<MatchEntity> items;
   final bool isLoading;
 
   static const double _minCardWidth = 280;

@@ -7,8 +7,6 @@ class FeedRemoteDataSourceImpl implements FeedDataSource {
   final SupabaseClient _supabaseClient;
   FeedRemoteDataSourceImpl(this._supabaseClient);
 
-  static const int _pageSize = 10;
-
   @override
   Future<List<MatchModel>> getMatchingUsers({
     required int page,
@@ -16,11 +14,7 @@ class FeedRemoteDataSourceImpl implements FeedDataSource {
   }) async {
     final response = await _supabaseClient.rpc(
       'get_matching_users',
-      params: {
-        'p_category_id': categoryId,
-        'p_limit': _pageSize,
-        'p_offset': page * _pageSize,
-      },
+      params: {'p_category_id': categoryId, 'p_page': page},
     );
 
     return (response as List)

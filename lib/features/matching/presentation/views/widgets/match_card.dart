@@ -3,6 +3,8 @@ import 'package:craft_chain/core/theme/app_text_styles.dart';
 import 'package:craft_chain/core/widgets/skill_chip.dart';
 import 'package:craft_chain/core/widgets/user_avatar.dart';
 import 'package:craft_chain/features/matching/data/models/match_suggestion.dart';
+import 'package:craft_chain/features/matching/domain/entities/match_entity.dart';
+import 'package:craft_chain/features/matching/domain/entities/skill_entity.dart';
 import 'package:craft_chain/features/profile/presentation/views/profile_screen.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:material_ui/material_ui.dart';
@@ -27,7 +29,7 @@ class MatchCard extends StatelessWidget {
     this.showMatchScore = true,
   });
 
-  final MatchSuggestion suggestion;
+  final MatchEntity suggestion;
 
   /// When `true`, shows a "TOP" badge over the avatar (highest score in feed).
   final bool isTopMatch;
@@ -39,7 +41,7 @@ class MatchCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
-    final scoreColor = _scoreColor(colors, suggestion.matchScore);
+    final scoreColor = _scoreColor(colors, suggestion.matchPercent);
 
     return Card(
       margin: EdgeInsets.zero,
@@ -63,7 +65,7 @@ class MatchCard extends StatelessWidget {
             if (showMatchScore) ...[
               const SizedBox(height: 10),
               _MatchBar(
-                score: suggestion.matchScore,
+                score: suggestion.matchPercent,
                 scoreColor: scoreColor,
                 borderColor: colors.inputBorder,
               ),
@@ -71,7 +73,7 @@ class MatchCard extends StatelessWidget {
             const SizedBox(height: 10),
             _SkillSection(
               labelKey: 'match.teaches',
-              skills: suggestion.canTeach.take(3).toList(),
+              skills: suggestion.teaches.take(3).toList(),
               isTeach: true,
             ),
             const SizedBox(height: 8),
@@ -90,7 +92,7 @@ class MatchCard extends StatelessWidget {
 
   /// Returns [AppColors.greenAccent] for top matches (≥ 90 %), primary blue
   /// otherwise. Uses a static constant so it's theme-independent.
-  static Color _scoreColor(AppColorPalette colors, double score) =>
+  static Color _scoreColor(AppColorPalette colors, int score) =>
       score >= 90 ? colors.greenAccent : colors.primary;
 }
 
@@ -102,7 +104,7 @@ class _CardHeader extends StatelessWidget {
     this.showMatchScore = true,
   });
 
-  final MatchSuggestion suggestion;
+  final MatchEntity suggestion;
   final bool isTopMatch;
   final Color scoreColor;
   final bool showMatchScore;
@@ -118,8 +120,8 @@ class _CardHeader extends StatelessWidget {
           clipBehavior: Clip.none,
           children: [
             UserAvatar(
-              imageUrl: suggestion.avatarUrl,
-              initials: suggestion.initials,
+              imageUrl: suggestion.photoUrl,
+              initials: suggestion.initial,
               colorSeed: suggestion.userId.hashCode.abs() % 4,
               radius: 23,
             ),
@@ -137,7 +139,7 @@ class _CardHeader extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      suggestion.name,
+                      suggestion.fullName,
                       style: AppTextStyles.titleMedium.copyWith(
                         color: colors.onSurface,
                       ),
@@ -164,7 +166,7 @@ class _CardHeader extends StatelessWidget {
               ),
               if (showMatchScore) ...[
                 const SizedBox(width: 8),
-                _ScoreBadge(score: suggestion.matchScore, color: scoreColor),
+                _ScoreBadge(score: suggestion.matchPercent, color: scoreColor),
               ],
             ],
           ),
@@ -201,7 +203,7 @@ class _TopBadge extends StatelessWidget {
 class _ScoreBadge extends StatelessWidget {
   const _ScoreBadge({required this.score, required this.color});
 
-  final double score;
+  final int score;
   final Color color;
 
   @override
@@ -275,7 +277,7 @@ class _SkillSection extends StatelessWidget {
   });
 
   final String labelKey;
-  final List<String> skills;
+  final List<SkillEntity> skills;
   final bool isTeach;
 
   @override
@@ -299,7 +301,7 @@ class _SkillSection extends StatelessWidget {
           children: skills
               .map(
                 (skill) => SkillChip(
-                  label: skill,
+                  label: skill.name,
                   type: isTeach ? SkillChipType.teach : SkillChipType.learn,
                   isSelected: true,
                 ),
@@ -318,7 +320,7 @@ class _MatchBar extends StatelessWidget {
     required this.borderColor,
   });
 
-  final double score;
+  final int score;
   final Color scoreColor;
   final Color borderColor;
 

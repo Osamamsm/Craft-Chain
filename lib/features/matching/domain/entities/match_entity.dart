@@ -24,6 +24,23 @@ class MatchEntity extends Equatable {
     required this.wantsToLearn,
   });
 
+  factory MatchEntity.placeholder() => MatchEntity(
+    userId: 'skeleton',
+    fullName: 'Loading Name Here',
+    city: 'Some City',
+    teaches: List.generate(
+      3,
+      (index) => SkillEntity(id: 1, name: 'Skill ${index + 1}'),
+    ),
+    wantsToLearn: List.generate(
+      3,
+      (index) => SkillEntity(id: 2, name: 'Skill ${index + 1}'),
+    ),
+    matchPercent: 82,
+    rating: 4.5,
+    barterCount: 8,
+  );
+
   /// "TOP" badge on the card
   bool get isTop => rating >= 4.5;
 

@@ -1,21 +1,4 @@
-// ── Filter enum ───────────────────────────────────────────────────────────────
-
-import 'package:craft_chain/features/matching/data/models/match_suggestion.dart';
-
-enum MatchFeedFilter { all, tech, design, languages, crafts, business }
-
-extension MatchFeedFilterX on MatchFeedFilter {
-  String get labelKey => switch (this) {
-    MatchFeedFilter.all => 'match.filter_all',
-    MatchFeedFilter.tech => 'match.filter_tech',
-    MatchFeedFilter.design => 'match.filter_design',
-    MatchFeedFilter.languages => 'match.filter_languages',
-    MatchFeedFilter.crafts => 'match.filter_crafts',
-    MatchFeedFilter.business => 'match.filter_business',
-  };
-}
-
-// ── States ────────────────────────────────────────────────────────────────────
+import 'package:craft_chain/features/matching/domain/entities/match_entity.dart';
 
 abstract class MatchFeedState {}
 
@@ -26,16 +9,36 @@ class MatchFeedLoading extends MatchFeedState {}
 class MatchFeedSuccess extends MatchFeedState {
   MatchFeedSuccess({
     required this.matches,
-    this.selectedFilter = MatchFeedFilter.all,
+    required this.totalCount,
+    this.page = 1,
+    this.selectedCategoryId,
+    this.isLoadingMore = false,
   });
 
-  final List<MatchSuggestion> matches;
-  final MatchFeedFilter selectedFilter;
+  final List<MatchEntity> matches;
+  final int totalCount;
+  final int page;
+  final int? selectedCategoryId;
+  final bool isLoadingMore;
+
+  bool get hasMore => matches.length < totalCount;
+
+  MatchFeedSuccess copyWith({
+    List<MatchEntity>? matches,
+    int? totalCount,
+    int? page,
+    bool? isLoadingMore,
+  }) => MatchFeedSuccess(
+    matches: matches ?? this.matches,
+    totalCount: totalCount ?? this.totalCount,
+    page: page ?? this.page,
+    selectedCategoryId: selectedCategoryId,
+    isLoadingMore: isLoadingMore ?? this.isLoadingMore,
+  );
 }
 
 class MatchFeedFailure extends MatchFeedState {
   MatchFeedFailure(this.message);
 
-  /// Translation key for the error message.
   final String message;
 }

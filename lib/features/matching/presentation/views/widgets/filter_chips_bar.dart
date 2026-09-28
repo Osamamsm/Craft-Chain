@@ -1,29 +1,33 @@
+import 'package:craft_chain/core/constants/app_skills.dart';
 import 'package:craft_chain/core/theme/app_colors.dart';
 import 'package:craft_chain/core/theme/app_text_styles.dart';
-import 'package:craft_chain/features/matching/presentation/logic/match_feed_cubit/match_feed_state.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:material_ui/material_ui.dart';
 
-/// Horizontally scrollable row of filter chips for the match feed.
+/// Horizontally scrollable row of category chips for the match feed.
 ///
-/// The selected chip is filled with [AppColors.primary]; inactive chips are
-/// outlined. Tapping a chip calls [onFilterSelected] with the new filter.
+/// The first chip is "All" (category id `null`), followed by one chip per
+/// category in [AppSkills.all]. Tapping a chip calls [onCategorySelected]
+/// with that category's id, or `null` for "All".
 ///
-/// This widget is purely presentational — it holds no state and calls no
-/// business logic directly.
+/// Purely presentational: it holds no state and calls no business logic.
 class FilterChipsBar extends StatelessWidget {
   const FilterChipsBar({
     super.key,
-    required this.selectedFilter,
-    required this.onFilterSelected,
+    required this.selectedCategoryId,
+    required this.onCategorySelected,
     this.padding = const EdgeInsets.symmetric(horizontal: 16),
   });
 
-  final MatchFeedFilter selectedFilter;
-  final ValueChanged<MatchFeedFilter> onFilterSelected;
+  final int? selectedCategoryId; // null = All
+  final ValueChanged<int?> onCategorySelected;
 
   /// Outer horizontal padding around the chip row.
   final EdgeInsets padding;
+
+  // "Other" (id 15) has no skills, so filtering by it always returns nothing.
+  static final List<SkillCategory> _categories =
+      AppSkills.all.where((c) => c.skills.isNotEmpty).toList();
 
   @override
   Widget build(BuildContext context) {
@@ -31,17 +35,22 @@ class FilterChipsBar extends StatelessWidget {
       scrollDirection: Axis.horizontal,
       padding: padding,
       child: Row(
-        children: MatchFeedFilter.values.map((filter) {
-          final isSelected = filter == selectedFilter;
-          return Padding(
-            padding: const EdgeInsets.only(right: 8),
-            child: _FilterChip(
-              label: filter.labelKey.tr(),
-              isSelected: isSelected,
-              onTap: () => onFilterSelected(filter),
+        children: [
+          _FilterChip(
+            label: 'match.filter_all'.tr(),
+            isSelected: selectedCategoryId == null,
+            onTap: () => onCategorySelected(null),
+          ),
+          for (final category in _categories)
+            _FilterChip(
+              label: category.nameKey.tr(),
+              isSelected: category.id == selectedCategoryId,
+              onTap: () => onCategorySelected(category.id),
             ),
-          );
-        }).toList(),
+        ].map((chip) => Padding(
+              padding: const EdgeInsetsDirectional.only(end: 8),
+              child: chip,
+            )).toList(),
       ),
     );
   }

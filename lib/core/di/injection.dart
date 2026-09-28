@@ -57,7 +57,7 @@ void configureDependencies() {
     () => FeedRemoteDataSourceImpl(supabaseClient),
   );
   getIt.registerLazySingleton<FeedRepo>(() => FeedRepoImpl(getIt()));
-  getIt.registerFactory<MatchFeedCubit>(() => MatchFeedCubit());
+  getIt.registerFactory<MatchFeedCubit>(() => MatchFeedCubit(getIt()));
 
   // Barter
   getIt.registerFactory<BarterRequestCubit>(() => BarterRequestCubit());

@@ -1,3 +1,4 @@
+import 'package:craft_chain/core/di/injection.dart';
 import 'package:craft_chain/core/layout/responsive_layout.dart';
 import 'package:craft_chain/core/theme/app_colors.dart';
 import 'package:craft_chain/core/theme/app_text_styles.dart';
@@ -18,7 +19,7 @@ class MatchFeedScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => MatchFeedCubit()..loadMatches(),
+      create: (_) => getIt<MatchFeedCubit>()..loadMatches(),
       child: const ResponsiveLayout(
         mobileLayout: _MobileView(),
         desktopLayout: _WebView(),
@@ -81,14 +82,15 @@ class _MobileView extends StatelessWidget {
               buildWhen: (prev, curr) =>
                   curr is MatchFeedSuccess &&
                   (prev is! MatchFeedSuccess ||
-                      prev.selectedFilter != curr.selectedFilter),
+                      prev.selectedCategoryId != curr.selectedCategoryId),
               builder: (context, state) {
-                final filter = state is MatchFeedSuccess
-                    ? state.selectedFilter
-                    : MatchFeedFilter.all;
+                final selectedCategoryId = state is MatchFeedSuccess
+                    ? state.selectedCategoryId
+                    : null;
                 return FilterChipsBar(
-                  selectedFilter: filter,
-                  onFilterSelected: context.read<MatchFeedCubit>().setFilter,
+                  selectedCategoryId: selectedCategoryId,
+                  onCategorySelected: (id) =>
+                      context.read<MatchFeedCubit>().setCategory(id),
                 );
               },
             ),
@@ -166,16 +168,16 @@ class _WebView extends StatelessWidget {
                   buildWhen: (prev, curr) =>
                       curr is MatchFeedSuccess &&
                       (prev is! MatchFeedSuccess ||
-                          prev.selectedFilter != curr.selectedFilter),
+                          prev.selectedCategoryId != curr.selectedCategoryId),
                   builder: (context, state) {
-                    final filter = state is MatchFeedSuccess
-                        ? state.selectedFilter
-                        : MatchFeedFilter.all;
+                    final selectedCategoryId = state is MatchFeedSuccess
+                        ? state.selectedCategoryId
+                        : null;
                     return FilterChipsBar(
-                      selectedFilter: filter,
-                      onFilterSelected: context
+                      selectedCategoryId: selectedCategoryId,
+                      onCategorySelected: context
                           .read<MatchFeedCubit>()
-                          .setFilter,
+                          .setCategory,
                       padding: EdgeInsets.zero,
                     );
                   },
