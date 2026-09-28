@@ -2,25 +2,12 @@ import 'package:craft_chain/core/theme/app_colors.dart';
 import 'package:craft_chain/core/theme/app_text_styles.dart';
 import 'package:craft_chain/core/widgets/skill_chip.dart';
 import 'package:craft_chain/core/widgets/user_avatar.dart';
-import 'package:craft_chain/features/matching/data/models/match_suggestion.dart';
 import 'package:craft_chain/features/matching/domain/entities/match_entity.dart';
 import 'package:craft_chain/features/matching/domain/entities/skill_entity.dart';
-import 'package:craft_chain/features/profile/presentation/views/profile_screen.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:go_router/go_router.dart';
 
-/// Card widget that displays a single [MatchSuggestion] in the feed.
-///
-/// Tapping anywhere on the card navigates to `/profile/{userId}` via
-/// `context.push()`. The card is entirely presentational — no business logic.
-///
-/// Layout (top → bottom):
-///   1. Header row  — avatar · name · city · star rating · match %
-///   2. Match bar   — thin progress bar coloured by score
-///   3. Teaches     — skill chips row (green)
-///   4. Wants       — skill chips row (blue)
-///   5. CTA button  — "View Profile →"
 class MatchCard extends StatelessWidget {
   const MatchCard({
     super.key,
@@ -30,12 +17,7 @@ class MatchCard extends StatelessWidget {
   });
 
   final MatchEntity suggestion;
-
-  /// When `true`, shows a "TOP" badge over the avatar (highest score in feed).
   final bool isTopMatch;
-
-  /// When `false`, hides the match score badge and progress bar.
-  /// Set to `false` in the explore screen where AI scoring is not used.
   final bool showMatchScore;
 
   @override
@@ -83,7 +65,7 @@ class MatchCard extends StatelessWidget {
               isTeach: false,
             ),
             const SizedBox(height: 12),
-            _ViewProfileButton(colors: colors),
+            _ViewProfileButton(userId: suggestion.userId, colors: colors),
           ],
         ),
       ),
@@ -339,14 +321,15 @@ class _MatchBar extends StatelessWidget {
 }
 
 class _ViewProfileButton extends StatelessWidget {
-  const _ViewProfileButton({required this.colors});
+  const _ViewProfileButton({required this.colors, required this.userId});
 
   final AppColorPalette colors;
+  final String userId;
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () => context.push(ProfileScreen.routePath),
+      onTap: () => context.push('/profile/$userId'),
       child: Container(
         width: double.infinity,
         height: 36,
