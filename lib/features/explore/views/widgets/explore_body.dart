@@ -50,6 +50,7 @@ class ExploreBody extends StatelessWidget {
     if (state case ExploreSuccess(results: final results)) {
       if (results.isEmpty) {
         return EmptyState(
+          onRefresh: ()=> Future.delayed(Duration.zero),
           icon: Icons.search_off_rounded,
           title: 'explore.no_results_title'.tr(),
           subtitle: 'explore.no_results_subtitle'.tr(),

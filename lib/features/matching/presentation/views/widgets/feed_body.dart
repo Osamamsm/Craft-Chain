@@ -40,6 +40,7 @@ class FeedBody extends StatelessWidget {
     if (state case MatchFeedSuccess(:final matches)) {
       if (matches.isEmpty) {
         return EmptyState(
+          onRefresh: ()=> context.read<MatchFeedCubit>().loadMatches(),
           icon: Icons.people_outline_rounded,
           title: 'match.no_matches_title'.tr(),
           subtitle: 'match.no_matches_subtitle'.tr(),
@@ -65,32 +66,54 @@ class _MobileList extends StatelessWidget {
   Widget build(BuildContext context) {
     return Skeletonizer(
       enabled: isLoading,
-      child: ListView.builder(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-        itemCount: items.length,
-        itemBuilder: (context, index) {
-          final isTop = index == 0 && !isLoading;
-          final card = MatchCard(
-            key: isLoading ? null : ValueKey(items[index].userId),
-            suggestion: items[index],
-            isTopMatch: isTop,
-          );
-
-          return Padding(
-            padding: const EdgeInsets.only(bottom: 12),
-            child: isLoading
-                ? card
-                : card
-                      .animate(delay: Duration(milliseconds: (index % 10) * 60))
-                      .fadeIn(duration: 320.ms)
-                      .slideY(
-                        begin: 0.1,
-                        end: 0,
-                        duration: 320.ms,
-                        curve: Curves.easeOut,
-                      ),
-          );
-        },
+      child: RefreshIndicator(
+        onRefresh: () => context.read<MatchFeedCubit>().loadMatches(),
+        child: NotificationListener(
+          onNotification: (ScrollNotification notification) {
+            if (notification is ScrollEndNotification) {
+              final double position = notification.metrics.pixels;
+        
+              final double max = notification.metrics.maxScrollExtent;
+        
+              final int triggerDistance = 200;
+        
+              if (position >= max - triggerDistance) {
+                context.read<MatchFeedCubit>().loadMore();
+              }
+            }
+            return false;
+          },
+          child: ListView.builder(
+            physics: const AlwaysScrollableScrollPhysics(),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            itemCount: items.length,
+            itemBuilder: (context, index) {
+              final isTop = index == 0 && !isLoading;
+              final card = MatchCard(
+                key: isLoading ? null : ValueKey(items[index].userId),
+                suggestion: items[index],
+                isTopMatch: isTop,
+              );
+        
+              return Padding(
+                padding: const EdgeInsets.only(bottom: 12),
+                child: isLoading
+                    ? card
+                    : card
+                          .animate(
+                            delay: Duration(milliseconds: (index % 10) * 60),
+                          )
+                          .fadeIn(duration: 320.ms)
+                          .slideY(
+                            begin: 0.1,
+                            end: 0,
+                            duration: 320.ms,
+                            curve: Curves.easeOut,
+                          ),
+              );
+            },
+          ),
+        ),
       ),
     );
   }

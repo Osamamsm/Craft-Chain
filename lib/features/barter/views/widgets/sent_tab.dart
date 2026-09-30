@@ -26,6 +26,7 @@ class SentTab extends StatelessWidget {
         }
         if (state.sent.isEmpty) {
           return EmptyState(
+            onRefresh: ()=> Future.delayed(Duration.zero),
             icon: Icons.send_outlined,
             title: 'barter.sent_empty_title'.tr(),
             subtitle: 'barter.sent_empty_subtitle'.tr(),

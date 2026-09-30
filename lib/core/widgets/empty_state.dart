@@ -10,62 +10,81 @@ class EmptyState extends StatelessWidget {
     required this.subtitle,
     this.actionLabel,
     this.onAction,
+    required this.onRefresh,
   });
-
   final IconData icon;
   final String title;
   final String subtitle;
   final String? actionLabel;
   final VoidCallback? onAction;
-
+  final RefreshCallback onRefresh;
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
-
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 32),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-              width: 72,
-              height: 72,
-              decoration: BoxDecoration(
-                color: colors.surface2,
-                shape: BoxShape.circle,
-              ),
-              child: Icon(icon, size: 32, color: colors.secondaryText),
-            ),
-            const SizedBox(height: 20),
-            Text(
-              title,
-              style: AppTextStyles.titleMedium.copyWith(
-                color: colors.onSurface,
-              ),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 8),
-            Text(
-              subtitle,
-              style: AppTextStyles.bodyMedium.copyWith(
-                color: colors.secondaryText,
-              ),
-              textAlign: TextAlign.center,
-            ),
-            if (actionLabel != null && onAction != null) ...[
-              const SizedBox(height: 24),
-              SizedBox(
-                width: 160,
-                child: ElevatedButton(
-                  onPressed: onAction,
-                  child: Text(actionLabel!),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        return RefreshIndicator(
+          onRefresh: onRefresh,
+          child: SingleChildScrollView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            child: ConstrainedBox(
+              constraints: BoxConstraints(minHeight: constraints.maxHeight),
+              child: Center(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 40,
+                    vertical: 32,
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Container(
+                        width: 72,
+                        height: 72,
+                        decoration: BoxDecoration(
+                          color: colors.surface2,
+                          shape: BoxShape.circle,
+                        ),
+                        child: Icon(
+                          icon,
+                          size: 32,
+                          color: colors.secondaryText,
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      Text(
+                        title,
+                        style: AppTextStyles.titleMedium.copyWith(
+                          color: colors.onSurface,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        subtitle,
+                        style: AppTextStyles.bodyMedium.copyWith(
+                          color: colors.secondaryText,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                      if (actionLabel != null && onAction != null) ...[
+                        const SizedBox(height: 24),
+                        SizedBox(
+                          width: 160,
+                          child: ElevatedButton(
+                            onPressed: onAction,
+                            child: Text(actionLabel!),
+                          ),
+                        ),
+                      ],
+                    ],
+                  ),
                 ),
               ),
-            ],
-          ],
-        ),
-      ),
+            ),
+          ),
+        );
+      },
     );
   }
 }

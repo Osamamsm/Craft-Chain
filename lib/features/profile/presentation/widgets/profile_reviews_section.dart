@@ -25,6 +25,7 @@ class ProfileReviewsSection extends StatelessWidget {
         const SizedBox(height: 12),
         if (reviews.isEmpty)
           EmptyState(
+            onRefresh: ()=> Future.delayed(Duration.zero),
             icon: Icons.rate_review_outlined,
             title: 'profile.no_reviews_title'.tr(),
             subtitle: 'profile.no_reviews_subtitle'.tr(),
