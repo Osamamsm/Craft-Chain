@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:craft_chain/features/explore/view_model/explore_cubit/explore_state.dart';
-import 'package:craft_chain/features/matching/model/models/match_suggestion.dart';
+import 'package:craft_chain/features/matching/data/models/match_suggestion.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 // ── Fake data (UI-only) ───────────────────────────────────────────────────────

@@ -27,6 +27,7 @@ class ReceivedTab extends StatelessWidget {
         }
         if (state.received.isEmpty) {
           return EmptyState(
+            onRefresh: ()=> Future.delayed(Duration.zero),
             icon: Icons.inbox_outlined,
             title: 'barter.received_empty_title'.tr(),
             subtitle: 'barter.received_empty_subtitle'.tr(),

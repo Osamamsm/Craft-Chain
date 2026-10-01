@@ -243,5 +243,22 @@
     "edit_learn_label": "Skills I Want to Learn",
     "error_title": "Profile not found",
     "error_load": "profile.error_generic"
+  },
+  "skills":{
+    "category_tech": "Technology",
+    "category_language": "Languages",
+    "category_business": "Business",
+    "category_design": "Design",
+    "category_marketing": "Marketing",
+    "category_music": "Music",
+    "category_photography_video": "Photography & Video",
+    "category_writing": "Writing",
+    "category_education": "Education",
+    "category_crafts_diy": "Crafts & DIY",
+    "category_cooking": "Cooking",
+    "category_fitness_sports": "Fitness & Sports",
+    "category_personal_development": "Personal Development",
+    "category_finance": "Finance",
+    "category_other": "Other"
   }
 }

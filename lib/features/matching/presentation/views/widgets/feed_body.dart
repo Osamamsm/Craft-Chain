@@ -1,29 +1,15 @@
 import 'package:craft_chain/core/theme/app_colors.dart';
 import 'package:craft_chain/core/theme/app_text_styles.dart';
 import 'package:craft_chain/core/widgets/empty_state.dart';
-import 'package:craft_chain/features/matching/model/models/match_suggestion.dart';
-import 'package:craft_chain/features/matching/view_model/match_feed_cubit/match_feed_cubit.dart';
-import 'package:craft_chain/features/matching/view_model/match_feed_cubit/match_feed_state.dart';
-import 'package:craft_chain/features/matching/views/widgets/match_card.dart';
+import 'package:craft_chain/features/matching/domain/entities/match_entity.dart';
+import 'package:craft_chain/features/matching/presentation/logic/match_feed_cubit/match_feed_cubit.dart';
+import 'package:craft_chain/features/matching/presentation/logic/match_feed_cubit/match_feed_state.dart';
+import 'package:craft_chain/features/matching/presentation/views/widgets/match_card.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:skeletonizer/skeletonizer.dart';
-
-final _kSkeletonItems = List.generate(
-  5,
-  (_) => const MatchSuggestion(
-    userId: 'skeleton',
-    name: 'Loading Name Here',
-    city: 'Some City',
-    canTeach: ['Skill One', 'Skill Two', 'Three'],
-    wantsToLearn: ['Learn A', 'Learn B'],
-    matchScore: 82,
-    rating: 4.5,
-    barterCount: 8,
-  ),
-);
 
 class FeedBody extends StatelessWidget {
   const FeedBody({super.key, required this.state, required this.isWeb});
@@ -35,8 +21,14 @@ class FeedBody extends StatelessWidget {
   Widget build(BuildContext context) {
     if (state is MatchFeedInitial || state is MatchFeedLoading) {
       return isWeb
-          ? _WebGrid(items: _kSkeletonItems, isLoading: true)
-          : _MobileList(items: _kSkeletonItems, isLoading: true);
+          ? _WebGrid(
+              items: List.generate(5, (_) => MatchEntity.placeholder()),
+              isLoading: true,
+            )
+          : _MobileList(
+              items: List.generate(5, (_) => MatchEntity.placeholder()),
+              isLoading: true,
+            );
     }
 
     if (state is MatchFeedFailure) {
@@ -48,6 +40,7 @@ class FeedBody extends StatelessWidget {
     if (state case MatchFeedSuccess(:final matches)) {
       if (matches.isEmpty) {
         return EmptyState(
+          onRefresh: ()=> context.read<MatchFeedCubit>().loadMatches(),
           icon: Icons.people_outline_rounded,
           title: 'match.no_matches_title'.tr(),
           subtitle: 'match.no_matches_subtitle'.tr(),
@@ -66,39 +59,61 @@ class FeedBody extends StatelessWidget {
 class _MobileList extends StatelessWidget {
   const _MobileList({required this.items, required this.isLoading});
 
-  final List<MatchSuggestion> items;
+  final List<MatchEntity> items;
   final bool isLoading;
 
   @override
   Widget build(BuildContext context) {
     return Skeletonizer(
       enabled: isLoading,
-      child: ListView.builder(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-        itemCount: items.length,
-        itemBuilder: (context, index) {
-          final isTop = index == 0 && !isLoading;
-          final card = MatchCard(
-            key: isLoading ? null : ValueKey(items[index].userId),
-            suggestion: items[index],
-            isTopMatch: isTop,
-          );
-
-          return Padding(
-            padding: const EdgeInsets.only(bottom: 12),
-            child: isLoading
-                ? card
-                : card
-                      .animate(delay: Duration(milliseconds: (index % 10) * 60))
-                      .fadeIn(duration: 320.ms)
-                      .slideY(
-                        begin: 0.1,
-                        end: 0,
-                        duration: 320.ms,
-                        curve: Curves.easeOut,
-                      ),
-          );
-        },
+      child: RefreshIndicator(
+        onRefresh: () => context.read<MatchFeedCubit>().loadMatches(),
+        child: NotificationListener(
+          onNotification: (ScrollNotification notification) {
+            if (notification is ScrollEndNotification) {
+              final double position = notification.metrics.pixels;
+        
+              final double max = notification.metrics.maxScrollExtent;
+        
+              final int triggerDistance = 200;
+        
+              if (position >= max - triggerDistance) {
+                context.read<MatchFeedCubit>().loadMore();
+              }
+            }
+            return false;
+          },
+          child: ListView.builder(
+            physics: const AlwaysScrollableScrollPhysics(),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            itemCount: items.length,
+            itemBuilder: (context, index) {
+              final isTop = index == 0 && !isLoading;
+              final card = MatchCard(
+                key: isLoading ? null : ValueKey(items[index].userId),
+                suggestion: items[index],
+                isTopMatch: isTop,
+              );
+        
+              return Padding(
+                padding: const EdgeInsets.only(bottom: 12),
+                child: isLoading
+                    ? card
+                    : card
+                          .animate(
+                            delay: Duration(milliseconds: (index % 10) * 60),
+                          )
+                          .fadeIn(duration: 320.ms)
+                          .slideY(
+                            begin: 0.1,
+                            end: 0,
+                            duration: 320.ms,
+                            curve: Curves.easeOut,
+                          ),
+              );
+            },
+          ),
+        ),
       ),
     );
   }
@@ -107,7 +122,7 @@ class _MobileList extends StatelessWidget {
 class _WebGrid extends StatelessWidget {
   const _WebGrid({required this.items, required this.isLoading});
 
-  final List<MatchSuggestion> items;
+  final List<MatchEntity> items;
   final bool isLoading;
 
   static const double _minCardWidth = 280;

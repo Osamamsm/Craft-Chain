@@ -166,6 +166,7 @@ class _MobileChatsTab extends StatelessWidget {
         }
         if (state.chats.isEmpty) {
           return EmptyState(
+            onRefresh: ()=> Future.delayed(Duration.zero),
             icon: Icons.chat_bubble_outline_rounded,
             title: 'barter.chats_empty_title'.tr(),
             subtitle: 'barter.chats_empty_subtitle'.tr(),

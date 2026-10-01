@@ -484,6 +484,7 @@ class _ErrorBody extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: Text('profile.title'.tr())),
       body: EmptyState(
+        onRefresh: () => Future.delayed(Duration.zero),
         icon: Icons.error_outline_rounded,
         title: 'profile.error_title'.tr(),
         subtitle: message.tr(),

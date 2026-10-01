@@ -31,7 +31,7 @@ class AppSkills {
     // =========================================================
     SkillCategory(
       id: 1,
-      nameKey: 'profile.category_tech',
+      nameKey: 'skills.category_tech',
       skills: [
         Skill(
           id: 1,
@@ -125,7 +125,7 @@ class AppSkills {
     // =========================================================
     SkillCategory(
       id: 2,
-      nameKey: 'profile.category_language',
+      nameKey: 'skills.category_language',
       skills: [
         Skill(
           id: 16,
@@ -175,7 +175,7 @@ class AppSkills {
     // =========================================================
     SkillCategory(
       id: 3,
-      nameKey: 'profile.category_business',
+      nameKey: 'skills.category_business',
       skills: [
         Skill(
           id: 26,
@@ -225,7 +225,7 @@ class AppSkills {
     // =========================================================
     SkillCategory(
       id: 4,
-      nameKey: 'profile.category_design',
+      nameKey: 'skills.category_design',
       skills: [
         Skill(
           id: 36,
@@ -267,7 +267,7 @@ class AppSkills {
     // =========================================================
     SkillCategory(
       id: 5,
-      nameKey: 'profile.category_marketing',
+      nameKey: 'skills.category_marketing',
       skills: [
         Skill(
           id: 44,
@@ -305,7 +305,7 @@ class AppSkills {
     // =========================================================
     SkillCategory(
       id: 6,
-      nameKey: 'profile.category_music',
+      nameKey: 'skills.category_music',
       skills: [
         Skill(
           id: 51,
@@ -339,7 +339,7 @@ class AppSkills {
     // =========================================================
     SkillCategory(
       id: 7,
-      nameKey: 'profile.category_photography_video',
+      nameKey: 'skills.category_photography_video',
       skills: [
         Skill(
           id: 57,
@@ -373,7 +373,7 @@ class AppSkills {
     // =========================================================
     SkillCategory(
       id: 8,
-      nameKey: 'profile.category_writing',
+      nameKey: 'skills.category_writing',
       skills: [
         Skill(
           id: 63,
@@ -403,7 +403,7 @@ class AppSkills {
     // =========================================================
     SkillCategory(
       id: 9,
-      nameKey: 'profile.category_education',
+      nameKey: 'skills.category_education',
       skills: [
         Skill(
           id: 68,
@@ -437,7 +437,7 @@ class AppSkills {
     // =========================================================
     SkillCategory(
       id: 10,
-      nameKey: 'profile.category_crafts_diy',
+      nameKey: 'skills.category_crafts_diy',
       skills: [
         Skill(
           id: 74,
@@ -471,7 +471,7 @@ class AppSkills {
     // =========================================================
     SkillCategory(
       id: 11,
-      nameKey: 'profile.category_cooking',
+      nameKey: 'skills.category_cooking',
       skills: [
         Skill(
           id: 80,
@@ -497,7 +497,7 @@ class AppSkills {
     // =========================================================
     SkillCategory(
       id: 12,
-      nameKey: 'profile.category_fitness_sports',
+      nameKey: 'skills.category_fitness_sports',
       skills: [
         Skill(
           id: 84,
@@ -535,7 +535,7 @@ class AppSkills {
     // =========================================================
     SkillCategory(
       id: 13,
-      nameKey: 'profile.category_personal_development',
+      nameKey: 'skills.category_personal_development',
       skills: [
         Skill(
           id: 91,
@@ -569,7 +569,7 @@ class AppSkills {
     // =========================================================
     SkillCategory(
       id: 14,
-      nameKey: 'profile.category_finance',
+      nameKey: 'skills.category_finance',
       skills: [
         Skill(
           id: 97,

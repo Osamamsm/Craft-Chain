@@ -1,5 +1,5 @@
 import 'package:craft_chain/core/theme/app_colors.dart';
-import 'package:craft_chain/features/matching/views/match_feed_screen.dart';
+import 'package:craft_chain/features/matching/presentation/views/match_feed_screen.dart';
 import 'package:craft_chain/features/profile/presentation/logic/profile_setup_cubit/profile_setup_cubit.dart';
 import 'package:craft_chain/features/profile/presentation/logic/profile_setup_cubit/profile_setup_state.dart';
 import 'package:craft_chain/features/profile/presentation/widgets/wizard_widgets/wizard_buttons.dart';

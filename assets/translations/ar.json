@@ -239,5 +239,22 @@
     "edit_learn_label": "المهارات التي أريد تعلّمها",
     "error_title": "الملف الشخصي غير موجود",
     "error_load": "profile.error_generic"
+  },
+  "skills":{
+    "category_tech": "التكنولوجيا",
+    "category_language": "اللغات",
+    "category_business": "الأعمال",
+    "category_design": "التصميم",
+    "category_marketing": "التسويق",
+    "category_music": "الموسيقى",
+    "category_photography_video": "التصوير والفيديو",
+    "category_writing": "الكتابة",
+    "category_education": "التعليم",
+    "category_crafts_diy": "الحرف والأعمال اليدوية",
+    "category_cooking": "الطبخ",
+    "category_fitness_sports": "اللياقة والرياضة",
+    "category_personal_development": "التطوير الشخصي",
+    "category_finance": "المالية",
+    "category_other": "أخرى"
   }
 }

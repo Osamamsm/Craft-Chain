@@ -3,8 +3,9 @@ import 'package:craft_chain/core/theme/app_text_styles.dart';
 import 'package:craft_chain/core/widgets/empty_state.dart';
 import 'package:craft_chain/features/explore/view_model/explore_cubit/explore_cubit.dart';
 import 'package:craft_chain/features/explore/view_model/explore_cubit/explore_state.dart';
-import 'package:craft_chain/features/matching/model/models/match_suggestion.dart';
-import 'package:craft_chain/features/matching/views/widgets/match_card.dart';
+import 'package:craft_chain/features/matching/data/models/match_suggestion.dart';
+import 'package:craft_chain/features/matching/domain/entities/match_entity.dart';
+import 'package:craft_chain/features/matching/presentation/views/widgets/match_card.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -27,8 +28,14 @@ class ExploreBody extends StatelessWidget {
 
     if (state is ExploreLoading) {
       return isWeb
-          ? _WebGrid(items: _kSkeletonItems, isLoading: true)
-          : _MobileList(items: _kSkeletonItems, isLoading: true);
+          ? _WebGrid(
+              items: List.generate(5, (_) => MatchEntity.placeholder()),
+              isLoading: true,
+            )
+          : _MobileList(
+              items: List.generate(5, (_) => MatchEntity.placeholder()),
+              isLoading: true,
+            );
     }
 
     if (state is ExploreFailure) {
@@ -43,15 +50,16 @@ class ExploreBody extends StatelessWidget {
     if (state case ExploreSuccess(results: final results)) {
       if (results.isEmpty) {
         return EmptyState(
+          onRefresh: ()=> Future.delayed(Duration.zero),
           icon: Icons.search_off_rounded,
           title: 'explore.no_results_title'.tr(),
           subtitle: 'explore.no_results_subtitle'.tr(),
         );
       }
 
-      return isWeb
-          ? _WebGrid(items: results, isLoading: false)
-          : _MobileList(items: results, isLoading: false);
+      // return isWeb
+      //     ? _WebGrid(items: results, isLoading: false)
+      //     : _MobileList(items: results, isLoading: false);
     }
 
     return const SizedBox.shrink();
@@ -126,7 +134,7 @@ class _InitialHint extends StatelessWidget {
 class _MobileList extends StatelessWidget {
   const _MobileList({required this.items, required this.isLoading});
 
-  final List<MatchSuggestion> items;
+  final List<MatchEntity> items;
   final bool isLoading;
 
   @override
@@ -166,7 +174,7 @@ class _MobileList extends StatelessWidget {
 class _WebGrid extends StatelessWidget {
   const _WebGrid({required this.items, required this.isLoading});
 
-  final List<MatchSuggestion> items;
+  final List<MatchEntity> items;
   final bool isLoading;
 
   static const double _minCardWidth = 280;

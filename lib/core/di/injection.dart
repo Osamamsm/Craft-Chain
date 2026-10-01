@@ -15,7 +15,11 @@ import 'package:craft_chain/features/barter/view_model/barter_request_cubit/bart
 import 'package:craft_chain/features/barter/view_model/barter_room_cubit/barter_room_cubit.dart';
 import 'package:craft_chain/features/barter/view_model/create_barter_cubit/create_barter_cubit.dart';
 import 'package:craft_chain/features/explore/view_model/explore_cubit/explore_cubit.dart';
-import 'package:craft_chain/features/matching/view_model/match_feed_cubit/match_feed_cubit.dart';
+import 'package:craft_chain/features/matching/data/data_source/feed_data_source.dart';
+import 'package:craft_chain/features/matching/data/data_source/feed_remote_data_source_impl.dart';
+import 'package:craft_chain/features/matching/data/repo/feed_repo_impl.dart';
+import 'package:craft_chain/features/matching/domain/repo/feed_repo.dart';
+import 'package:craft_chain/features/matching/presentation/logic/match_feed_cubit/match_feed_cubit.dart';
 import 'package:craft_chain/features/profile/data/data_source/profile_remote_data_source.dart';
 import 'package:craft_chain/features/profile/data/data_source/profile_remote_data_source_impl.dart';
 import 'package:craft_chain/features/profile/data/repo/profile_repo_impl.dart';
@@ -44,10 +48,16 @@ void configureDependencies() {
     () => SessionDataSourceImpl(getIt()),
   );
   getIt.registerLazySingleton<SessionRepo>(() => SessionRepoImpl(getIt()));
-  getIt.registerLazySingleton<SessionCubit>(() => SessionCubit(getIt(), getIt()));
+  getIt.registerLazySingleton<SessionCubit>(
+    () => SessionCubit(getIt(), getIt()),
+  );
 
-  // Matching
-  getIt.registerFactory<MatchFeedCubit>(() => MatchFeedCubit());
+  // Feed
+  getIt.registerLazySingleton<FeedDataSource>(
+    () => FeedRemoteDataSourceImpl(supabaseClient),
+  );
+  getIt.registerLazySingleton<FeedRepo>(() => FeedRepoImpl(getIt()));
+  getIt.registerFactory<MatchFeedCubit>(() => MatchFeedCubit(getIt()));
 
   // Barter
   getIt.registerFactory<BarterRequestCubit>(() => BarterRequestCubit());
@@ -68,3 +78,5 @@ void configureDependencies() {
   // Core Logic
   getIt.registerFactory<ImagePickerCubit>(() => ImagePickerCubit());
 }
+
+class MatchingRepoImpl {}
