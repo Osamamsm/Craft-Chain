@@ -1,5 +1,5 @@
-import 'package:craft_chain/features/barter/models/barter.dart';
-import 'package:craft_chain/features/barter/models/message.dart';
+import 'package:craft_chain/features/barter/data/models/barter.dart';
+import 'package:craft_chain/features/barter/data/models/message.dart';
 
 class BarterRoomState {
   const BarterRoomState({

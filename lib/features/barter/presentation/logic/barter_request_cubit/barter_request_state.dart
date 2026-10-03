@@ -1,4 +1,4 @@
-import 'package:craft_chain/features/barter/models/barter.dart';
+import 'package:craft_chain/features/barter/data/models/barter.dart';
 
 class BarterRequestState {
   const BarterRequestState({

@@ -9,9 +9,9 @@ import 'package:craft_chain/features/auth/presentation/views/reset_password_scre
 import 'package:craft_chain/features/auth/presentation/views/sign_in_screen.dart';
 import 'package:craft_chain/features/auth/presentation/views/sign_up_screen.dart';
 import 'package:craft_chain/features/auth/presentation/views/welcome_screen.dart';
-import 'package:craft_chain/features/barter/models/barter.dart';
-import 'package:craft_chain/features/barter/views/barter_requests_view.dart';
-import 'package:craft_chain/features/barter/views/barter_room_screen.dart';
+import 'package:craft_chain/features/barter/data/models/barter.dart';
+import 'package:craft_chain/features/barter/presentation/views/barter_requests_view.dart';
+import 'package:craft_chain/features/barter/presentation/views/barter_room_screen.dart';
 import 'package:craft_chain/features/explore/view_model/explore_cubit/explore_cubit.dart';
 import 'package:craft_chain/features/explore/views/explore_screen.dart';
 import 'package:craft_chain/features/home/main_shell.dart';
