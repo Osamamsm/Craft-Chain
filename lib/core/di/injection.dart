@@ -11,6 +11,8 @@ import 'package:craft_chain/features/auth/domain/repo/auth_repo.dart';
 import 'package:craft_chain/features/auth/domain/repo/session_repo.dart';
 import 'package:craft_chain/features/auth/presentation/Cubits/auth_cubit/auth_cubit.dart';
 import 'package:craft_chain/features/auth/presentation/Cubits/session_cubit/session_cubit.dart';
+import 'package:craft_chain/features/barter/data/data_source/barters_data_source.dart';
+import 'package:craft_chain/features/barter/data/data_source/barters_remote_data_source.dart';
 import 'package:craft_chain/features/barter/presentation/logic/barter_request_cubit/barter_request_cubit.dart';
 import 'package:craft_chain/features/barter/presentation/logic/barter_room_cubit/barter_room_cubit.dart';
 import 'package:craft_chain/features/barter/presentation/logic/create_barter_cubit/create_barter_cubit.dart';
@@ -60,6 +62,9 @@ void configureDependencies() {
   getIt.registerFactory<MatchFeedCubit>(() => MatchFeedCubit(getIt()));
 
   // Barter
+  getIt.registerLazySingleton<BartersDataSource>(
+    () => BartersRemoteDataSource(supabaseClient),
+  );
   getIt.registerFactory<BarterRequestCubit>(() => BarterRequestCubit());
   getIt.registerFactory<BarterRoomCubit>(() => BarterRoomCubit());
   getIt.registerFactory<CreateBarterCubit>(() => CreateBarterCubit());
