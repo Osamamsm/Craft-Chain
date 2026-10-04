@@ -1,3 +1,4 @@
+import 'package:craft_chain/core/error/exception_mapper.dart';
 import 'package:craft_chain/core/error/failures.dart';
 import 'package:craft_chain/features/barter/domain/entities/barter_action_result.dart';
 import 'package:craft_chain/features/barter/domain/entities/barter_chat.dart';
@@ -14,21 +15,37 @@ class BartersRepoImpl implements BartersRepo {
 
   BartersRepoImpl(this._bartersDataSource);
   @override
-  Future<Either<Failure, BarterActionResult>> acceptBarter(String barterId) {
-    // TODO: implement acceptBarter
-    throw UnimplementedError();
+  Future<Either<Failure, BarterActionResult>> acceptBarter(
+    String barterId,
+  ) async {
+    try {
+      final result = await _bartersDataSource.acceptBarter(barterId);
+      return Right(result);
+    } catch (e) {
+      return Left(ExceptionMapper.mapExceptionToFailure(e));
+    }
   }
 
   @override
-  Future<Either<Failure, BarterActionResult>> cancelBarter(String barterId) {
-    // TODO: implement cancelBarter
-    throw UnimplementedError();
+  Future<Either<Failure, BarterActionResult>> cancelBarter(
+    String barterId,
+  ) async {
+    try {
+      final result = await _bartersDataSource.cancelBarter(barterId);
+      return Right(result);
+    } catch (e) {
+      return Left(ExceptionMapper.mapExceptionToFailure(e));
+    }
   }
 
   @override
-  Future<Either<Failure, List<BarterChatPreview>>> getActiveBarters() {
-    // TODO: implement getActiveBarters
-    throw UnimplementedError();
+  Future<Either<Failure, List<BarterChatPreview>>> getActiveBarters() async {
+    try {
+      final result = await _bartersDataSource.getActiveBarters();
+      return Right(result);
+    } catch (e) {
+      return Left(ExceptionMapper.mapExceptionToFailure(e));
+    }
   }
 
   @override
@@ -36,27 +53,48 @@ class BartersRepoImpl implements BartersRepo {
     required String barterId,
     int limit = 50,
     DateTime? before,
-  }) {
-    // TODO: implement getBarterChat
-    throw UnimplementedError();
+  }) async {
+    try {
+      final result = await _bartersDataSource.getBarterChat(
+        barterId: barterId,
+        limit: limit,
+        before: before,
+      );
+      return Right(result);
+    } catch (e) {
+      return Left(ExceptionMapper.mapExceptionToFailure(e));
+    }
   }
 
   @override
-  Future<Either<Failure, List<MeetingPlatform>>> getMeetingPlatforms() {
-    // TODO: implement getMeetingPlatforms
-    throw UnimplementedError();
+  Future<Either<Failure, List<MeetingPlatform>>> getMeetingPlatforms() async {
+    try {
+      final result = await _bartersDataSource.getMeetingPlatforms();
+      return Right(result);
+    } catch (e) {
+      return Left(ExceptionMapper.mapExceptionToFailure(e));
+    }
   }
 
   @override
-  Future<Either<Failure, List<ReceivedBarterRequest>>> getReceivedRequests() {
-    // TODO: implement getReceivedRequests
-    throw UnimplementedError();
+  Future<Either<Failure, List<ReceivedBarterRequest>>>
+  getReceivedRequests() async {
+    try {
+      final result = await _bartersDataSource.getReceivedRequests();
+      return Right(result);
+    } catch (e) {
+      return Left(ExceptionMapper.mapExceptionToFailure(e));
+    }
   }
 
   @override
-  Future<Either<Failure, List<SentBarterRequest>>> getSentRequests() {
-    // TODO: implement getSentRequests
-    throw UnimplementedError();
+  Future<Either<Failure, List<SentBarterRequest>>> getSentRequests() async {
+    try {
+      final result = await _bartersDataSource.getSentRequests();
+      return Right(result);
+    } catch (e) {
+      return Left(ExceptionMapper.mapExceptionToFailure(e));
+    }
   }
 
   @override
@@ -64,24 +102,45 @@ class BartersRepoImpl implements BartersRepo {
     required String barterId,
     required DateTime scheduledAt,
     required String meetingPlatformId,
-  }) {
-    // TODO: implement proposeMeeting
-    throw UnimplementedError();
+  }) async {
+    try {
+      final result = await _bartersDataSource.proposeMeeting(
+        barterId: barterId,
+        scheduledAt: scheduledAt,
+        meetingPlatformId: meetingPlatformId,
+      );
+      return Right(result);
+    } catch (e) {
+      return Left(ExceptionMapper.mapExceptionToFailure(e));
+    }
   }
 
   @override
-  Future<Either<Failure, BarterActionResult>> rejectBarter(String barterId) {
-    // TODO: implement rejectBarter
-    throw UnimplementedError();
+  Future<Either<Failure, BarterActionResult>> rejectBarter(
+    String barterId,
+  ) async {
+    try {
+      final result = await _bartersDataSource.rejectBarter(barterId);
+      return Right(result);
+    } catch (e) {
+      return Left(ExceptionMapper.mapExceptionToFailure(e));
+    }
   }
 
   @override
   Future<Either<Failure, BarterActionResult>> respondToMeetingProposal({
     required String barterId,
     required bool accept,
-  }) {
-    // TODO: implement respondToMeetingProposal
-    throw UnimplementedError();
+  }) async {
+    try {
+      final result = await _bartersDataSource.respondToMeetingProposal(
+        barterId: barterId,
+        accept: accept,
+      );
+      return Right(result);
+    } catch (e) {
+      return Left(ExceptionMapper.mapExceptionToFailure(e));
+    }
   }
 
   @override
@@ -89,16 +148,28 @@ class BartersRepoImpl implements BartersRepo {
     required String recipientId,
     required int requesterSkillId,
     required int recipientSkillId,
-  }) {
-    // TODO: implement sendBarterRequest
-    throw UnimplementedError();
+  }) async {
+    try {
+      final result = await _bartersDataSource.sendBarterRequest(
+        recipientId: recipientId,
+        requesterSkillId: requesterSkillId,
+        recipientSkillId: recipientSkillId,
+      );
+      return Right(result);
+    } catch (e) {
+      return Left(ExceptionMapper.mapExceptionToFailure(e));
+    }
   }
 
   @override
   Future<Either<Failure, BarterActionResult>> withdrawMeetingProposal(
     String barterId,
-  ) {
-    // TODO: implement withdrawMeetingProposal
-    throw UnimplementedError();
+  ) async {
+    try {
+      final result = await _bartersDataSource.withdrawMeetingProposal(barterId);
+      return Right(result);
+    } catch (e) {
+      return Left(ExceptionMapper.mapExceptionToFailure(e));
+    }
   }
 }
