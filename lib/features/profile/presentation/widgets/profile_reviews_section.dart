@@ -1,6 +1,5 @@
 import 'package:craft_chain/core/theme/app_colors.dart';
 import 'package:craft_chain/core/theme/app_text_styles.dart';
-import 'package:craft_chain/core/widgets/empty_state.dart';
 import 'package:craft_chain/core/widgets/section_label.dart';
 import 'package:craft_chain/features/profile/data/models/review.dart';
 import 'package:craft_chain/features/profile/presentation/widgets/review_card.dart';
@@ -24,12 +23,7 @@ class ProfileReviewsSection extends StatelessWidget {
         _ReviewsHeader(count: reviews.length),
         const SizedBox(height: 12),
         if (reviews.isEmpty)
-          EmptyState(
-            onRefresh: ()=> Future.delayed(Duration.zero),
-            icon: Icons.rate_review_outlined,
-            title: 'profile.no_reviews_title'.tr(),
-            subtitle: 'profile.no_reviews_subtitle'.tr(),
-          )
+          _EmptyReviews()
         else
           ...reviews.map(
             (r) => Padding(
@@ -38,6 +32,56 @@ class ProfileReviewsSection extends StatelessWidget {
             ),
           ),
       ],
+    );
+  }
+}
+
+// ── Inline empty placeholder ───────────────────────────────────────────────────
+
+class _EmptyReviews extends StatelessWidget {
+  const _EmptyReviews();
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.colors;
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 32),
+      child: Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              width: 56,
+              height: 56,
+              decoration: BoxDecoration(
+                color: colors.surface2,
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                Icons.rate_review_outlined,
+                size: 26,
+                color: colors.secondaryText,
+              ),
+            ),
+            const SizedBox(height: 16),
+            Text(
+              'profile.no_reviews_title'.tr(),
+              style: AppTextStyles.titleMedium.copyWith(
+                color: colors.onSurface,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 6),
+            Text(
+              'profile.no_reviews_subtitle'.tr(),
+              style: AppTextStyles.bodyMedium.copyWith(
+                color: colors.secondaryText,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
