@@ -11,17 +11,16 @@ final class SendBarterRequestInitial extends SendBarterRequestState {}
 
 final class SendBarterRequestLoading extends SendBarterRequestState {}
 
-final class SendBarterRequestLoaded extends SendBarterRequestState {
+final class SendBarterRequestSuccess extends SendBarterRequestState {
   final BarterActionResult result;
-  const SendBarterRequestLoaded(this.result);
+  const SendBarterRequestSuccess(this.result);
   @override
   List<Object> get props => [result];
 }
 
 final class SendBarterRequestError extends SendBarterRequestState {
-  final String error;
-  const SendBarterRequestError(this.error);
+  final String errorMessage;
+  const SendBarterRequestError(this.errorMessage);
   @override
-  List<Object> get props => [error];
+  List<Object> get props => [errorMessage];
 }
-

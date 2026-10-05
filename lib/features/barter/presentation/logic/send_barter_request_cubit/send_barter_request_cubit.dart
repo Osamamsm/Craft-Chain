@@ -22,7 +22,13 @@ class SendBarterRequestCubit extends Cubit<SendBarterRequestState> {
     );
     result.fold(
       (failure) => emit(SendBarterRequestError(failure.message)),
-      (result) => emit(SendBarterRequestLoaded(result)),
+      (result) {
+        if (result.success) {
+          emit(SendBarterRequestSuccess(result));
+        } else {
+          emit(SendBarterRequestError(result.message));
+        }
+      },
     );
   }
 }
