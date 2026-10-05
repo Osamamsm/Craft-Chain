@@ -1,223 +1,232 @@
 import 'package:craft_chain/core/theme/app_colors.dart';
 import 'package:craft_chain/core/theme/app_text_styles.dart';
 import 'package:craft_chain/core/widgets/skill_chip.dart';
-import 'package:craft_chain/features/barter/presentation/logic/barter_request_cubit/barter_request_cubit.dart';
-import 'package:craft_chain/features/barter/presentation/logic/create_barter_cubit/create_barter_cubit.dart';
-import 'package:craft_chain/features/barter/presentation/logic/create_barter_cubit/create_barter_state.dart';
+import 'package:craft_chain/features/barter/presentation/logic/send_barter_request_cubit/send_barter_request_cubit.dart';
+import 'package:craft_chain/features/profile/domain/entities/profile_skill_entity.dart';
+import 'package:craft_chain/features/profile/domain/entities/user_profile_entity.dart';
 import 'package:easy_localization/easy_localization.dart';
-import 'package:material_ui/material_ui.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:material_ui/material_ui.dart';
 
-/// A bottom sheet that lets the current user select one skill to teach and
-/// one skill to learn from the target user, then submit a barter request.
-///
-/// Must be shown with a [BlocProvider] wrapping [BarterRequestCubit] in scope.
-class BarterRequestSheet extends StatelessWidget {
-  const BarterRequestSheet({
+/// A bottom sheet that lets the current user pick one skill to teach and one
+/// skill to learn, both taken from the viewed user's profile:
+///  - teach  → [recipient.wantsToLearn]  (becomes requesterSkillId)
+///  - learn  → [recipient.teaches]       (becomes recipientSkillId)
+class BarterRequestBottomSheet extends StatefulWidget {
+  const BarterRequestBottomSheet({
     super.key,
-    required this.currentUserSkills,
-    required this.targetUserSkills,
-    required this.targetUserName,
-    required this.targetUserId,
+    required this.recipient,
     this.onRequestSent,
   });
 
-  /// Skills the *current* user can teach (for the top picker).
-  final List<String> currentUserSkills;
-
-  /// Skills the *target* user can teach (for the bottom picker).
-  final List<String> targetUserSkills;
-
-  final String targetUserName;
-  final String targetUserId;
+  final UserProfileEntity recipient;
 
   /// Optional callback invoked after the request is sent successfully.
   final VoidCallback? onRequestSent;
 
-  @override
-  Widget build(BuildContext context) {
-    return BlocConsumer<CreateBarterCubit, CreateBarterState>(
-      listener: (context, state) async {
-        if (!state.isSendingRequest && state.selectedTeachSkill == null) {
-          // Request just completed — sheet is already popped by the bloc.
-        }
-      },
-      builder: (context, state) {
-        return _BarterRequestSheetContent(
-          currentUserSkills: currentUserSkills,
-          targetUserSkills: targetUserSkills,
-          targetUserName: targetUserName,
-          targetUserId: targetUserId,
-          onRequestSent: onRequestSent,
-          state: state,
-        );
-      },
+  /// Opens the sheet with its own [SendBarterRequestCubit].
+  static Future<void> show(
+    BuildContext context, {
+    required UserProfileEntity recipient,
+    VoidCallback? onRequestSent,
+  }) {
+    return showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      useSafeArea: true,
+      backgroundColor: Colors.transparent,
+      builder: (_) => BarterRequestBottomSheet(
+        recipient: recipient,
+        onRequestSent: onRequestSent,
+      ),
     );
   }
+
+  @override
+  State<BarterRequestBottomSheet> createState() =>
+      _BarterRequestBottomSheetState();
 }
 
-// ── Internal stateful content ──────────────────────────────────────────────────
+class _BarterRequestBottomSheetState extends State<BarterRequestBottomSheet> {
+  int? _teachSkillId; // requesterSkillId
+  int? _learnSkillId; // recipientSkillId
 
-class _BarterRequestSheetContent extends StatelessWidget {
-  const _BarterRequestSheetContent({
-    required this.currentUserSkills,
-    required this.targetUserSkills,
-    required this.targetUserName,
-    required this.targetUserId,
-    required this.state,
-    this.onRequestSent,
-  });
+  bool get _canSubmit => _teachSkillId != null && _learnSkillId != null;
 
-  final List<String> currentUserSkills;
-  final List<String> targetUserSkills;
-  final String targetUserName;
-  final String targetUserId;
-  final CreateBarterState state;
-  final VoidCallback? onRequestSent;
+  void _submit() {
+    context.read<SendBarterRequestCubit>().sendBarterRequest(
+      recipientId: widget.recipient.id,
+      requesterSkillId: _teachSkillId!,
+      recipientSkillId: _learnSkillId!,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
-    final cubit = context.read<CreateBarterCubit>();
+    final name = widget.recipient.fullName;
 
-    return Container(
-      decoration: BoxDecoration(
-        color: colors.surface,
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          // ── Handle ──────────────────────────────────────────────────────────
-          const SizedBox(height: 12),
-          Container(
-            width: 40,
-            height: 4,
-            decoration: BoxDecoration(
-              color: colors.inputBorder,
-              borderRadius: BorderRadius.circular(2),
+    return BlocConsumer<SendBarterRequestCubit, SendBarterRequestState>(
+      listener: (context, state) {
+        final messenger = ScaffoldMessenger.of(context);
+
+        if (state is SendBarterRequestSuccess) {
+          Navigator.of(context).pop();
+          messenger.showSnackBar(
+            SnackBar(
+              content: Text('barter.request_sent_snackbar'.tr()),
+              behavior: SnackBarBehavior.floating,
+              backgroundColor: colors.greenAccent,
             ),
-          ),
-          const SizedBox(height: 20),
+          );
+          widget.onRequestSent?.call();
+        } else if (state is SendBarterRequestError) {
+          messenger.showSnackBar(
+            SnackBar(
+              content: Text(state.errorMessage),
+              behavior: SnackBarBehavior.floating,
+              backgroundColor: colors.error,
+            ),
+          );
+        }
+      },
+      builder: (context, state) {
+        final isLoading = state is SendBarterRequestLoading;
 
-          // ── Header ──────────────────────────────────────────────────────────
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24),
-            child: Row(
-              children: [
-                Expanded(
-                  child: Text(
-                    'barter.sheet_title'.tr(),
-                    style: AppTextStyles.titleLarge.copyWith(
-                      color: colors.onSurface,
+        return Container(
+          decoration: BoxDecoration(
+            color: colors.surface,
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // ── Handle ──────────────────────────────────────────────────
+              const SizedBox(height: 12),
+              Container(
+                width: 40,
+                height: 4,
+                decoration: BoxDecoration(
+                  color: colors.inputBorder,
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+              const SizedBox(height: 20),
+
+              // ── Header ──────────────────────────────────────────────────
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        'barter.sheet_title'.tr(),
+                        style: AppTextStyles.titleLarge.copyWith(
+                          color: colors.onSurface,
+                        ),
+                      ),
                     ),
+                    IconButton(
+                      onPressed: () => Navigator.of(context).pop(),
+                      icon: Icon(
+                        Icons.close_rounded,
+                        color: colors.secondaryText,
+                        size: 22,
+                      ),
+                      padding: EdgeInsets.zero,
+                      constraints: const BoxConstraints(),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 4),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24),
+                child: Text(
+                  'barter.sheet_subtitle'.tr(namedArgs: {'name': name}),
+                  style: AppTextStyles.bodyMedium.copyWith(
+                    color: colors.secondaryText,
                   ),
                 ),
-                IconButton(
-                  onPressed: () => Navigator.of(context).pop(),
-                  icon: Icon(Icons.close_rounded,
-                      color: colors.secondaryText, size: 22),
-                  padding: EdgeInsets.zero,
-                  constraints: const BoxConstraints(),
+              ),
+              const SizedBox(height: 24),
+
+              // ── Pickers ─────────────────────────────────────────────────
+              Flexible(
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.symmetric(horizontal: 24),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _SectionLabel(
+                        icon: Icons.school_rounded,
+                        label: 'barter.what_you_teach'.tr(
+                          namedArgs: {'name': name},
+                        ),
+                        color: colors.teachChipText,
+                      ),
+                      const SizedBox(height: 10),
+                      _SkillPickerRow(
+                        skills: widget.recipient.wantsToLearn,
+                        emptyMessage: 'barter.recipient_wants_nothing'.tr(),
+                        selectedId: _teachSkillId,
+                        type: SkillChipType.teach,
+                        onSelect: isLoading
+                            ? null
+                            : (id) => setState(() => _teachSkillId = id),
+                      ),
+
+                      const SizedBox(height: 24),
+
+                      _SectionLabel(
+                        icon: Icons.auto_stories_rounded,
+                        label: 'barter.what_you_learn'.tr(
+                          namedArgs: {'name': name},
+                        ),
+                        color: colors.primary,
+                      ),
+                      const SizedBox(height: 10),
+                      _SkillPickerRow(
+                        skills: widget.recipient.teaches,
+                        emptyMessage: 'barter.recipient_no_skills'.tr(),
+                        selectedId: _learnSkillId,
+                        type: SkillChipType.learn,
+                        onSelect: isLoading
+                            ? null
+                            : (id) => setState(() => _learnSkillId = id),
+                      ),
+
+                      const SizedBox(height: 32),
+                    ],
+                  ),
                 ),
-              ],
-            ),
-          ),
-          const SizedBox(height: 4),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24),
-            child: Text(
-              'barter.sheet_subtitle'.tr(
-                namedArgs: {'name': targetUserName},
               ),
-              style: AppTextStyles.bodyMedium.copyWith(
-                color: colors.secondaryText,
+
+              // ── Submit button ───────────────────────────────────────────
+              Padding(
+                padding: EdgeInsets.fromLTRB(
+                  24,
+                  0,
+                  24,
+                  MediaQuery.viewInsetsOf(context).bottom + 12,
+                ),
+                child: _SendButton(
+                  canSubmit: _canSubmit,
+                  isLoading: isLoading,
+                  onPressed: _submit,
+                ),
               ),
-            ),
+            ],
           ),
-          const SizedBox(height: 24),
-          Flexible(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(horizontal: 24),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _SectionLabel(
-                    icon: Icons.school_rounded,
-                    label: 'barter.what_you_teach'.tr(),
-                    color: colors.teachChipText,
-                  ),
-                  const SizedBox(height: 10),
-                  _SkillPickerRow(
-                    skills: currentUserSkills,
-                    selected: state.selectedTeachSkill,
-                    type: SkillChipType.teach,
-                    onSelect: cubit.selectTeachSkill,
-                  ),
-
-                  const SizedBox(height: 24),
-
-                  // ── Section 2: What do you want to LEARN? ───────────────────
-                  _SectionLabel(
-                    icon: Icons.auto_stories_rounded,
-                    label: 'barter.what_you_learn'.tr(
-                      namedArgs: {'name': targetUserName},
-                    ),
-                    color: colors.primary,
-                  ),
-                  const SizedBox(height: 10),
-                  _SkillPickerRow(
-                    skills: targetUserSkills,
-                    selected: state.selectedLearnSkill,
-                    type: SkillChipType.learn,
-                    onSelect: cubit.selectLearnSkill,
-                  ),
-
-                  const SizedBox(height: 32),
-                ],
-              ),
-            ),
-          ),
-
-          // ── Submit button ────────────────────────────────────────────────────
-          Padding(
-            padding: EdgeInsets.fromLTRB(
-              24,
-              0,
-              24,
-              MediaQuery.of(context).viewInsets.bottom + 24,
-            ),
-            child: _SendButton(
-              canSubmit: state.canSubmitRequest,
-              isLoading: state.isSendingRequest,
-              onPressed: () async {
-                final success = await cubit.sendBarterRequest(
-                  targetUserId: targetUserId,
-                  targetUserName: targetUserName,
-                );
-                if (success && context.mounted) {
-                  Navigator.of(context).pop();
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text('barter.request_sent_snackbar'.tr()),
-                      behavior: SnackBarBehavior.floating,
-                      backgroundColor: colors.greenAccent,
-                    ),
-                  );
-                  onRequestSent?.call();
-                }
-              },
-            ),
-          ),
-        ],
-      ),
-    ).animate().slideY(
+        ).animate().slideY(
           begin: 0.1,
           end: 0,
           duration: 280.ms,
           curve: Curves.easeOutCubic,
         );
+      },
+    );
   }
 }
 
@@ -264,30 +273,41 @@ class _SectionLabel extends StatelessWidget {
 class _SkillPickerRow extends StatelessWidget {
   const _SkillPickerRow({
     required this.skills,
-    required this.selected,
+    required this.emptyMessage,
+    required this.selectedId,
     required this.type,
     required this.onSelect,
   });
-  final List<String> skills;
-  final String? selected;
+
+  final List<ProfileSkillEntity> skills;
+  final String emptyMessage;
+  final int? selectedId;
   final SkillChipType type;
-  final ValueChanged<String> onSelect;
+  final ValueChanged<int>? onSelect;
 
   @override
   Widget build(BuildContext context) {
+    if (skills.isEmpty) {
+      return Text(
+        emptyMessage,
+        style: AppTextStyles.bodyMedium.copyWith(
+          color: context.colors.secondaryText,
+        ),
+      );
+    }
+
     return Wrap(
       spacing: 8,
       runSpacing: 8,
-      children: skills
-          .map(
-            (s) => SkillChip(
-              label: s,
-              type: type,
-              isSelected: s == selected,
-              onTap: () => onSelect(s),
-            ),
-          )
-          .toList(),
+      children: [
+        for (final skill in skills)
+          SkillChip(
+            label: skill.name,
+            type: type,
+            isSelected: skill.skillId == selectedId,
+            onTap: () => onSelect?.call(skill.skillId),
+          ),
+      ],
     );
   }
 }

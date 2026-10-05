@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:craft_chain/core/di/injection.dart';
+import 'package:craft_chain/features/barter/presentation/logic/send_barter_request_cubit/send_barter_request_cubit.dart';
 import 'package:craft_chain/features/profile/domain/entities/user_profile_entity.dart';
 import 'package:craft_chain/features/auth/presentation/Cubits/session_cubit/session_cubit.dart';
 import 'package:craft_chain/features/auth/presentation/Cubits/session_cubit/session_state.dart';
@@ -189,15 +190,22 @@ final appRouter = GoRouter(
                     sessionState is Authenticated &&
                     sessionState.user.id == userId;
 
-                return BlocProvider(
+                return MultiBlocProvider(
                   key: ValueKey(
                     userId,
-                  ), // new cubit when viewing a different user
-                  create: (_) => getIt<ProfileCubit>()
-                    ..getUserProfile(
-                      userId: userId,
-                      isOwnProfile: isOwnProfile,
+                  ),
+                  providers: [
+                    BlocProvider(
+                      create: (_) => getIt<ProfileCubit>()
+                        ..getUserProfile(
+                          userId: userId,
+                          isOwnProfile: isOwnProfile,
+                        ),
                     ),
+                    BlocProvider(
+                      create: (_) => getIt<SendBarterRequestCubit>(),
+                    ),
+                  ],
                   child: child,
                 );
               },

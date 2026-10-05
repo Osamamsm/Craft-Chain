@@ -1,5 +1,6 @@
 import 'package:craft_chain/core/theme/app_colors.dart';
 import 'package:craft_chain/core/theme/app_text_styles.dart';
+import 'package:craft_chain/features/barter/presentation/views/widgets/barter_request_sheet.dart';
 import 'package:craft_chain/features/profile/domain/entities/user_profile_entity.dart';
 import 'package:craft_chain/features/profile/presentation/logic/profile_cubit/profile_cubit.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -46,7 +47,7 @@ class ProfileBottomAction extends StatelessWidget {
       ),
       child: isOwnProfile
           ? _EditButton.outlined(context, user)
-          : _BarterButton.filled(),
+          : _BarterButton.filled(recipient: user),
     );
   }
 }
@@ -70,7 +71,10 @@ class ProfileWebAction extends StatelessWidget {
   Widget build(BuildContext context) {
     return isOwnProfile
         ? _EditButton.outlinedWhite(context, user)
-        : SizedBox(width: 200, child: _BarterButton.filledWhite(context));
+        : SizedBox(
+            width: 200,
+            child: _BarterButton.filledWhite(context, recipient: user),
+          );
   }
 }
 
@@ -119,11 +123,15 @@ class _EditButton {
 
 class _BarterButton {
   /// Filled primary button — mobile bottom bar.
-  static Widget filled() {
+  static Widget filled({required UserProfileEntity recipient}) {
     return Builder(
       builder: (context) => ElevatedButton(
         onPressed: () {
-          // TODO: open barter request bottom sheet
+          showModalBottomSheet(
+            context: context,
+            builder: (context) =>
+                BarterRequestBottomSheet(recipient: recipient),
+          );
         },
         child: Text('profile.send_barter_request'.tr()),
       ),
@@ -131,10 +139,16 @@ class _BarterButton {
   }
 
   /// Filled white button — web gradient header.
-  static Widget filledWhite(BuildContext context) {
+  static Widget filledWhite(
+    BuildContext context, {
+    required UserProfileEntity recipient,
+  }) {
     return ElevatedButton(
       onPressed: () {
-        // TODO: open barter request bottom sheet
+        showModalBottomSheet(
+          context: context,
+          builder: (context) => BarterRequestBottomSheet(recipient: recipient),
+        );
       },
       style: ElevatedButton.styleFrom(
         backgroundColor: Colors.white,
