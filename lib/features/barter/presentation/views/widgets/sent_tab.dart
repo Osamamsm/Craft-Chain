@@ -2,9 +2,8 @@ import 'package:craft_chain/core/theme/app_colors.dart';
 import 'package:craft_chain/core/theme/app_text_styles.dart';
 import 'package:craft_chain/core/widgets/empty_state.dart';
 import 'package:craft_chain/core/widgets/user_avatar.dart';
-import 'package:craft_chain/features/barter/data/models/barter.dart';
-import 'package:craft_chain/features/barter/presentation/logic/barter_request_cubit/barter_request_cubit.dart';
-import 'package:craft_chain/features/barter/presentation/logic/barter_request_cubit/barter_request_state.dart';
+import 'package:craft_chain/features/barter/domain/entities/sent_barter_request.dart';
+import 'package:craft_chain/features/barter/presentation/logic/get_sent_requests_cubit/get_sent_requests_cubit.dart';
 import 'package:craft_chain/features/barter/presentation/views/widgets/request_skeleton_list.dart';
 import 'package:craft_chain/features/barter/presentation/views/widgets/skill_exchange_pill.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -17,32 +16,30 @@ class SentTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<BarterRequestCubit, BarterRequestState>(
-      buildWhen: (prev, curr) =>
-          prev.sent != curr.sent || prev.isLoadingSent != curr.isLoadingSent,
+    return BlocBuilder<GetSentRequestsCubit, GetSentRequestsState>(
       builder: (context, state) {
-        if (state.isLoadingSent) {
-          return RequestSkeletonList();
-        }
-        if (state.sent.isEmpty) {
+        if (state is GetSentRequestsSuccess && state.requests.isEmpty) {
           return EmptyState(
-            onRefresh: ()=> Future.delayed(Duration.zero),
+            onRefresh: () => Future.delayed(Duration.zero),
             icon: Icons.send_outlined,
             title: 'barter.sent_empty_title'.tr(),
             subtitle: 'barter.sent_empty_subtitle'.tr(),
           );
         }
-        return ListView.builder(
-          padding: const EdgeInsets.all(16),
-          itemCount: state.sent.length,
-          itemBuilder: (context, index) {
-            final barter = state.sent[index];
-            return _SentRequestCard(barter: barter)
-                .animate()
-                .fadeIn(delay: (index * 60).ms, duration: 280.ms)
-                .slideY(begin: 0.05, end: 0);
-          },
-        );
+        if (state is GetSentRequestsSuccess) {
+          return ListView.builder(
+            padding: const EdgeInsets.all(16),
+            itemCount: state.requests.length,
+            itemBuilder: (context, index) {
+              final barter = state.requests[index];
+              return _SentRequestCard(barter: barter)
+                  .animate()
+                  .fadeIn(delay: (index * 60).ms, duration: 280.ms)
+                  .slideY(begin: 0.05, end: 0);
+            },
+          );
+        }
+        return RequestSkeletonList();
       },
     );
   }
@@ -50,7 +47,7 @@ class SentTab extends StatelessWidget {
 
 class _SentRequestCard extends StatelessWidget {
   const _SentRequestCard({required this.barter});
-  final BarterModel barter;
+  final SentBarterRequest barter;
 
   @override
   Widget build(BuildContext context) {
@@ -70,9 +67,9 @@ class _SentRequestCard extends StatelessWidget {
           Row(
             children: [
               UserAvatar(
-                initials: barter.user2Initials,
+                initials: barter.recipient.initial,
                 radius: 22,
-                colorSeed: barter.user2ColorSeed,
+                imageUrl: barter.recipient.photoUrl,
               ),
               const SizedBox(width: 12),
               Expanded(
@@ -80,7 +77,7 @@ class _SentRequestCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      barter.user2Name,
+                      barter.recipient.fullName,
                       style: AppTextStyles.titleMedium.copyWith(
                         color: colors.onSurface,
                       ),
@@ -96,8 +93,10 @@ class _SentRequestCard extends StatelessWidget {
               ),
               // Pending badge
               Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: 4,
+                ),
                 decoration: BoxDecoration(
                   color: colors.infoBackground,
                   borderRadius: BorderRadius.circular(20),
@@ -139,7 +138,7 @@ class _SentRequestCard extends StatelessWidget {
               Expanded(
                 child: SkillExchangePill(
                   label: 'barter.you_will_teach'.tr(),
-                  skill: barter.user1Teaches,
+                  skill: barter.youWillTeach,
                   bgColor: colors.teachChipBg,
                   textColor: colors.teachChipText,
                   icon: Icons.school_rounded,
@@ -147,13 +146,16 @@ class _SentRequestCard extends StatelessWidget {
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8),
-                child: Icon(Icons.swap_horiz_rounded,
-                    color: colors.secondaryText, size: 18),
+                child: Icon(
+                  Icons.swap_horiz_rounded,
+                  color: colors.secondaryText,
+                  size: 18,
+                ),
               ),
               Expanded(
                 child: SkillExchangePill(
                   label: 'barter.you_will_learn'.tr(),
-                  skill: barter.user2Teaches,
+                  skill: barter.youWillLearn,
                   bgColor: colors.infoBackground,
                   textColor: colors.primary,
                   icon: Icons.auto_stories_rounded,

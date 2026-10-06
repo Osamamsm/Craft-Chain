@@ -1,8 +1,10 @@
+import 'package:craft_chain/core/di/injection.dart';
 import 'package:craft_chain/core/theme/app_colors.dart';
 import 'package:craft_chain/core/theme/app_text_styles.dart';
 import 'package:craft_chain/core/widgets/empty_state.dart';
 import 'package:craft_chain/features/barter/presentation/logic/barter_request_cubit/barter_request_cubit.dart';
 import 'package:craft_chain/features/barter/presentation/logic/barter_request_cubit/barter_request_state.dart';
+import 'package:craft_chain/features/barter/presentation/logic/get_sent_requests_cubit/get_sent_requests_cubit.dart';
 import 'package:craft_chain/features/barter/presentation/views/widgets/chats_skeleton_list.dart';
 import 'package:craft_chain/features/barter/presentation/views/widgets/dismissible_chat_tile.dart';
 import 'package:craft_chain/features/barter/presentation/views/widgets/received_tab.dart';
@@ -29,26 +31,12 @@ class _MobileBarterViewBodyState extends State<MobileBarterViewBody>
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
     _tabController.addListener(_onTabChanged);
-    // Load initial data.
-    WidgetsBinding.instance.addPostFrameCallback((_) => _loadTab(0));
   }
 
   void _onTabChanged() {
     if (!_tabController.indexIsChanging) return;
-    _loadTab(_tabController.index);
   }
 
-  void _loadTab(int index) {
-    final cubit = context.read<BarterRequestCubit>();
-    switch (index) {
-      case 0:
-        cubit.loadChats();
-      case 1:
-        cubit.loadReceived();
-      case 2:
-        cubit.loadSent();
-    }
-  }
 
   @override
   void dispose() {
@@ -73,7 +61,11 @@ class _MobileBarterViewBodyState extends State<MobileBarterViewBody>
                 children: [
                   const _MobileChatsTab(),
                   const ReceivedTab(),
-                  const SentTab(),
+                  BlocProvider(
+                    create: (context) =>
+                        getIt<GetSentRequestsCubit>()..getSentRequests(),
+                    child: const SentTab(),
+                  ),
                 ],
               ),
             ),
@@ -166,7 +158,7 @@ class _MobileChatsTab extends StatelessWidget {
         }
         if (state.chats.isEmpty) {
           return EmptyState(
-            onRefresh: ()=> Future.delayed(Duration.zero),
+            onRefresh: () => Future.delayed(Duration.zero),
             icon: Icons.chat_bubble_outline_rounded,
             title: 'barter.chats_empty_title'.tr(),
             subtitle: 'barter.chats_empty_subtitle'.tr(),
