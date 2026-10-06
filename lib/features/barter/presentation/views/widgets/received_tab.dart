@@ -32,11 +32,6 @@ class ReceivedTab extends StatelessWidget {
               content: Text(feedback.message),
             ),
           );
-
-        if (!feedback.isError &&
-            feedback.action == ReceivedRequestAction.accept) {
-          // TODO: context.read<YourChatsCubit>().getActiveBarters();
-        }
       },
       child: BlocBuilder<ReceivedRequestsCubit, ReceivedRequestsState>(
         builder: (context, state) {
