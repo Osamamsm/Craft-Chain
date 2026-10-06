@@ -129,7 +129,11 @@
     "room_cancel": "Cancel",
     "room_confirm": "Confirm",
     "room_input_hint": "Type a message…",
-    "room_input_disabled": "Barter completed — chat is read-only"
+    "room_input_disabled": "Barter completed — chat is read-only",
+    "rejected": "Rejected",
+    "cancelled": "Cancelled",
+    "request_rejected": "Your request was rejected",
+    "request_cancelled": "Request cancelled"
   },
   "match": {
     "filter_all": "All",

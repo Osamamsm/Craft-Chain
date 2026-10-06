@@ -2,6 +2,7 @@ import 'package:craft_chain/core/theme/app_colors.dart';
 import 'package:craft_chain/core/theme/app_text_styles.dart';
 import 'package:craft_chain/core/widgets/empty_state.dart';
 import 'package:craft_chain/core/widgets/user_avatar.dart';
+import 'package:craft_chain/features/barter/domain/entities/barter_status.dart';
 import 'package:craft_chain/features/barter/domain/entities/sent_barter_request.dart';
 import 'package:craft_chain/features/barter/presentation/logic/get_sent_requests_cubit/get_sent_requests_cubit.dart';
 import 'package:craft_chain/features/barter/presentation/views/widgets/request_skeleton_list.dart';
@@ -49,6 +50,13 @@ class _SentRequestCard extends StatelessWidget {
   const _SentRequestCard({required this.barter});
   final SentBarterRequest barter;
 
+  /// Subtitle under the recipient's name, based on the request status.
+  String _subtitle() => switch (barter.status) {
+        BarterStatus.rejected => 'barter.request_rejected'.tr(),
+        BarterStatus.cancelled => 'barter.request_cancelled'.tr(),
+        _ => 'barter.request_pending'.tr(),
+      };
+
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
@@ -83,7 +91,7 @@ class _SentRequestCard extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      'barter.request_pending'.tr(),
+                      _subtitle(),
                       style: AppTextStyles.bodySmall.copyWith(
                         color: colors.secondaryText,
                       ),
@@ -91,42 +99,8 @@ class _SentRequestCard extends StatelessWidget {
                   ],
                 ),
               ),
-              // Pending badge
-              Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 10,
-                  vertical: 4,
-                ),
-                decoration: BoxDecoration(
-                  color: colors.infoBackground,
-                  borderRadius: BorderRadius.circular(20),
-                  border: Border.all(
-                    color: colors.primary.withValues(alpha: 0.3),
-                  ),
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Container(
-                      width: 6,
-                      height: 6,
-                      decoration: BoxDecoration(
-                        color: colors.primary,
-                        shape: BoxShape.circle,
-                      ),
-                    ),
-                    const SizedBox(width: 5),
-                    Text(
-                      'barter.pending'.tr(),
-                      style: AppTextStyles.bodySmall.copyWith(
-                        color: colors.primary,
-                        fontWeight: FontWeight.w600,
-                        fontSize: 11,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+              // Status badge (pending / rejected / cancelled)
+              _StatusBadge(status: barter.status),
             ],
           ),
 
@@ -162,6 +136,65 @@ class _SentRequestCard extends StatelessWidget {
                 ),
               ),
             ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _StatusBadge extends StatelessWidget {
+  const _StatusBadge({required this.status});
+  final BarterStatus status;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.colors;
+    // Swap for your own error token if AppColors has one.
+    final errorColor = Theme.of(context).colorScheme.error;
+
+    final (Color color, Color background, String label) = switch (status) {
+      BarterStatus.rejected => (
+          errorColor,
+          errorColor.withValues(alpha: 0.1),
+          'barter.rejected'.tr(),
+        ),
+      BarterStatus.cancelled => (
+          colors.secondaryText,
+          colors.secondaryText.withValues(alpha: 0.12),
+          'barter.cancelled'.tr(),
+        ),
+      // pending (the Sent tab only ever receives pending / rejected / cancelled)
+      _ => (
+          colors.primary,
+          colors.infoBackground,
+          'barter.pending'.tr(),
+        ),
+    };
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+      decoration: BoxDecoration(
+        color: background,
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: color.withValues(alpha: 0.3)),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            width: 6,
+            height: 6,
+            decoration: BoxDecoration(color: color, shape: BoxShape.circle),
+          ),
+          const SizedBox(width: 5),
+          Text(
+            label,
+            style: AppTextStyles.bodySmall.copyWith(
+              color: color,
+              fontWeight: FontWeight.w600,
+              fontSize: 11,
+            ),
           ),
         ],
       ),

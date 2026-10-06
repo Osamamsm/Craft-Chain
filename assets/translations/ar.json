@@ -129,7 +129,11 @@
     "room_cancel": "إلغاء",
     "room_confirm": "تأكيد",
     "room_input_hint": "اكتب رسالة…",
-    "room_input_disabled": "اكتملت المقايضة — المحادثة للقراءة فقط"
+    "room_input_disabled": "اكتملت المقايضة — المحادثة للقراءة فقط",
+    "rejected": "مرفوض",
+    "cancelled": "ملغي",
+    "request_rejected": "تم رفض طلبك",
+    "request_cancelled": "تم إلغاء الطلب"
   },
   "match": {
     "filter_all": "الكل",
