@@ -133,7 +133,11 @@
     "rejected": "مرفوض",
     "cancelled": "ملغي",
     "request_rejected": "تم رفض طلبك",
-    "request_cancelled": "تم إلغاء الطلب"
+    "request_cancelled": "تم إلغاء الطلب",
+    "cancel_request": "إلغاء الطلب",
+    "keep_request": "إبقاء الطلب",
+    "cancel_confirm_title": "إلغاء الطلب؟",
+    "cancel_confirm_message": "هل تريد إلغاء طلبك إلى {}؟"
   },
   "match": {
     "filter_all": "الكل",

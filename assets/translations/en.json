@@ -133,7 +133,11 @@
     "rejected": "Rejected",
     "cancelled": "Cancelled",
     "request_rejected": "Your request was rejected",
-    "request_cancelled": "Request cancelled"
+    "request_cancelled": "Request cancelled",
+    "cancel_request": "Cancel Request",
+    "keep_request": "Keep Request",
+    "cancel_confirm_title": "Cancel the request?",
+    "cancel_confirm_message": "Do you want to cancel your request to {}?"
   },
   "match": {
     "filter_all": "All",

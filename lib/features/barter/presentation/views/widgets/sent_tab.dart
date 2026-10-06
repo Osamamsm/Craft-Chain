@@ -4,7 +4,7 @@ import 'package:craft_chain/core/widgets/empty_state.dart';
 import 'package:craft_chain/core/widgets/user_avatar.dart';
 import 'package:craft_chain/features/barter/domain/entities/barter_status.dart';
 import 'package:craft_chain/features/barter/domain/entities/sent_barter_request.dart';
-import 'package:craft_chain/features/barter/presentation/logic/get_sent_requests_cubit/get_sent_requests_cubit.dart';
+import 'package:craft_chain/features/barter/presentation/logic/sent_requests_cubit/sent_requests_cubit.dart';
 import 'package:craft_chain/features/barter/presentation/views/widgets/request_skeleton_list.dart';
 import 'package:craft_chain/features/barter/presentation/views/widgets/skill_exchange_pill.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -17,31 +17,51 @@ class SentTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<GetSentRequestsCubit, GetSentRequestsState>(
-      builder: (context, state) {
-        if (state is GetSentRequestsSuccess && state.requests.isEmpty) {
-          return EmptyState(
-            onRefresh: () => Future.delayed(Duration.zero),
-            icon: Icons.send_outlined,
-            title: 'barter.sent_empty_title'.tr(),
-            subtitle: 'barter.sent_empty_subtitle'.tr(),
+    // The listener shows the snackbar after a cancel (success or error);
+    // the builder only ever renders the list.
+    return BlocListener<GetSentRequestsCubit, GetSentRequestsState>(
+      listenWhen: (_, current) =>
+          current is GetSentRequestsSuccess && current.feedback != null,
+      listener: (context, state) {
+        final feedback = (state as GetSentRequestsSuccess).feedback!;
+        final messenger = ScaffoldMessenger.of(context);
+        messenger
+          ..hideCurrentSnackBar()
+          ..showSnackBar(
+            SnackBar(
+              behavior: SnackBarBehavior.floating,
+              backgroundColor:
+                  feedback.isError ? Theme.of(context).colorScheme.error : null,
+              content: Text(feedback.message),
+            ),
           );
-        }
-        if (state is GetSentRequestsSuccess) {
-          return ListView.builder(
-            padding: const EdgeInsets.all(16),
-            itemCount: state.requests.length,
-            itemBuilder: (context, index) {
-              final barter = state.requests[index];
-              return _SentRequestCard(barter: barter)
-                  .animate()
-                  .fadeIn(delay: (index * 60).ms, duration: 280.ms)
-                  .slideY(begin: 0.05, end: 0);
-            },
-          );
-        }
-        return RequestSkeletonList();
       },
+      child: BlocBuilder<GetSentRequestsCubit, GetSentRequestsState>(
+        builder: (context, state) {
+          if (state is GetSentRequestsSuccess && state.requests.isEmpty) {
+            return EmptyState(
+              onRefresh: () => Future.delayed(Duration.zero),
+              icon: Icons.send_outlined,
+              title: 'barter.sent_empty_title'.tr(),
+              subtitle: 'barter.sent_empty_subtitle'.tr(),
+            );
+          }
+          if (state is GetSentRequestsSuccess) {
+            return ListView.builder(
+              padding: const EdgeInsets.all(16),
+              itemCount: state.requests.length,
+              itemBuilder: (context, index) {
+                final barter = state.requests[index];
+                return _SentRequestCard(barter: barter)
+                    .animate()
+                    .fadeIn(delay: (index * 60).ms, duration: 280.ms)
+                    .slideY(begin: 0.05, end: 0);
+              },
+            );
+          }
+          return RequestSkeletonList();
+        },
+      ),
     );
   }
 }
@@ -57,9 +77,40 @@ class _SentRequestCard extends StatelessWidget {
         _ => 'barter.request_pending'.tr(),
       };
 
+  /// Cancelling can't be undone, so ask first.
+  Future<void> _confirmCancel(BuildContext context) async {
+    final errorColor = Theme.of(context).colorScheme.error;
+
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: Text('barter.cancel_confirm_title'.tr()),
+        content: Text(
+          'barter.cancel_confirm_message'.tr(args: [barter.recipient.fullName]),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(false),
+            child: Text('barter.keep_request'.tr()),
+          ),
+          TextButton(
+            style: TextButton.styleFrom(foregroundColor: errorColor),
+            onPressed: () => Navigator.of(dialogContext).pop(true),
+            child: Text('barter.cancel_request'.tr()),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed == true && context.mounted) {
+      context.read<GetSentRequestsCubit>().cancelRequest(barter.barterId);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
+    final errorColor = Theme.of(context).colorScheme.error;
 
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
@@ -136,6 +187,33 @@ class _SentRequestCard extends StatelessWidget {
                 ),
               ),
             ],
+          ),
+
+          // ── Cancel (pending only) ────────────────────────────────────────
+          // Optimistic cancel flips the status right away, so the button
+          // collapses smoothly instead of popping out.
+          AnimatedSize(
+            duration: const Duration(milliseconds: 200),
+            alignment: Alignment.topCenter,
+            child: barter.status == BarterStatus.pending
+                ? Padding(
+                    padding: const EdgeInsets.only(top: 14),
+                    child: SizedBox(
+                      width: double.infinity,
+                      child: OutlinedButton(
+                        onPressed: () => _confirmCancel(context),
+                        style: OutlinedButton.styleFrom(
+                          foregroundColor: errorColor,
+                          side: BorderSide(color: errorColor),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                        child: Text('barter.cancel_request'.tr()),
+                      ),
+                    ),
+                  )
+                : const SizedBox(width: double.infinity),
           ),
         ],
       ),

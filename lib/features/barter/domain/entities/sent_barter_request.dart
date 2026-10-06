@@ -30,4 +30,14 @@ class SentBarterRequest extends Equatable {
     youWillTeach,
     youWillLearn,
   ];
+
+
+    SentBarterRequest copyWith({BarterStatus? status}) => SentBarterRequest(
+        barterId: barterId,
+        status: status ?? this.status,
+        createdAt: createdAt,
+        recipient: recipient,
+        youWillTeach: youWillTeach,
+        youWillLearn: youWillLearn,
+      );
 }

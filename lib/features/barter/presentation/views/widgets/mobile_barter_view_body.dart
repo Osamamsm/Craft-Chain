@@ -4,7 +4,7 @@ import 'package:craft_chain/core/theme/app_text_styles.dart';
 import 'package:craft_chain/core/widgets/empty_state.dart';
 import 'package:craft_chain/features/barter/presentation/logic/barter_request_cubit/barter_request_cubit.dart';
 import 'package:craft_chain/features/barter/presentation/logic/barter_request_cubit/barter_request_state.dart';
-import 'package:craft_chain/features/barter/presentation/logic/get_sent_requests_cubit/get_sent_requests_cubit.dart';
+import 'package:craft_chain/features/barter/presentation/logic/sent_requests_cubit/sent_requests_cubit.dart';
 import 'package:craft_chain/features/barter/presentation/views/widgets/chats_skeleton_list.dart';
 import 'package:craft_chain/features/barter/presentation/views/widgets/dismissible_chat_tile.dart';
 import 'package:craft_chain/features/barter/presentation/views/widgets/received_tab.dart';
