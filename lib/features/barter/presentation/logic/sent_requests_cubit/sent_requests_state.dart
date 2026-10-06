@@ -1,18 +1,18 @@
 part of 'sent_requests_cubit.dart';
 
-sealed class GetSentRequestsState extends Equatable {
-  const GetSentRequestsState();
+sealed class SentRequestsState extends Equatable {
+  const SentRequestsState();
 
   // List<Object?> (was List<Object>) because feedback below is nullable.
   @override
   List<Object?> get props => [];
 }
 
-final class GetSentRequestsInitial extends GetSentRequestsState {}
+final class GetSentRequestsInitial extends SentRequestsState {}
 
-final class GetSentRequestsLoading extends GetSentRequestsState {}
+final class GetSentRequestsLoading extends SentRequestsState {}
 
-final class GetSentRequestsSuccess extends GetSentRequestsState {
+final class GetSentRequestsSuccess extends SentRequestsState {
   final List<SentBarterRequest> requests;
   final SentRequestsFeedback? feedback;
 
@@ -22,7 +22,7 @@ final class GetSentRequestsSuccess extends GetSentRequestsState {
   List<Object?> get props => [requests, feedback];
 }
 
-final class GetSentRequestsFailure extends GetSentRequestsState {
+final class GetSentRequestsFailure extends SentRequestsState {
   final String message;
   const GetSentRequestsFailure({required this.message});
 

@@ -6,10 +6,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 part 'sent_requests_state.dart';
 
-class GetSentRequestsCubit extends Cubit<GetSentRequestsState> {
+class SentRequestsCubit extends Cubit<SentRequestsState> {
   final BartersRepo _bartersRepo;
 
-  GetSentRequestsCubit(this._bartersRepo) : super(GetSentRequestsInitial());
+  SentRequestsCubit(this._bartersRepo) : super(GetSentRequestsInitial());
 
   Future<void> getSentRequests() async {
     emit(GetSentRequestsLoading());
@@ -28,8 +28,9 @@ class GetSentRequestsCubit extends Cubit<GetSentRequestsState> {
     final current = state;
     if (current is! GetSentRequestsSuccess) return;
 
-    final target =
-        current.requests.where((r) => r.barterId == barterId).firstOrNull;
+    final target = current.requests
+        .where((r) => r.barterId == barterId)
+        .firstOrNull;
     // Ignore double taps / requests that are no longer pending.
     if (target == null || target.status != BarterStatus.pending) return;
 
@@ -52,7 +53,10 @@ class GetSentRequestsCubit extends Cubit<GetSentRequestsState> {
       (failure) async => emit(
         GetSentRequestsSuccess(
           requests: previous,
-          feedback: SentRequestsFeedback(message: failure.message, isError: true),
+          feedback: SentRequestsFeedback(
+            message: failure.message,
+            isError: true,
+          ),
         ),
       ),
       (actionResult) async {

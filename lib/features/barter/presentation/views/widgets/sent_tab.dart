@@ -19,7 +19,7 @@ class SentTab extends StatelessWidget {
   Widget build(BuildContext context) {
     // The listener shows the snackbar after a cancel (success or error);
     // the builder only ever renders the list.
-    return BlocListener<GetSentRequestsCubit, GetSentRequestsState>(
+    return BlocListener<SentRequestsCubit, SentRequestsState>(
       listenWhen: (_, current) =>
           current is GetSentRequestsSuccess && current.feedback != null,
       listener: (context, state) {
@@ -30,13 +30,14 @@ class SentTab extends StatelessWidget {
           ..showSnackBar(
             SnackBar(
               behavior: SnackBarBehavior.floating,
-              backgroundColor:
-                  feedback.isError ? Theme.of(context).colorScheme.error : null,
+              backgroundColor: feedback.isError
+                  ? Theme.of(context).colorScheme.error
+                  : null,
               content: Text(feedback.message),
             ),
           );
       },
-      child: BlocBuilder<GetSentRequestsCubit, GetSentRequestsState>(
+      child: BlocBuilder<SentRequestsCubit, SentRequestsState>(
         builder: (context, state) {
           if (state is GetSentRequestsSuccess && state.requests.isEmpty) {
             return EmptyState(
@@ -72,10 +73,10 @@ class _SentRequestCard extends StatelessWidget {
 
   /// Subtitle under the recipient's name, based on the request status.
   String _subtitle() => switch (barter.status) {
-        BarterStatus.rejected => 'barter.request_rejected'.tr(),
-        BarterStatus.cancelled => 'barter.request_cancelled'.tr(),
-        _ => 'barter.request_pending'.tr(),
-      };
+    BarterStatus.rejected => 'barter.request_rejected'.tr(),
+    BarterStatus.cancelled => 'barter.request_cancelled'.tr(),
+    _ => 'barter.request_pending'.tr(),
+  };
 
   /// Cancelling can't be undone, so ask first.
   Future<void> _confirmCancel(BuildContext context) async {
@@ -103,7 +104,7 @@ class _SentRequestCard extends StatelessWidget {
     );
 
     if (confirmed == true && context.mounted) {
-      context.read<GetSentRequestsCubit>().cancelRequest(barter.barterId);
+      context.read<SentRequestsCubit>().cancelRequest(barter.barterId);
     }
   }
 
@@ -233,21 +234,17 @@ class _StatusBadge extends StatelessWidget {
 
     final (Color color, Color background, String label) = switch (status) {
       BarterStatus.rejected => (
-          errorColor,
-          errorColor.withValues(alpha: 0.1),
-          'barter.rejected'.tr(),
-        ),
+        errorColor,
+        errorColor.withValues(alpha: 0.1),
+        'barter.rejected'.tr(),
+      ),
       BarterStatus.cancelled => (
-          colors.secondaryText,
-          colors.secondaryText.withValues(alpha: 0.12),
-          'barter.cancelled'.tr(),
-        ),
+        colors.secondaryText,
+        colors.secondaryText.withValues(alpha: 0.12),
+        'barter.cancelled'.tr(),
+      ),
       // pending (the Sent tab only ever receives pending / rejected / cancelled)
-      _ => (
-          colors.primary,
-          colors.infoBackground,
-          'barter.pending'.tr(),
-        ),
+      _ => (colors.primary, colors.infoBackground, 'barter.pending'.tr()),
     };
 
     return Container(

@@ -37,7 +37,6 @@ class _MobileBarterViewBodyState extends State<MobileBarterViewBody>
     if (!_tabController.indexIsChanging) return;
   }
 
-
   @override
   void dispose() {
     _tabController.removeListener(_onTabChanged);
@@ -63,7 +62,7 @@ class _MobileBarterViewBodyState extends State<MobileBarterViewBody>
                   const ReceivedTab(),
                   BlocProvider(
                     create: (context) =>
-                        getIt<GetSentRequestsCubit>()..getSentRequests(),
+                        getIt<SentRequestsCubit>()..getSentRequests(),
                     child: const SentTab(),
                   ),
                 ],
