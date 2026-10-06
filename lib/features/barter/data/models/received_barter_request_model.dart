@@ -18,7 +18,7 @@ class ReceivedBarterRequestModel extends ReceivedBarterRequest {
         requester: BarterUserModel(
           id: json['requester_id'] as String,
           fullName: json['requester_name'] as String,
-          photoUrl: json['requester_photo'] as String?,
+          photoUrl: json['requester_photo'] as String,
           rating: (json['requester_rating'] as num?)?.toDouble(),
         ),
         willTeachYou: json['will_teach_you'] as String,

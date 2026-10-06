@@ -21,7 +21,7 @@ class SentBarterRequestModel extends SentBarterRequest {
         recipient: BarterUserModel(
           id: json['recipient_id'] as String,
           fullName: json['recipient_name'] as String,
-          photoUrl: json['recipient_photo'] as String?,
+          photoUrl: json['recipient_photo'] as String,
         ),
         youWillTeach: json['you_will_teach'] as String,
         youWillLearn: json['you_will_learn'] as String,

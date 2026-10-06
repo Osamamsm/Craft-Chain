@@ -23,7 +23,7 @@ class BarterChatPreviewModel extends BarterChatPreview {
         otherUser: BarterUserModel(
           id: json['other_user_id'] as String,
           fullName: json['other_user_name'] as String,
-          photoUrl: json['other_user_photo'] as String?,
+          photoUrl: json['other_user_photo'] as String,
         ),
         mySkill: json['my_skill'] as String,
         theirSkill: json['their_skill'] as String,

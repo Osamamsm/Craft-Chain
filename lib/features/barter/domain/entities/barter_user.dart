@@ -4,13 +4,13 @@ class BarterUser extends Equatable {
   const BarterUser({
     required this.id,
     required this.fullName,
-    this.photoUrl,
+    required this.photoUrl,
     this.rating,
   });
 
   final String id;
   final String fullName;
-  final String? photoUrl;
+  final String photoUrl;
 
   final double? rating;
 
