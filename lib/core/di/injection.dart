@@ -17,7 +17,6 @@ import 'package:craft_chain/features/barter/data/repo/barters_repo_impl.dart';
 import 'package:craft_chain/features/barter/domain/repo/barters_repo.dart';
 import 'package:craft_chain/features/barter/presentation/logic/barter_request_cubit/barter_request_cubit.dart';
 import 'package:craft_chain/features/barter/presentation/logic/barter_room_cubit/barter_room_cubit.dart';
-import 'package:craft_chain/features/barter/presentation/logic/create_barter_cubit/create_barter_cubit.dart';
 import 'package:craft_chain/features/barter/presentation/logic/sent_requests_cubit/sent_requests_cubit.dart';
 import 'package:craft_chain/features/barter/presentation/logic/send_barter_request_cubit/send_barter_request_cubit.dart';
 import 'package:craft_chain/features/explore/view_model/explore_cubit/explore_cubit.dart';
@@ -76,7 +75,6 @@ void configureDependencies() {
   getIt.registerFactory<SentRequestsCubit>(() => SentRequestsCubit(getIt()));
   getIt.registerFactory<BarterRequestCubit>(() => BarterRequestCubit());
   getIt.registerFactory<BarterRoomCubit>(() => BarterRoomCubit());
-  getIt.registerFactory<CreateBarterCubit>(() => CreateBarterCubit());
 
   // Explore
   getIt.registerFactory<ExploreCubit>(() => ExploreCubit());
