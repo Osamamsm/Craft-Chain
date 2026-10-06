@@ -2,9 +2,8 @@ import 'package:craft_chain/core/theme/app_colors.dart';
 import 'package:craft_chain/core/theme/app_text_styles.dart';
 import 'package:craft_chain/core/widgets/empty_state.dart';
 import 'package:craft_chain/core/widgets/user_avatar.dart';
-import 'package:craft_chain/features/barter/data/models/barter.dart';
-import 'package:craft_chain/features/barter/presentation/logic/barter_request_cubit/barter_request_cubit.dart';
-import 'package:craft_chain/features/barter/presentation/logic/barter_request_cubit/barter_request_state.dart';
+import 'package:craft_chain/features/barter/domain/entities/received_barter_request.dart';
+import 'package:craft_chain/features/barter/presentation/logic/cubit/received_requests_cubit.dart';
 import 'package:craft_chain/features/barter/presentation/views/widgets/request_skeleton_list.dart';
 import 'package:craft_chain/features/barter/presentation/views/widgets/skill_exchange_pill.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -17,46 +16,78 @@ class ReceivedTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<BarterRequestCubit, BarterRequestState>(
-      buildWhen: (prev, curr) =>
-          prev.received != curr.received ||
-          prev.isLoadingReceived != curr.isLoadingReceived,
-      builder: (context, state) {
-        if (state.isLoadingReceived) {
-          return RequestSkeletonList();
-        }
-        if (state.received.isEmpty) {
-          return EmptyState(
-            onRefresh: ()=> Future.delayed(Duration.zero),
-            icon: Icons.inbox_outlined,
-            title: 'barter.received_empty_title'.tr(),
-            subtitle: 'barter.received_empty_subtitle'.tr(),
+    final colors = context.colors;
+    return BlocListener<ReceivedRequestsCubit, ReceivedRequestsState>(
+      listenWhen: (_, current) =>
+          current is ReceivedRequestsSuccess && current.feedback != null,
+      listener: (context, state) {
+        final feedback = (state as ReceivedRequestsSuccess).feedback!;
+
+        ScaffoldMessenger.of(context)
+          ..hideCurrentSnackBar()
+          ..showSnackBar(
+            SnackBar(
+              behavior: SnackBarBehavior.floating,
+              backgroundColor: feedback.isError ? colors.error : null,
+              content: Text(feedback.message),
+            ),
           );
+
+        if (!feedback.isError &&
+            feedback.action == ReceivedRequestAction.accept) {
+          // TODO: context.read<YourChatsCubit>().getActiveBarters();
         }
-        return ListView.builder(
-          padding: const EdgeInsets.all(16),
-          itemCount: state.received.length,
-          itemBuilder: (context, index) {
-            final barter = state.received[index];
-            return _ReceivedRequestCard(barter: barter)
-                .animate()
-                .fadeIn(delay: (index * 60).ms, duration: 280.ms)
-                .slideY(begin: 0.05, end: 0);
-          },
-        );
       },
+      child: BlocBuilder<ReceivedRequestsCubit, ReceivedRequestsState>(
+        builder: (context, state) {
+          if (state is ReceivedRequestsFailure) {
+            return EmptyState(
+              onRefresh: () =>
+                  context.read<ReceivedRequestsCubit>().getReceivedRequests(),
+              icon: Icons.error_outline_rounded,
+              title: 'barter.load_failed_title'.tr(),
+              subtitle: state.message,
+            );
+          }
+          if (state is! ReceivedRequestsSuccess) {
+            // Initial / Loading
+            return RequestSkeletonList();
+          }
+          if (state.requests.isEmpty) {
+            return EmptyState(
+              onRefresh: () =>
+                  context.read<ReceivedRequestsCubit>().getReceivedRequests(),
+              icon: Icons.inbox_outlined,
+              title: 'barter.received_empty_title'.tr(),
+              subtitle: 'barter.received_empty_subtitle'.tr(),
+            );
+          }
+          return ListView.builder(
+            padding: const EdgeInsets.all(16),
+            itemCount: state.requests.length,
+            itemBuilder: (context, index) {
+              final barter = state.requests[index];
+              return _ReceivedRequestCard(barter: barter)
+                  // Keyed so removing a card doesn't replay the others' animation.
+                  .animate(key: ValueKey(barter.barterId))
+                  .fadeIn(delay: (index * 60).ms, duration: 280.ms)
+                  .slideY(begin: 0.05, end: 0);
+            },
+          );
+        },
+      ),
     );
   }
 }
 
 class _ReceivedRequestCard extends StatelessWidget {
   const _ReceivedRequestCard({required this.barter});
-  final BarterModel barter;
+  final ReceivedBarterRequest barter;
 
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
-    final cubit = context.read<BarterRequestCubit>();
+    final cubit = context.read<ReceivedRequestsCubit>();
 
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
@@ -72,9 +103,9 @@ class _ReceivedRequestCard extends StatelessWidget {
           Row(
             children: [
               UserAvatar(
-                initials: barter.user1Initials,
+                initials: barter.requester.initial,
                 radius: 22,
-                colorSeed: barter.user1ColorSeed,
+                imageUrl: barter.requester.photoUrl,
               ),
               const SizedBox(width: 12),
               Expanded(
@@ -82,7 +113,7 @@ class _ReceivedRequestCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      barter.user1Name,
+                      barter.requester.fullName,
                       style: AppTextStyles.titleMedium.copyWith(
                         color: colors.onSurface,
                       ),
@@ -107,7 +138,7 @@ class _ReceivedRequestCard extends StatelessWidget {
               Expanded(
                 child: SkillExchangePill(
                   label: 'barter.will_teach_you'.tr(),
-                  skill: barter.user1Teaches,
+                  skill: barter.willTeachYou,
                   bgColor: colors.teachChipBg,
                   textColor: colors.teachChipText,
                   icon: Icons.school_rounded,
@@ -115,13 +146,16 @@ class _ReceivedRequestCard extends StatelessWidget {
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8),
-                child: Icon(Icons.swap_horiz_rounded,
-                    color: colors.secondaryText, size: 18),
+                child: Icon(
+                  Icons.swap_horiz_rounded,
+                  color: colors.secondaryText,
+                  size: 18,
+                ),
               ),
               Expanded(
                 child: SkillExchangePill(
                   label: 'barter.wants_to_learn'.tr(),
-                  skill: barter.user2Teaches,
+                  skill: barter.wantsToLearn,
                   bgColor: colors.infoBackground,
                   textColor: colors.primary,
                   icon: Icons.auto_stories_rounded,
@@ -137,13 +171,14 @@ class _ReceivedRequestCard extends StatelessWidget {
             children: [
               Expanded(
                 child: OutlinedButton(
-                  onPressed: () => cubit.declineRequest(barter.barterId),
+                  onPressed: () => cubit.rejectRequest(barter.barterId),
                   style: OutlinedButton.styleFrom(
                     foregroundColor: colors.error,
                     side: BorderSide(color: colors.error),
                     minimumSize: const Size(0, 44),
                     shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10)),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
                   ),
                   child: Text('barter.decline'.tr()),
                 ),
@@ -158,7 +193,8 @@ class _ReceivedRequestCard extends StatelessWidget {
                     minimumSize: const Size(0, 44),
                     elevation: 0,
                     shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10)),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
                   ),
                   child: Text('barter.accept'.tr()),
                 ),

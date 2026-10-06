@@ -137,7 +137,8 @@
     "cancel_request": "إلغاء الطلب",
     "keep_request": "إبقاء الطلب",
     "cancel_confirm_title": "إلغاء الطلب؟",
-    "cancel_confirm_message": "هل تريد إلغاء طلبك إلى {}؟"
+    "cancel_confirm_message": "هل تريد إلغاء طلبك إلى {}؟",
+    "load_failed_title": "تعذر تحميل الطلبات"
   },
   "match": {
     "filter_all": "الكل",

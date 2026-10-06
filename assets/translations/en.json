@@ -137,7 +137,8 @@
     "cancel_request": "Cancel Request",
     "keep_request": "Keep Request",
     "cancel_confirm_title": "Cancel the request?",
-    "cancel_confirm_message": "Do you want to cancel your request to {}?"
+    "cancel_confirm_message": "Do you want to cancel your request to {}?",
+    "load_failed_title": "Failed to load requests"
   },
   "match": {
     "filter_all": "All",
