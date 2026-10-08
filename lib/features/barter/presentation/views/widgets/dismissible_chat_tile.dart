@@ -1,6 +1,6 @@
 import 'package:craft_chain/core/theme/app_colors.dart';
 import 'package:craft_chain/core/theme/app_text_styles.dart';
-import 'package:craft_chain/features/barter/data/models/barter.dart';
+import 'package:craft_chain/features/barter/domain/entities/barter_chat_preview.dart';
 import 'package:craft_chain/features/barter/presentation/logic/barter_request_cubit/barter_request_cubit.dart';
 import 'package:craft_chain/features/barter/presentation/views/widgets/barter_chat_tile.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -15,7 +15,7 @@ class DismissibleChatTile extends StatelessWidget {
     this.isSelected = false,
     required this.onTap,
   });
-  final BarterModel barter;
+  final BarterChatPreview barter;
   final bool isSelected;
   final VoidCallback onTap;
 
@@ -70,7 +70,6 @@ class DismissibleChatTile extends StatelessWidget {
         child:
             BarterChatTile(
                   barter: barter,
-                  currentUserId: kFakeBarterCurrentUserId,
                   onTap: onTap,
                 )
                 .animate()

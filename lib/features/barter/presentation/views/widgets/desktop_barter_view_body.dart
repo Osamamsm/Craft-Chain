@@ -202,11 +202,13 @@ class _DesktopChatsTab extends StatelessWidget {
           itemBuilder: (ctx, index) {
             final barter = state.chats[index];
             final isSelected = barter.barterId == selectedBarterId;
-            return DismissibleChatTile(
-              barter: barter,
-              isSelected: isSelected,
-              onTap: () => onTileTap(barter),
-            );
+            //TODO replace the sized box
+            return SizedBox();
+            // return DismissibleChatTile(
+            //   barter: barter,
+            //   isSelected: isSelected,
+            //   onTap: () => onTileTap(barter),
+            // );
           },
         );
       },

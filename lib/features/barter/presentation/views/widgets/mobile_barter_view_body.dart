@@ -2,6 +2,7 @@ import 'package:craft_chain/core/di/injection.dart';
 import 'package:craft_chain/core/theme/app_colors.dart';
 import 'package:craft_chain/core/theme/app_text_styles.dart';
 import 'package:craft_chain/core/widgets/empty_state.dart';
+import 'package:craft_chain/features/barter/presentation/logic/active_barters_cubit/active_barters_cubit.dart';
 import 'package:craft_chain/features/barter/presentation/logic/barter_request_cubit/barter_request_cubit.dart';
 import 'package:craft_chain/features/barter/presentation/logic/barter_request_cubit/barter_request_state.dart';
 import 'package:craft_chain/features/barter/presentation/logic/received_requests_cubit.dart/received_requests_cubit.dart';
@@ -59,7 +60,11 @@ class _MobileBarterViewBodyState extends State<MobileBarterViewBody>
               child: TabBarView(
                 controller: _tabController,
                 children: [
-                  const _MobileChatsTab(),
+                  BlocProvider(
+                    create: (context) =>
+                        getIt<ActiveBartersCubit>()..getActiveBarters(),
+                    child: const _MobileChatsTab(),
+                  ),
                   BlocProvider(
                     create: (context) =>
                         getIt<ReceivedRequestsCubit>()..getReceivedRequests(),
@@ -152,23 +157,10 @@ class _MobileChatsTab extends StatelessWidget {
   const _MobileChatsTab();
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<BarterRequestCubit, BarterRequestState>(
-      buildWhen: (prev, curr) =>
-          prev.chats != curr.chats ||
-          prev.isLoadingChats != curr.isLoadingChats,
+    return BlocBuilder<ActiveBartersCubit, ActiveBartersState>(
       builder: (context, state) {
-        if (state.isLoadingChats) {
-          return ChatsSkeletonList();
-        }
-        if (state.chats.isEmpty) {
-          return EmptyState(
-            onRefresh: () => Future.delayed(Duration.zero),
-            icon: Icons.chat_bubble_outline_rounded,
-            title: 'barter.chats_empty_title'.tr(),
-            subtitle: 'barter.chats_empty_subtitle'.tr(),
-          );
-        }
-        return ListView.separated(
+        if (state is ActiveBartersSuccess) {
+          return ListView.separated(
           padding: const EdgeInsets.symmetric(vertical: 8),
           itemCount: state.chats.length,
           separatorBuilder: (ctx, idx) =>
@@ -184,6 +176,17 @@ class _MobileChatsTab extends StatelessWidget {
             );
           },
         );
+        }
+        if (state is ActiveBartersFailure) {
+          return EmptyState(
+            onRefresh: () => context.read<ActiveBartersCubit>().getActiveBarters(),
+            icon: Icons.chat_bubble_outline_rounded,
+            title: 'barter.chats_empty_title'.tr(),
+            subtitle: 'barter.chats_empty_subtitle'.tr(),
+          );
+        }
+        return ChatsSkeletonList();
+        
       },
     );
   }

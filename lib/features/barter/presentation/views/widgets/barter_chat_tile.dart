@@ -1,38 +1,19 @@
 import 'package:craft_chain/core/theme/app_colors.dart';
 import 'package:craft_chain/core/theme/app_text_styles.dart';
 import 'package:craft_chain/core/widgets/user_avatar.dart';
-import 'package:craft_chain/features/barter/data/models/barter.dart';
+import 'package:craft_chain/features/barter/domain/entities/barter_chat_preview.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:intl/intl.dart';
 
 /// A single row in the Chats tab list.
 ///
 /// Displays the other user's avatar, name, skill exchange summary, last
-/// message preview, relative timestamp, status badge, and unread count.
+/// message preview, relative timestamp, status dot, and unread count.
 class BarterChatTile extends StatelessWidget {
-  const BarterChatTile({
-    super.key,
-    required this.barter,
-    required this.currentUserId,
-    required this.onTap,
-  });
+  const BarterChatTile({super.key, required this.barter, required this.onTap});
 
-  final BarterModel barter;
-  final String currentUserId;
+  final BarterChatPreview barter;
   final VoidCallback onTap;
-
-  // Returns the *other* user's display data relative to [currentUserId].
-  _OtherUser _otherUser() {
-    final iAmUser1 = barter.user1Id == currentUserId;
-    return _OtherUser(
-      name: iAmUser1 ? barter.user2Name : barter.user1Name,
-      initials: iAmUser1 ? barter.user2Initials : barter.user1Initials,
-      colorSeed: iAmUser1 ? barter.user2ColorSeed : barter.user1ColorSeed,
-    );
-  }
-
-  String _exchangeSummary() =>
-      '${barter.user1Teaches} ↔ ${barter.user2Teaches}';
 
   String _relativeTime(DateTime time) {
     final diff = DateTime.now().difference(time);
@@ -46,9 +27,9 @@ class BarterChatTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
-    final other = _otherUser();
-    final isCompleted = barter.status == BarterStatus.completed;
-    final hasUnread = barter.unreadCount > 0;
+    final other = barter.otherUser;
+    final isCompleted = barter.isCompleted;
+    final hasUnread = barter.hasUnread;
 
     return InkWell(
       onTap: onTap,
@@ -62,9 +43,9 @@ class BarterChatTile extends StatelessWidget {
               clipBehavior: Clip.none,
               children: [
                 UserAvatar(
-                  initials: other.initials,
+                  initials: other.initial,
                   radius: 24,
-                  colorSeed: other.colorSeed,
+                  imageUrl: other.photoUrl,
                 ),
                 Positioned(
                   bottom: 0,
@@ -80,8 +61,7 @@ class BarterChatTile extends StatelessWidget {
                       border: Border.all(color: colors.surface, width: 2),
                     ),
                     child: isCompleted
-                        ? Icon(Icons.check,
-                            size: 7, color: colors.onPrimary)
+                        ? Icon(Icons.check, size: 7, color: colors.onPrimary)
                         : null,
                   ),
                 ),
@@ -99,7 +79,7 @@ class BarterChatTile extends StatelessWidget {
                     children: [
                       Expanded(
                         child: Text(
-                          other.name,
+                          other.fullName,
                           style: AppTextStyles.titleMedium.copyWith(
                             color: colors.onSurface,
                             fontSize: 15,
@@ -124,9 +104,9 @@ class BarterChatTile extends StatelessWidget {
                     ],
                   ),
                   const SizedBox(height: 2),
-                  // Skill exchange summary
+                  // Skill exchange summary (my skill ↔ their skill)
                   Text(
-                    _exchangeSummary(),
+                    '${barter.mySkill} ↔ ${barter.theirSkill}',
                     style: AppTextStyles.bodySmall.copyWith(
                       color: colors.primary,
                       fontWeight: FontWeight.w600,
@@ -159,7 +139,9 @@ class BarterChatTile extends StatelessWidget {
                         Container(
                           margin: const EdgeInsets.only(left: 6),
                           padding: const EdgeInsets.symmetric(
-                              horizontal: 6, vertical: 2),
+                            horizontal: 6,
+                            vertical: 2,
+                          ),
                           decoration: BoxDecoration(
                             color: colors.error,
                             borderRadius: BorderRadius.circular(20),
@@ -185,15 +167,4 @@ class BarterChatTile extends StatelessWidget {
       ),
     );
   }
-}
-
-class _OtherUser {
-  const _OtherUser({
-    required this.name,
-    required this.initials,
-    required this.colorSeed,
-  });
-  final String name;
-  final String initials;
-  final int colorSeed;
 }
