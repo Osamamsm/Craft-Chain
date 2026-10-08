@@ -15,6 +15,7 @@ import 'package:craft_chain/features/barter/data/data_source/barters_data_source
 import 'package:craft_chain/features/barter/data/data_source/barters_remote_data_source.dart';
 import 'package:craft_chain/features/barter/data/repo/barters_repo_impl.dart';
 import 'package:craft_chain/features/barter/domain/repo/barters_repo.dart';
+import 'package:craft_chain/features/barter/presentation/logic/active_barters_cubit/active_barters_cubit.dart';
 import 'package:craft_chain/features/barter/presentation/logic/barter_request_cubit/barter_request_cubit.dart';
 import 'package:craft_chain/features/barter/presentation/logic/barter_room_cubit/barter_room_cubit.dart';
 import 'package:craft_chain/features/barter/presentation/logic/received_requests_cubit.dart/received_requests_cubit.dart';
@@ -77,6 +78,7 @@ void configureDependencies() {
   getIt.registerFactory<ReceivedRequestsCubit>(
     () => ReceivedRequestsCubit(getIt()),
   );
+  getIt.registerFactory<ActiveBartersCubit>(() => ActiveBartersCubit(getIt()));
   getIt.registerFactory<BarterRequestCubit>(() => BarterRequestCubit());
   getIt.registerFactory<BarterRoomCubit>(() => BarterRoomCubit());
 
