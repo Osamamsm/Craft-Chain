@@ -3,7 +3,7 @@ import 'package:craft_chain/core/theme/app_text_styles.dart';
 import 'package:craft_chain/core/widgets/empty_state.dart';
 import 'package:craft_chain/core/widgets/user_avatar.dart';
 import 'package:craft_chain/features/barter/domain/entities/received_barter_request.dart';
-import 'package:craft_chain/features/barter/presentation/logic/cubit/received_requests_cubit.dart';
+import 'package:craft_chain/features/barter/presentation/logic/received_requests_cubit.dart/received_requests_cubit.dart';
 import 'package:craft_chain/features/barter/presentation/views/widgets/request_skeleton_list.dart';
 import 'package:craft_chain/features/barter/presentation/views/widgets/skill_exchange_pill.dart';
 import 'package:easy_localization/easy_localization.dart';
