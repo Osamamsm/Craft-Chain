@@ -1,6 +1,6 @@
 import 'package:craft_chain/core/theme/app_colors.dart';
 import 'package:craft_chain/core/theme/app_text_styles.dart';
-import 'package:craft_chain/features/barter/data/models/message.dart';
+import 'package:craft_chain/features/barter/domain/entities/barter_message.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:intl/intl.dart';
@@ -17,7 +17,7 @@ class MessageBubble extends StatelessWidget {
     required this.isSent,
   });
 
-  final MessageModel message;
+  final BarterMessage message;
   final bool isSent;
 
   static final _timeFmt = DateFormat('h:mm a');

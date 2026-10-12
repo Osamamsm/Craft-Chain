@@ -154,7 +154,7 @@ class _DesktopBarterViewBodyState extends State<DesktopBarterViewBody>
             child: _selectedBarter != null
                 ? BarterRoomScreen(
                     key: ValueKey(_selectedBarter!.barterId),
-                    barter: _selectedBarter!,
+                    barterId: _selectedBarter!.barterId,
                     showBackButton: false,
                     onClose: _closeRoom,
                   )

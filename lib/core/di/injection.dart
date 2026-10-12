@@ -79,8 +79,8 @@ void configureDependencies() {
     () => ReceivedRequestsCubit(getIt()),
   );
   getIt.registerFactory<ActiveBartersCubit>(() => ActiveBartersCubit(getIt()));
+  getIt.registerFactory<BarterRoomCubit>(() => BarterRoomCubit(getIt()));
   getIt.registerFactory<BarterRequestCubit>(() => BarterRequestCubit());
-  getIt.registerFactory<BarterRoomCubit>(() => BarterRoomCubit());
 
   // Explore
   getIt.registerFactory<ExploreCubit>(() => ExploreCubit());

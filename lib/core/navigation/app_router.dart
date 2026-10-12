@@ -1,6 +1,8 @@
 import 'dart:async';
 
 import 'package:craft_chain/core/di/injection.dart';
+import 'package:craft_chain/features/barter/domain/entities/barter_chat_preview.dart';
+import 'package:craft_chain/features/barter/presentation/logic/barter_room_cubit/barter_room_cubit.dart';
 import 'package:craft_chain/features/barter/presentation/logic/send_barter_request_cubit/send_barter_request_cubit.dart';
 import 'package:craft_chain/features/profile/domain/entities/user_profile_entity.dart';
 import 'package:craft_chain/features/auth/presentation/Cubits/session_cubit/session_cubit.dart';
@@ -10,7 +12,6 @@ import 'package:craft_chain/features/auth/presentation/views/reset_password_scre
 import 'package:craft_chain/features/auth/presentation/views/sign_in_screen.dart';
 import 'package:craft_chain/features/auth/presentation/views/sign_up_screen.dart';
 import 'package:craft_chain/features/auth/presentation/views/welcome_screen.dart';
-import 'package:craft_chain/features/barter/data/models/barter.dart';
 import 'package:craft_chain/features/barter/presentation/views/barter_requests_view.dart';
 import 'package:craft_chain/features/barter/presentation/views/barter_room_screen.dart';
 import 'package:craft_chain/features/explore/view_model/explore_cubit/explore_cubit.dart';
@@ -191,9 +192,7 @@ final appRouter = GoRouter(
                     sessionState.user.id == userId;
 
                 return MultiBlocProvider(
-                  key: ValueKey(
-                    userId,
-                  ),
+                  key: ValueKey(userId),
                   providers: [
                     BlocProvider(
                       create: (_) => getIt<ProfileCubit>()
@@ -233,8 +232,13 @@ final appRouter = GoRouter(
       path: '/barter-room/:barterId',
       name: BarterRoomScreen.routeName,
       builder: (context, state) {
-        final barter = state.extra! as BarterModel;
-        return BarterRoomScreen(barter: barter);
+        final barter = state.extra! as BarterChatPreview;
+        return BlocProvider(
+          create: (_) =>
+              getIt<BarterRoomCubit>()
+                ..getBarterChat(barterId: barter.barterId),
+          child: BarterRoomScreen(barterId: barter.barterId),
+        );
       },
     ),
   ],

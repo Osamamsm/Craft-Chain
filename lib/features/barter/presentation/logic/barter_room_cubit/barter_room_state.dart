@@ -1,39 +1,42 @@
-import 'package:craft_chain/features/barter/data/models/barter.dart';
-import 'package:craft_chain/features/barter/data/models/message.dart';
+import 'package:craft_chain/features/barter/domain/entities/barter_chat.dart';
+import 'package:equatable/equatable.dart';
 
-class BarterRoomState {
-  const BarterRoomState({
-    this.barter,
-    this.messages = const [],
-    this.isLoading = false,
-    this.isSending = false,
-    this.isCompleted = false,
-    this.errorMessage,
-  });
+sealed class BarterRoomState extends Equatable {
+  const BarterRoomState();
 
-  final BarterModel? barter;
-  final List<MessageModel> messages;
-  final bool isLoading;
-  final bool isSending;
-  final bool isCompleted;
-  final String? errorMessage;
+  @override
+  List<Object?> get props => [];
+}
 
-  BarterRoomState copyWith({
-    BarterModel? barter,
-    List<MessageModel>? messages,
-    bool? isLoading,
-    bool? isSending,
-    bool? isCompleted,
-    String? errorMessage,
-    bool clearError = false,
-  }) {
-    return BarterRoomState(
-      barter: barter ?? this.barter,
-      messages: messages ?? this.messages,
-      isLoading: isLoading ?? this.isLoading,
-      isSending: isSending ?? this.isSending,
-      isCompleted: isCompleted ?? this.isCompleted,
-      errorMessage: clearError ? null : (errorMessage ?? this.errorMessage),
-    );
-  }
+final class BarterRoomInitial extends BarterRoomState {}
+
+final class BarterRoomLoading extends BarterRoomState {}
+
+final class BarterRoomLoaded extends BarterRoomState {
+  final BarterChat chat;
+  final BarterChatFeedback? feedback;
+
+  const BarterRoomLoaded({required this.chat, this.feedback});
+
+  @override
+  List<Object?> get props => [chat, feedback];
+}
+
+final class BarterRoomError extends BarterRoomState {
+  final String error;
+
+  const BarterRoomError({required this.error});
+
+  @override
+  List<Object?> get props => [error];
+}
+
+class BarterChatFeedback extends Equatable {
+  final String message;
+  final bool isError;
+
+  const BarterChatFeedback({required this.message, required this.isError});
+
+  @override
+  List<Object?> get props => [message, isError];
 }

@@ -1,31 +1,20 @@
-import 'package:craft_chain/core/constants/constants.dart';
-import 'package:craft_chain/core/di/injection.dart';
 import 'package:craft_chain/core/theme/app_colors.dart';
 import 'package:craft_chain/core/theme/app_text_styles.dart';
-import 'package:craft_chain/features/barter/data/models/barter.dart';
+import 'package:craft_chain/features/barter/domain/entities/barter_message.dart';
 import 'package:craft_chain/features/barter/presentation/logic/barter_room_cubit/barter_room_cubit.dart';
 import 'package:craft_chain/features/barter/presentation/logic/barter_room_cubit/barter_room_state.dart';
 import 'package:craft_chain/features/barter/presentation/views/widgets/barter_room_header.dart';
 import 'package:craft_chain/features/barter/presentation/views/widgets/chat_input_bar.dart';
 import 'package:craft_chain/features/barter/presentation/views/widgets/message_bubble.dart';
-import 'package:craft_chain/features/barter/presentation/views/widgets/session_banner.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-/// The dedicated chat screen for an active barter.
-///
-/// Can be used in two ways:
-/// - **Full-screen / mobile**: pushed via `context.push('/barter-room/...')`.
-///   [showBackButton] defaults to true.
-/// - **Embedded panel / desktop**: placed inside the right panel of
-///   [DesktopBarterViewBody]. Pass [showBackButton] = false and provide
-///   [onClose] to dismiss the panel.
 class BarterRoomScreen extends StatelessWidget {
   const BarterRoomScreen({
     super.key,
-    required this.barter,
+    required this.barterId,
     this.showBackButton = true,
     this.onClose,
   });
@@ -33,18 +22,16 @@ class BarterRoomScreen extends StatelessWidget {
   static const routePath = '/barter-room/:barterId';
   static const routeName = 'barter-room';
 
-  final BarterModel barter;
+  final String barterId;
   final bool showBackButton;
   final VoidCallback? onClose;
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<BarterRoomCubit>(
-      create: (_) => getIt<BarterRoomCubit>()..loadRoom(barter),
-      child: _BarterRoomView(
-        showBackButton: showBackButton,
-        onClose: onClose,
-      ),
+    return _BarterRoomView(
+      barterId: barterId,
+      showBackButton: showBackButton,
+      onClose: onClose,
     );
   }
 }
@@ -53,10 +40,12 @@ class BarterRoomScreen extends StatelessWidget {
 
 class _BarterRoomView extends StatefulWidget {
   const _BarterRoomView({
+    required this.barterId,
     required this.showBackButton,
     this.onClose,
   });
 
+  final String barterId;
   final bool showBackButton;
   final VoidCallback? onClose;
 
@@ -91,90 +80,114 @@ class _BarterRoomViewState extends State<_BarterRoomView> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<BarterRoomCubit, BarterRoomState>(
-      listenWhen: (prev, curr) => prev.messages.length != curr.messages.length,
-      listener: (context, state) => _scrollToBottom(),
-      builder: (context, state) {
-        if (state.isLoading || state.barter == null) {
-          return _LoadingView(showBackButton: widget.showBackButton);
-        }
+    final colors = context.colors;
 
-        final barter = state.barter!;
-        final isCompleted = state.isCompleted;
-
-        return Scaffold(
-          backgroundColor: context.colors.background,
-          appBar: BarterRoomHeader(
-            barter: barter,
-            currentUserId: Constants.kFakeCurrentUserId,
-            showBackButton: widget.showBackButton,
-            onBack: widget.onClose,
-          ),
-          body: Column(
-            children: [
-              // ── Session banner ─────────────────────────────────────────
-              SessionBanner(
-                scheduledAt: null, // TODO: wire from barter when Firestore ready
-                platform: null,
-              ),
-
-              // ── Completed banner ───────────────────────────────────────
-              if (isCompleted) _CompletedBanner(),
-
-              // ── Chat messages ──────────────────────────────────────────
-              Expanded(
-                child: state.messages.isEmpty
-                    ? _EmptyChatHint()
-                    : ListView.builder(
-                        controller: _scrollController,
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 16,
-                          vertical: 12,
-                        ),
-                        itemCount: state.messages.length,
-                        itemBuilder: (ctx, index) {
-                          final msg = state.messages[index];
-                          final isSent =
-                              msg.senderId == Constants.kFakeCurrentUserId;
-                          final showDateSeparator = _shouldShowDate(
-                            state.messages,
-                            index,
-                          );
-
-                          return Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              if (showDateSeparator)
-                                _DateSeparator(date: msg.createdAt),
-                              MessageBubble(
-                                message: msg,
-                                isSent: isSent,
-                              ),
-                            ],
-                          );
-                        },
-                      ),
-              ),
-
-              // ── Input bar ──────────────────────────────────────────────
-              ChatInputBar(
-                isSending: state.isSending,
-                disabled: isCompleted,
-                onSend: (text) =>
-                    context.read<BarterRoomCubit>().sendMessage(text),
-              ),
-            ],
-          ),
-        );
+    // Snackbar when sending a message fails
+    return BlocListener<BarterRoomCubit, BarterRoomState>(
+      listenWhen: (_, curr) => curr is BarterRoomLoaded && curr.feedback != null,
+      listener: (context, state) {
+        final feedback = (state as BarterRoomLoaded).feedback!;
+        ScaffoldMessenger.of(context)
+          ..hideCurrentSnackBar()
+          ..showSnackBar(
+            SnackBar(
+              behavior: SnackBarBehavior.floating,
+              backgroundColor: feedback.isError ? colors.error : null,
+              content: Text(feedback.message),
+            ),
+          );
       },
+      child: BlocConsumer<BarterRoomCubit, BarterRoomState>(
+        // scroll down when the number of messages changes (incl. first load)
+        listenWhen: (prev, curr) {
+          if (curr is! BarterRoomLoaded) return false;
+          final prevCount =
+              prev is BarterRoomLoaded ? prev.chat.messages.length : -1;
+          return prevCount != curr.chat.messages.length;
+        },
+        listener: (context, state) => _scrollToBottom(),
+        builder: (context, state) {
+          if (state is BarterRoomError) {
+            return _ErrorView(
+              message: state.error,
+              showBackButton: widget.showBackButton,
+              onRetry: () => context
+                  .read<BarterRoomCubit>()
+                  .getBarterChat(barterId: widget.barterId),
+            );
+          }
+          if (state is! BarterRoomLoaded) {
+            return _LoadingView(showBackButton: widget.showBackButton);
+          }
+
+          final info = state.chat.info;
+          final messages = state.chat.messages;
+
+          return Scaffold(
+            backgroundColor: colors.background,
+            // BarterRoomHeader takes the BarterChatInfo entity
+            // (otherUser, mySkill, theirSkill).
+            appBar: BarterRoomHeader(
+              info: info,
+              showBackButton: widget.showBackButton,
+              onBack: widget.onClose,
+            ),
+            body: Column(
+              children: [
+                // ── Completed banner ───────────────────────────────────────
+                if (info.isCompleted) _CompletedBanner(),
+
+                // ── Chat messages ──────────────────────────────────────────
+                Expanded(
+                  child: messages.isEmpty
+                      ? _EmptyChatHint()
+                      : ListView.builder(
+                          controller: _scrollController,
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 12,
+                          ),
+                          itemCount: messages.length,
+                          itemBuilder: (ctx, index) {
+                            final msg = messages[index];
+                            return Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                if (_shouldShowDate(messages, index))
+                                  _DateSeparator(date: msg.createdAt),
+                                // isMine is computed by the server
+                                MessageBubble(
+                                  message: msg,
+                                  isSent: msg.isMine,
+                                ),
+                              ],
+                            );
+                          },
+                        ),
+                ),
+
+                // ── Input bar ──────────────────────────────────────────────
+                // Sending is optimistic, so there is no "sending" state.
+                ChatInputBar(
+                  isSending: false,
+                  disabled: info.isCompleted,
+                  onSend: (text) =>
+                      context.read<BarterRoomCubit>().sendMessage(text),
+                ),
+              ],
+            ),
+          );
+        },
+      ),
     );
   }
 
-  bool _shouldShowDate(List messages, int index) {
+  bool _shouldShowDate(List<BarterMessage> messages, int index) {
     if (index == 0) return true;
-    final curr = messages[index].createdAt as DateTime;
-    final prev = messages[index - 1].createdAt as DateTime;
-    return !DateUtils.isSameDay(curr, prev);
+    return !DateUtils.isSameDay(
+      messages[index].createdAt,
+      messages[index - 1].createdAt,
+    );
   }
 }
 
@@ -194,8 +207,53 @@ class _LoadingView extends StatelessWidget {
         automaticallyImplyLeading: showBackButton,
         elevation: 0,
       ),
+      body: Center(child: CircularProgressIndicator(color: colors.primary)),
+    );
+  }
+}
+
+class _ErrorView extends StatelessWidget {
+  const _ErrorView({
+    required this.message,
+    required this.showBackButton,
+    required this.onRetry,
+  });
+
+  final String message;
+  final bool showBackButton;
+  final VoidCallback onRetry;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.colors;
+    return Scaffold(
+      backgroundColor: colors.background,
+      appBar: AppBar(
+        backgroundColor: colors.surface,
+        automaticallyImplyLeading: showBackButton,
+        elevation: 0,
+      ),
       body: Center(
-        child: CircularProgressIndicator(color: colors.primary),
+        child: Padding(
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                message,
+                textAlign: TextAlign.center,
+                style: AppTextStyles.bodyMedium.copyWith(
+                  color: colors.secondaryText,
+                ),
+              ),
+              const SizedBox(height: 12),
+              IconButton(
+                onPressed: onRetry,
+                icon: Icon(Icons.refresh_rounded, color: colors.primary),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -217,9 +275,7 @@ class _EmptyChatHint extends StatelessWidget {
           const SizedBox(height: 12),
           Text(
             'barter.room_empty_title'.tr(),
-            style: AppTextStyles.titleMedium.copyWith(
-              color: colors.onSurface,
-            ),
+            style: AppTextStyles.titleMedium.copyWith(color: colors.onSurface),
           ),
           const SizedBox(height: 6),
           Text(
@@ -249,9 +305,7 @@ class _CompletedBanner extends StatelessWidget {
       decoration: BoxDecoration(
         color: colors.greenAccent.withValues(alpha: 0.15),
         borderRadius: BorderRadius.circular(10),
-        border: Border.all(
-          color: colors.greenAccent.withValues(alpha: 0.4),
-        ),
+        border: Border.all(color: colors.greenAccent.withValues(alpha: 0.4)),
       ),
       child: Row(
         children: [
@@ -282,8 +336,7 @@ class _DateSeparator extends StatelessWidget {
   String _label() {
     final now = DateTime.now();
     if (DateUtils.isSameDay(date, now)) return 'Today';
-    if (DateUtils.isSameDay(
-        date, now.subtract(const Duration(days: 1)))) {
+    if (DateUtils.isSameDay(date, now.subtract(const Duration(days: 1)))) {
       return 'Yesterday';
     }
     return DateFormat('MMMM d').format(date);

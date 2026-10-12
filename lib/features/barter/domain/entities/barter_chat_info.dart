@@ -28,6 +28,8 @@ class BarterChatInfo extends Equatable {
   final MeetingProposal? pendingProposal;
 
   bool get isScheduled => scheduledAt != null;
+
+  bool get isCompleted => status == BarterStatus.completed;
   bool get hasPendingProposal => pendingProposal != null;
 
   bool get canProposeMeeting => status == BarterStatus.active;
@@ -40,14 +42,13 @@ class BarterChatInfo extends Equatable {
 
   @override
   List<Object?> get props => [
-        barterId,
-        status,
-        otherUser,
-        mySkill,
-        theirSkill,
-        scheduledAt,
-        meetingPlatform,
-        pendingProposal,
-      ];
+    barterId,
+    status,
+    otherUser,
+    mySkill,
+    theirSkill,
+    scheduledAt,
+    meetingPlatform,
+    pendingProposal,
+  ];
 }
-

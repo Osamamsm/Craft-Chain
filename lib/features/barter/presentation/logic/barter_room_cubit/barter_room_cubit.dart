@@ -1,161 +1,74 @@
-import 'package:craft_chain/core/constants/constants.dart';
-import 'package:craft_chain/features/barter/data/models/barter.dart';
-import 'package:craft_chain/features/barter/data/models/message.dart';
+import 'package:craft_chain/features/barter/domain/entities/barter_chat.dart';
+import 'package:craft_chain/features/barter/domain/entities/barter_message.dart';
+import 'package:craft_chain/features/barter/domain/repo/barters_repo.dart';
 import 'package:craft_chain/features/barter/presentation/logic/barter_room_cubit/barter_room_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-final _now = DateTime.now();
-
-final _fakeMessages = <String, List<MessageModel>>{
-  'barter_001': [
-    MessageModel(
-      messageId: 'm1',
-      senderId: 'user_sara',
-      text: 'Hey! Excited to start our skill exchange 🎉',
-      createdAt: _now.subtract(const Duration(hours: 2, minutes: 30)),
-    ),
-    MessageModel(
-      messageId: 'm2',
-      senderId: Constants.kFakeCurrentUserId,
-      text: 'Me too! When would be a good time for first session?',
-      createdAt: _now.subtract(const Duration(hours: 2, minutes: 10)),
-    ),
-    MessageModel(
-      messageId: 'm3',
-      senderId: 'user_sara',
-      text: 'How about Thursday at 8 PM on Zoom?',
-      createdAt: _now.subtract(const Duration(hours: 1, minutes: 45)),
-    ),
-    MessageModel(
-      messageId: 'm4',
-      senderId: Constants.kFakeCurrentUserId,
-      text: 'Thursday works perfectly for me 👍',
-      createdAt: _now.subtract(const Duration(hours: 1, minutes: 30)),
-    ),
-    MessageModel(
-      messageId: 'm5',
-      senderId: 'user_sara',
-      text: 'Great! I\'ll send the Zoom link before the session.',
-      createdAt: _now.subtract(const Duration(minutes: 30)),
-    ),
-    MessageModel(
-      messageId: 'm6',
-      senderId: Constants.kFakeCurrentUserId,
-      text: 'Sure, let\'s schedule for Saturday!',
-      createdAt: _now.subtract(const Duration(minutes: 2)),
-    ),
-  ],
-  'barter_002': [
-    MessageModel(
-      messageId: 'm1',
-      senderId: 'user_nour',
-      text: 'Hi! Ready to start our design sessions?',
-      createdAt: _now.subtract(const Duration(hours: 3)),
-    ),
-    MessageModel(
-      messageId: 'm2',
-      senderId: Constants.kFakeCurrentUserId,
-      text: 'Absolutely! I\'ll start with the Python basics.',
-      createdAt: _now.subtract(const Duration(hours: 2, minutes: 45)),
-    ),
-    MessageModel(
-      messageId: 'm3',
-      senderId: 'user_nour',
-      text: 'Can you send the Figma file?',
-      createdAt: _now.subtract(const Duration(hours: 1)),
-    ),
-  ],
-  'barter_003': [
-    MessageModel(
-      messageId: 'm1',
-      senderId: Constants.kFakeCurrentUserId,
-      text: 'That was an amazing session! Learned so much.',
-      createdAt: _now.subtract(const Duration(days: 2)),
-    ),
-    MessageModel(
-      messageId: 'm2',
-      senderId: 'user_layla',
-      text: 'Same here! Your video editing tips were gold ✨',
-      createdAt: _now.subtract(const Duration(days: 1, hours: 23)),
-    ),
-    MessageModel(
-      messageId: 'm3',
-      senderId: Constants.kFakeCurrentUserId,
-      text: 'Great session! Thanks so much 🎉',
-      createdAt: _now.subtract(const Duration(days: 1)),
-    ),
-  ],
-  'barter_004': [
-    MessageModel(
-      messageId: 'm1',
-      senderId: 'user_reem',
-      text: 'Hi! Excited about our skill exchange.',
-      createdAt: _now.subtract(const Duration(days: 4)),
-    ),
-    MessageModel(
-      messageId: 'm2',
-      senderId: Constants.kFakeCurrentUserId,
-      text: 'Me too! When should we have our first session?',
-      createdAt: _now.subtract(const Duration(days: 3, hours: 22)),
-    ),
-    MessageModel(
-      messageId: 'm3',
-      senderId: 'user_reem',
-      text: 'Looking forward to our next session!',
-      createdAt: _now.subtract(const Duration(days: 3)),
-    ),
-  ],
-};
-
 class BarterRoomCubit extends Cubit<BarterRoomState> {
-  BarterRoomCubit() : super(const BarterRoomState());
+  final BartersRepo _bartersRepo;
+  BarterRoomCubit(this._bartersRepo) : super(BarterRoomInitial());
 
-  Future<void> loadRoom(BarterModel barter) async {
-    emit(state.copyWith(isLoading: true, clearError: true));
-    await Future<void>.delayed(const Duration(milliseconds: 600));
-    final messages = List<MessageModel>.from(
-      _fakeMessages[barter.barterId] ?? [],
-    );
-    emit(
-      state.copyWith(
-        barter: barter,
-        messages: messages,
-        isLoading: false,
-        isCompleted: barter.status == BarterStatus.completed,
-      ),
+  Future<void> getBarterChat({required String barterId}) async {
+    emit(BarterRoomLoading());
+    final response = await _bartersRepo.getBarterChat(barterId: barterId);
+    if (isClosed) return;
+    response.fold(
+      (failure) => emit(BarterRoomError(error: failure.message)),
+      (chat) => emit(BarterRoomLoaded(chat: chat)),
     );
   }
 
   Future<void> sendMessage(String text) async {
+    final current = state;
+    if (current is! BarterRoomLoaded) return;
+
     final trimmed = text.trim();
     if (trimmed.isEmpty) return;
 
-    emit(state.copyWith(isSending: true));
-
-    // Optimistic insert.
-    final newMessage = MessageModel(
-      messageId: 'msg_${DateTime.now().millisecondsSinceEpoch}',
-      senderId: Constants.kFakeCurrentUserId,
+    final now = DateTime.now();
+    final temp = BarterMessage(
+      id: 'pending-${now.microsecondsSinceEpoch}',
+      senderId: '', // not needed for display: the bubble uses isMine
       text: trimmed,
-
-      createdAt: DateTime.now(),
+      isRead: false,
+      createdAt: now,
+      isMine: true,
     );
 
-    final updated = [...state.messages, newMessage];
+    emit(
+      BarterRoomLoaded(
+        chat: BarterChat(
+          info: current.chat.info,
+          messages: [...current.chat.messages, temp],
+        ),
+      ),
+    );
 
-    if (state.barter != null) {
-      _fakeMessages.putIfAbsent(state.barter!.barterId, () => []);
-      _fakeMessages[state.barter!.barterId]!.add(newMessage);
-    }
+    final result = await _bartersRepo.sendMessage(
+      barterId: current.chat.info.barterId,
+      text: trimmed,
+    );
+    if (isClosed) return;
 
-    await Future<void>.delayed(const Duration(milliseconds: 300));
-    emit(state.copyWith(messages: updated, isSending: false));
-  }
+    final errorMessage = result.fold<String?>(
+      (failure) => failure.message,
+      (actionResult) => actionResult.success ? null : actionResult.message,
+    );
+    if (errorMessage == null) return; // keep the optimistic message
 
-  Future<void> markAsCompleted() async {
-    if (state.barter == null) return;
-    await Future<void>.delayed(const Duration(milliseconds: 500));
-    final updated = state.barter!.copyWith(status: BarterStatus.completed);
-    emit(state.copyWith(barter: updated, isCompleted: true));
+    final latest = state;
+    if (latest is! BarterRoomLoaded) return;
+    emit(
+      BarterRoomLoaded(
+        chat: BarterChat(
+          info: latest.chat.info,
+          messages: [
+            for (final m in latest.chat.messages)
+              if (m.id != temp.id) m,
+          ],
+        ),
+        feedback: BarterChatFeedback(message: errorMessage, isError: true),
+      ),
+    );
   }
 }
