@@ -37,5 +37,10 @@ abstract class BartersDataSource {
     DateTime? before,
   });
 
+  Future<BarterActionResultModel> sendMessage({
+    required String barterId,
+    required String text,
+  });
+
   Future<List<MeetingPlatformModel>> getMeetingPlatforms();
 }

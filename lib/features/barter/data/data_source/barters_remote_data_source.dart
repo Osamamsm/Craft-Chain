@@ -148,4 +148,16 @@ class BartersRemoteDataSource implements BartersDataSource {
         .order('sort_order');
     return response.map(MeetingPlatformModel.fromJson).toList();
   }
+
+  @override
+  Future<BarterActionResultModel> sendMessage({
+    required String barterId,
+    required String text,
+  }) async {
+    final response = await _client.rpc(
+      'send_message',
+      params: {'p_barter_id': barterId, 'p_text': text},
+    );
+    return BarterActionResultModel.fromJson(response as Map<String, dynamic>);
+  }
 }
