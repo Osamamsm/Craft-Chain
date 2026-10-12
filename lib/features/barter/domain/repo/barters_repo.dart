@@ -43,5 +43,10 @@ abstract class BartersRepo {
     DateTime? before,
   });
 
+  Future<Either<Failure, BarterActionResult>> sendMessage({
+    required String barterId,
+    required String text,
+  });
+
   Future<Either<Failure, List<MeetingPlatform>>> getMeetingPlatforms();
 }

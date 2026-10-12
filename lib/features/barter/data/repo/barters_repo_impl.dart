@@ -172,4 +172,20 @@ class BartersRepoImpl implements BartersRepo {
       return Left(ExceptionMapper.mapExceptionToFailure(e));
     }
   }
+
+  @override
+  Future<Either<Failure, BarterActionResult>> sendMessage({
+    required String barterId,
+    required String text,
+  }) async {
+    try {
+      final result = await _bartersDataSource.sendMessage(
+        barterId: barterId,
+        text: text,
+      );
+      return Right(result);
+    } catch (e) {
+      return Left(ExceptionMapper.mapExceptionToFailure(e));
+    }
+  }
 }
